@@ -17,7 +17,7 @@ import java.awt.event.ActionEvent;
 
 public class Login2 {
 
-	private JFrame frame;
+	private JFrame frameLogin;
 	private JTextField txtNombreDeUsuario;
 	private JTextField textField;
 
@@ -29,7 +29,7 @@ public class Login2 {
 			public void run() {
 				try {
 					Login2 window = new Login2();
-					window.frame.setVisible(true);
+					window.frameLogin.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -43,18 +43,24 @@ public class Login2 {
 	public Login2() {
 		initialize();
 	}
+	
+	public void mostrarVentana() {
+		frameLogin.setLocationRelativeTo(null);
+		frameLogin.setVisible(true);
+	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frameLogin = new JFrame();
+		frameLogin.setBounds(100, 100, 450, 300);
+		frameLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frameLogin.setLocationRelativeTo(null); //Para que aparezca en el centro
 		
 		JPanel panelNorte = new JPanel();
 		panelNorte.setBorder(new LineBorder(new Color(0, 0, 0)));
-		frame.getContentPane().add(panelNorte, BorderLayout.NORTH);
+		frameLogin.getContentPane().add(panelNorte, BorderLayout.NORTH);
 		panelNorte.setLayout(new BoxLayout(panelNorte, BoxLayout.Y_AXIS));
 		
 		JPanel panelTitulo = new JPanel();
@@ -84,20 +90,20 @@ public class Login2 {
 		JPanel panel_Inicio = new JPanel();
 		panelNorte.add(panel_Inicio);
 		
-		JButton btnNewButton = new JButton("Iniciar Sesi�n");
+		JButton btnNewButton = new JButton("Iniciar Sesion");
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 25));
 		btnNewButton.setForeground(new Color(0, 0, 255));
 		panel_Inicio.add(btnNewButton);
 		
 		JPanel panelCentro = new JPanel();
 		panelCentro.setBorder(new LineBorder(new Color(192, 192, 192)));
-		frame.getContentPane().add(panelCentro, BorderLayout.SOUTH);
+		frameLogin.getContentPane().add(panelCentro, BorderLayout.SOUTH);
 		panelCentro.setLayout(new BoxLayout(panelCentro, BoxLayout.Y_AXIS));
 		
 		JPanel panelTexto = new JPanel();
 		panelCentro.add(panelTexto);
 		
-		JLabel lblCrearCuenta = new JLabel("�No tienes una cuenta?");
+		JLabel lblCrearCuenta = new JLabel("¿No tienes una cuenta?");
 		lblCrearCuenta.setToolTipText("");
 		lblCrearCuenta.setForeground(new Color(255, 0, 0));
 		panelTexto.add(lblCrearCuenta);
@@ -109,6 +115,9 @@ public class Login2 {
 		btnCrearCuenta.addActionListener(new ActionListener()/* Clase anonima */ {
 			public void actionPerformed(ActionEvent e) {
 				Registro ventanaRegistro = new Registro();
+				ventanaRegistro.mostrarVentana();
+				frameLogin.dispose();
+				
 			}
 		//Una interfaz que solo tiene un m�todo, es una interfaz funcional
 		});
@@ -117,7 +126,7 @@ public class Login2 {
 		JButton btnSalir = new JButton("Salir");
 		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
+				frameLogin.dispose();
 				System.exit(0);
 			}
 		});

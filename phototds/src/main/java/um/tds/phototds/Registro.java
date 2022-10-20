@@ -4,18 +4,25 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
 import java.awt.BorderLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import com.toedter.calendar.JDateChooser;
 import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Registro {
 
-	private JFrame frame;
+	private JFrame frameRegistro;
 	private JTextField textEmail;
 	private JTextField textNombre;
 	private JTextField textUsuario;
@@ -29,7 +36,7 @@ public class Registro {
 			public void run() {
 				try {
 					Registro window = new Registro();
-					window.frame.setVisible(true);
+					window.frameRegistro.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -43,17 +50,22 @@ public class Registro {
 	public Registro() {
 		initialize();
 	}
+	
+	public void mostrarVentana() {
+		frameRegistro.setLocationRelativeTo(null); //NULL -> Se posiciona en el centro de la pantalla
+		frameRegistro.setVisible(true);
+	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 579, 396);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frameRegistro = new JFrame();
+		frameRegistro.setBounds(100, 100, 579, 396);
+		frameRegistro.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panelDatos = new JPanel();
-		frame.getContentPane().add(panelDatos, BorderLayout.CENTER);
+		frameRegistro.getContentPane().add(panelDatos, BorderLayout.CENTER);
 		panelDatos.setLayout(new BoxLayout(panelDatos, BoxLayout.Y_AXIS));
 		
 		JPanel panelEmail = new JPanel();
@@ -92,7 +104,7 @@ public class Registro {
 		panelDatos.add(panelClave);
 		
 		txtContrasea = new JTextField();
-		txtContrasea.setText("Contrase�a");
+		txtContrasea.setText("Contraseña");
 		panelClave.add(txtContrasea);
 		txtContrasea.setColumns(40);
 		
@@ -112,10 +124,18 @@ public class Registro {
 		flowLayout_1.setAlignment(FlowLayout.LEFT);
 		panelDatos.add(panelFotoUsuario);
 		
-		JLabel lblFotoUsuario = new JLabel("A�adir foto del usuario (opcional)");
+		JLabel lblFotoUsuario = new JLabel("Añadir foto del usuario (opcional)");
 		panelFotoUsuario.add(lblFotoUsuario);
 		
+		
+		
 		JButton btnFotoUsuario = new JButton("+");
+		btnFotoUsuario.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser j = new JFileChooser();
+				j.showSaveDialog(null);
+			}
+		});
 		panelFotoUsuario.add(btnFotoUsuario);
 		
 		JPanel panelPresentacion = new JPanel();
@@ -123,14 +143,40 @@ public class Registro {
 		flowLayout_2.setAlignment(FlowLayout.LEFT);
 		panelDatos.add(panelPresentacion);
 		
-		JLabel lblPresentacion = new JLabel("A�adir presentacion (opcional)");
+		JLabel lblPresentacion = new JLabel("Añadir presentacion (opcional)");
 		panelPresentacion.add(lblPresentacion);
 		
 		JButton btnPresentacion = new JButton(". . .");
+		btnPresentacion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame frame = new JFrame();
+				frame.setBounds(100, 100, 450, 300);
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				
+				JTextArea textArea = new JTextArea();
+				frame.getContentPane().add(textArea, BorderLayout.CENTER);
+				
+				JPanel panelBotones = new JPanel();
+				frame.getContentPane().add(panelBotones, BorderLayout.SOUTH);
+				
+				JButton btnOk = new JButton("OK");
+				panelBotones.add(btnOk);
+				
+				JButton btnCancel = new JButton("Cancel");
+				panelBotones.add(btnCancel);
+				
+				JLabel lblTitulo = new JLabel("Escribe tu presentación (máximo 200 caracteres)");
+				lblTitulo.setFont(new Font("Verdana", Font.BOLD, 13));
+				lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+				frame.getContentPane().add(lblTitulo, BorderLayout.NORTH);
+				
+				frame.setVisible(true);
+			}
+		});
 		panelPresentacion.add(btnPresentacion);
 		
 		JPanel panelTitulo = new JPanel();
-		frame.getContentPane().add(panelTitulo, BorderLayout.NORTH);
+		frameRegistro.getContentPane().add(panelTitulo, BorderLayout.NORTH);
 		panelTitulo.setLayout(new BoxLayout(panelTitulo, BoxLayout.Y_AXIS));
 		
 		JPanel panelTexto = new JPanel();
@@ -146,18 +192,32 @@ public class Registro {
 		flowLayout_6.setAlignment(FlowLayout.LEFT);
 		panelTitulo.add(panelDescripcion);
 		
-		JLabel lblDescripcion = new JLabel("Si te registras podr�s compartir fotos y ver las fotos de tus amigos");
+		JLabel lblDescripcion = new JLabel("Si te registras podrás compartir fotos y ver las fotos de tus amigos");
 		lblDescripcion.setFont(new Font("Verdana", Font.PLAIN, 15));
 		panelDescripcion.add(lblDescripcion);
 		
 		JPanel panelBotones = new JPanel();
-		frame.getContentPane().add(panelBotones, BorderLayout.SOUTH);
+		frameRegistro.getContentPane().add(panelBotones, BorderLayout.SOUTH);
 		panelBotones.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
 		JButton btnOK = new JButton("OK");
+		btnOK.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Login2 ventanaLogin = new Login2();
+				ventanaLogin.mostrarVentana();
+				frameRegistro.dispose();
+			}
+		});
 		panelBotones.add(btnOK);
 		
 		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Login2 ventanaLogin = new Login2();
+				ventanaLogin.mostrarVentana();
+				frameRegistro.dispose();
+			}
+		});
 		panelBotones.add(btnCancel);
 	}
 

@@ -1,13 +1,20 @@
 package um.tds.phototds;
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
-    }
+import java.awt.EventQueue;
+
+public class App {
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			
+			public void run() {
+				try {
+					Login2 ventanaLogin = new Login2();
+					ventanaLogin.mostrarVentana();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+			}
+		});
+	}
 }
