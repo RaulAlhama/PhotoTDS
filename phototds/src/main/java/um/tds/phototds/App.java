@@ -3,6 +3,7 @@ package um.tds.phototds;
 import java.awt.EventQueue;
 
 public class App {
+	//Lanzamos la aplicación
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			
