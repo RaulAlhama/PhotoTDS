@@ -1,9 +1,8 @@
-package um.tds.phototds;
+package um.tds.phototds.vistas;
 
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JTextField;
 import java.awt.BorderLayout;
 import javax.swing.JTextArea;
 import javax.swing.JPanel;
@@ -11,10 +10,13 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Presentacion {
 
 	private JFrame frame;
+	private JTextArea textArea;
 
 	/**
 	 * Launch the application.
@@ -46,17 +48,30 @@ public class Presentacion {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
 		
-		JTextArea textArea = new JTextArea();
+		textArea = new JTextArea();
 		frame.getContentPane().add(textArea, BorderLayout.CENTER);
 		
 		JPanel panelBotones = new JPanel();
 		frame.getContentPane().add(panelBotones, BorderLayout.SOUTH);
 		
 		JButton btnOk = new JButton("OK");
+		btnOk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println(textArea.getText());
+				frame.dispose();
+			}
+		});
 		panelBotones.add(btnOk);
 		
 		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				frame.dispose();
+				
+			}
+		});
 		panelBotones.add(btnCancel);
 		
 		JLabel lblTitulo = new JLabel("Escribe tu presentación (máximo 200 caracteres)");
