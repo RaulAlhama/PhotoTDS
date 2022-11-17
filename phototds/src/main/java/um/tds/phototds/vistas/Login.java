@@ -14,7 +14,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
-import java.awt.FlowLayout;
 import javax.swing.border.TitledBorder;
 
 public class Login {
@@ -22,7 +21,6 @@ public class Login {
 	private JFrame frameLogin;
 	private JTextField txtNombreDeUsuario;
 	private JPasswordField ClaveField;
-	private int hola;
 
 
 	/**

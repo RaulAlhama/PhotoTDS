@@ -1,7 +1,5 @@
 package um.tds.phototds.controlador;
 
-import java.util.Date;
-
 import um.tds.phototds.dominio.RepoUsuarios;
 import um.tds.phototds.dominio.Usuario;
 import um.tds.phototds.persistencia.DAOException;
@@ -45,15 +43,14 @@ public class Controlador {
 		return false;
 	}
 
-	public boolean registrarUsuario(String nombre,String email, String login, String password,
+	public boolean registrarUsuario(String nombre, String email, String login, String password,
 			String fechaNacimiento) {
 
 		if (esUsuarioRegistrado(login))
 			return false;
 		Usuario usuario = new Usuario(nombre, email, login, password, fechaNacimiento);
 
-		UsuarioDAO usuarioDAO = factoria
-				.getUsuarioDAO(); /* Adaptador DAO para almacenar el nuevo Usuario en la BD */
+		UsuarioDAO usuarioDAO = factoria.getUsuarioDAO(); /* Adaptador DAO para almacenar el nuevo Usuario en la BD */
 		usuarioDAO.create(usuario);
 
 		RepoUsuarios.getUnicaInstancia().addUsuario(usuario);
