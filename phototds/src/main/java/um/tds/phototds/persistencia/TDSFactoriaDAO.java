@@ -10,4 +10,10 @@ public TDSFactoriaDAO() {	}
 		return new TDSUsuarioDAO(); 
 	}
 
+	@Override
+	public TDSFotoDAO getFotoDAO() {
+		// TODO Auto-generated method stub
+		return new TDSFotoDAO();
+	}
+
 }
