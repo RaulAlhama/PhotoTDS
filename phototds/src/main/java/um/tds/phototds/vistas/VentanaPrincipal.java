@@ -20,20 +20,14 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
-
-import um.tds.phototds.dominio.Foto;
 
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 import java.awt.event.ActionEvent;
-import javax.swing.JList;
 import javax.swing.JScrollPane;
 import java.awt.GridLayout;
-import javax.swing.BoxLayout;
-import java.awt.FlowLayout;
 
 public class VentanaPrincipal {
 

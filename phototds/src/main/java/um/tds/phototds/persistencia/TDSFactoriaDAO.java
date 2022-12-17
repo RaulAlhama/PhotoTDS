@@ -11,9 +11,9 @@ public TDSFactoriaDAO() {	}
 	}
 
 	@Override
-	public TDSFotoDAO getFotoDAO() {
+	public TDSPublicacionDAO getPublicacionDAO() {
 		// TODO Auto-generated method stub
-		return new TDSFotoDAO();
+		return new TDSPublicacionDAO();
 	}
 
 }
