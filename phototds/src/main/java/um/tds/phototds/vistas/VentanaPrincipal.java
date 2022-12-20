@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagLayout;
@@ -20,7 +22,6 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 
 import javax.swing.JTextField;
-
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -71,15 +72,15 @@ public class VentanaPrincipal {
 		framePrincipal.setBounds(100, 100, 668, 458);
 		framePrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-				JPanel panel = new JPanel();
-				framePrincipal.getContentPane().add(panel, BorderLayout.NORTH);
-				GridBagLayout gbl_panel = new GridBagLayout();
-				gbl_panel.columnWidths = new int[] { 0, 0, 50, 0, 0, 0, 0, 0, 0, 30, 50, 0, 0, 0, 0 };
-				gbl_panel.rowHeights = new int[] { 10, 0, 0 };
-				gbl_panel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+				JPanel panelNorte = new JPanel();
+				framePrincipal.getContentPane().add(panelNorte, BorderLayout.NORTH);
+				GridBagLayout gbl_panelNorte = new GridBagLayout();
+				gbl_panelNorte.columnWidths = new int[] { 0, 0, 50, 0, 0, 0, 0, 0, 0, 30, 50, 0, 0, 0, 0 };
+				gbl_panelNorte.rowHeights = new int[] { 10, 0, 0 };
+				gbl_panelNorte.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 						Double.MIN_VALUE };
-				gbl_panel.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
-				panel.setLayout(gbl_panel);
+				gbl_panelNorte.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
+				panelNorte.setLayout(gbl_panelNorte);
 				
 						JLabel lblPhototds = new JLabel("PhotoTDS");
 						lblPhototds.setForeground(DEFAULT_BACKGROUND);
@@ -88,7 +89,7 @@ public class VentanaPrincipal {
 						gbc_lblPhototds.insets = new Insets(0, 0, 0, 5);
 						gbc_lblPhototds.gridx = 1;
 						gbc_lblPhototds.gridy = 1;
-						panel.add(lblPhototds, gbc_lblPhototds);
+						panelNorte.add(lblPhototds, gbc_lblPhototds);
 						
 								JButton btnAddFoto = new JButton("+");
 								btnAddFoto.addActionListener(new ActionListener() {
@@ -128,7 +129,7 @@ public class VentanaPrincipal {
 								gbc_btnAddFoto.insets = new Insets(0, 0, 0, 5);
 								gbc_btnAddFoto.gridx = 4;
 								gbc_btnAddFoto.gridy = 1;
-								panel.add(btnAddFoto, gbc_btnAddFoto);
+								panelNorte.add(btnAddFoto, gbc_btnAddFoto);
 								
 										txtBuscador = new JTextField();
 										txtBuscador.setText("Buscador");
@@ -138,7 +139,7 @@ public class VentanaPrincipal {
 										gbc_txtBuscador.fill = GridBagConstraints.HORIZONTAL;
 										gbc_txtBuscador.gridx = 5;
 										gbc_txtBuscador.gridy = 1;
-										panel.add(txtBuscador, gbc_txtBuscador);
+										panelNorte.add(txtBuscador, gbc_txtBuscador);
 										txtBuscador.setColumns(10);
 										
 												JButton btnBuscar = new JButton("");
@@ -152,7 +153,7 @@ public class VentanaPrincipal {
 												gbc_btnBuscar.insets = new Insets(0, 0, 0, 5);
 												gbc_btnBuscar.gridx = 8;
 												gbc_btnBuscar.gridy = 1;
-												panel.add(btnBuscar, gbc_btnBuscar);
+												panelNorte.add(btnBuscar, gbc_btnBuscar);
 												
 														JButton btnUsuario = new JButton("");
 														btnUsuario.setBackground(DEFAULT_BACKGROUND);
@@ -161,78 +162,150 @@ public class VentanaPrincipal {
 														gbc_btnUsuario.insets = new Insets(0, 0, 0, 5);
 														gbc_btnUsuario.gridx = 11;
 														gbc_btnUsuario.gridy = 1;
-														panel.add(btnUsuario, gbc_btnUsuario);
+														panelNorte.add(btnUsuario, gbc_btnUsuario);
 														
 																JButton btnMenu = new JButton("");
+																btnMenu.addActionListener(new ActionListener() {
+																	public void actionPerformed(ActionEvent e) {
+																		JFrame frame = new JFrame();
+																		frame.setBounds(100, 100, 228, 99);
+																		
+																		JPanel panel = new JPanel();
+																		frame.getContentPane().add(panel, BorderLayout.CENTER);
+																		panel.setLayout(new GridLayout(0, 1, 0, 0));
+																		
+																		JButton btnPremium = new JButton("Premium");
+																		btnPremium.addActionListener(new ActionListener() {
+																			public void actionPerformed(ActionEvent e) {
+																				frame.dispose();
+																			}
+																		});
+																		panel.add(btnPremium);
+																		
+																		JButton btnGenerarPDF = new JButton("GenerarPDF");
+																		btnGenerarPDF.addActionListener(new ActionListener() {
+																			public void actionPerformed(ActionEvent e) {
+																				frame.dispose();
+																			}
+																		});
+																		panel.add(btnGenerarPDF);
+																		
+																		frame.setLocationRelativeTo(btnMenu);
+																		frame.setVisible(true);
+																		
+																	}
+																});
 																btnMenu.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/list.png")));
 																btnMenu.setBackground(DEFAULT_BACKGROUND);
 																GridBagConstraints gbc_btnMenu = new GridBagConstraints();
 																gbc_btnMenu.insets = new Insets(0, 0, 0, 5);
 																gbc_btnMenu.gridx = 12;
 																gbc_btnMenu.gridy = 1;
-																panel.add(btnMenu, gbc_btnMenu);
+																panelNorte.add(btnMenu, gbc_btnMenu);
 		
+		JPanel panelCentral = new JPanel();
+		BorderLayout bl_panelCentral = new BorderLayout();
+		bl_panelCentral.setVgap(10);
+		panelCentral.setLayout(bl_panelCentral);
+		//framePrincipal.getContentPane().add(panelCentral, BorderLayout.CENTER);
 		
+		JScrollPane scrollFotos = new JScrollPane(panelCentral);
+		panelCentral.setAutoscrolls(true);
 		
-		
-		JPanel panelfotos = new JPanel();
-		
-		JScrollPane scrollPane = new JScrollPane(panelfotos);
-		framePrincipal.getContentPane().add(scrollPane, BorderLayout.CENTER);
-		panelfotos.setLayout(new GridLayout(0, 1, 1, 10));
+		JPanel panelCentro = new JPanel();
+		panelCentro.setBackground(Color.LIGHT_GRAY);
+		panelCentral.add(panelCentro, BorderLayout.CENTER);
+		panelCentro.setLayout(new GridLayout(0, 1, 0, 10));
 		
 		JPanel panelFoto1 = new JPanel();
-		panelfotos.add(panelFoto1);
-		panelFoto1.setLayout(new GridLayout(0, 3));
+		panelCentro.add(panelFoto1);
+		GridBagLayout gbl_panelFoto1 = new GridBagLayout();
+		gbl_panelFoto1.columnWidths = new int[]{192, 97, 97, 0, 0};
+		gbl_panelFoto1.rowHeights = new int[]{40, 0, 0};
+		gbl_panelFoto1.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panelFoto1.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		panelFoto1.setLayout(gbl_panelFoto1);
 		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/paisajeTDS.png")));
-		panelFoto1.add(lblNewLabel);
+		JLabel foto = new JLabel("");
+		foto.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/paisajeTDS.png")));
+		GridBagConstraints gbc_foto = new GridBagConstraints();
+		gbc_foto.fill = GridBagConstraints.HORIZONTAL;
+		gbc_foto.gridheight = 2;
+		gbc_foto.anchor = GridBagConstraints.NORTH;
+		gbc_foto.insets = new Insets(0, 0, 0, 5);
+		gbc_foto.gridx = 0;
+		gbc_foto.gridy = 0;
+		panelFoto1.add(foto, gbc_foto);
 		
 		JButton btnNewButton = new JButton("New button");
-		panelFoto1.add(btnNewButton);
+		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		gbc_btnNewButton.anchor = GridBagConstraints.WEST;
+		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton.gridx = 1;
+		gbc_btnNewButton.gridy = 0;
+		panelFoto1.add(btnNewButton, gbc_btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("New button");
-		panelFoto1.add(btnNewButton_1);
+		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
+		gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton_1.anchor = GridBagConstraints.WEST;
+		gbc_btnNewButton_1.gridx = 2;
+		gbc_btnNewButton_1.gridy = 0;
+		panelFoto1.add(btnNewButton_1, gbc_btnNewButton_1);
+		
+		JLabel lblMeGusta = new JLabel("26 Me gusta");
+		GridBagConstraints gbc_lblMeGusta = new GridBagConstraints();
+		gbc_lblMeGusta.insets = new Insets(0, 0, 5, 0);
+		gbc_lblMeGusta.gridx = 3;
+		gbc_lblMeGusta.gridy = 0;
+		panelFoto1.add(lblMeGusta, gbc_lblMeGusta);
 		
 		JPanel panelFoto2 = new JPanel();
-		panelfotos.add(panelFoto2);
-		panelFoto2.setLayout(new GridLayout(1, 0, 0, 0));
+		panelCentro.add(panelFoto2);
+		GridBagLayout gbl_panelFoto2 = new GridBagLayout();
+		gbl_panelFoto2.columnWidths = new int[] {192, 97, 97, 0, 0};
+		gbl_panelFoto2.rowHeights = new int[]{16, 0};
+		gbl_panelFoto2.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panelFoto2.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		panelFoto2.setLayout(gbl_panelFoto2);
 		
-		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/paisajeTDS.png")));
-		panelFoto2.add(lblNewLabel_1);
+		JLabel lblFoto2 = new JLabel("");
+		lblFoto2.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/paisajeTDS.png")));
+		GridBagConstraints gbc_lblFoto2 = new GridBagConstraints();
+		gbc_lblFoto2.insets = new Insets(0, 0, 0, 5);
+		gbc_lblFoto2.anchor = GridBagConstraints.NORTHWEST;
+		gbc_lblFoto2.gridx = 0;
+		gbc_lblFoto2.gridy = 0;
+		panelFoto2.add(lblFoto2, gbc_lblFoto2);
 		
 		JButton btnNewButton_2 = new JButton("New button");
-		panelFoto2.add(btnNewButton_2);
+		GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
+		gbc_btnNewButton_2.insets = new Insets(0, 0, 0, 5);
+		gbc_btnNewButton_2.gridx = 1;
+		gbc_btnNewButton_2.gridy = 0;
+		panelFoto2.add(btnNewButton_2, gbc_btnNewButton_2);
 		
 		JButton btnNewButton_3 = new JButton("New button");
-		panelFoto2.add(btnNewButton_3);
+		GridBagConstraints gbc_btnNewButton_3 = new GridBagConstraints();
+		gbc_btnNewButton_3.insets = new Insets(0, 0, 0, 5);
+		gbc_btnNewButton_3.gridx = 2;
+		gbc_btnNewButton_3.gridy = 0;
+		panelFoto2.add(btnNewButton_3, gbc_btnNewButton_3);
+		
+		JLabel lblMeGusta_1 = new JLabel("14 Me gusta");
+		GridBagConstraints gbc_lblMeGusta_1 = new GridBagConstraints();
+		gbc_lblMeGusta_1.gridx = 3;
+		gbc_lblMeGusta_1.gridy = 0;
+		panelFoto2.add(lblMeGusta_1, gbc_lblMeGusta_1);
 		
 		JPanel panelFoto3 = new JPanel();
-		panelfotos.add(panelFoto3);
-		panelFoto3.setLayout(new GridLayout(0, 3, 0, 0));
-		
-		JLabel lblNewLabel_2 = new JLabel("");
-		lblNewLabel_2.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/paisajeTDS.png")));
-		panelFoto3.add(lblNewLabel_2);
-		
-		JButton btnNewButton_4 = new JButton("New button");
-		panelFoto3.add(btnNewButton_4);
-		
-		JButton btnNewButton_5 = new JButton("New button");
-		panelFoto3.add(btnNewButton_5);
+		panelCentro.add(panelFoto3);
 		
 		JPanel panelFoto4 = new JPanel();
-		panelfotos.add(panelFoto4);
-		panelFoto4.setLayout(new GridLayout(0, 1, 0, 0));
+		panelCentro.add(panelFoto4);
+		framePrincipal.getContentPane().add(scrollFotos, BorderLayout.CENTER);
 		
-		JLabel lblNewLabel_3 = new JLabel("");
-		lblNewLabel_3.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/paisajeTDS.png")));
-		panelFoto4.add(lblNewLabel_3);
 		
-		JPanel panelFoto5 = new JPanel();
-		panelfotos.add(panelFoto5);
 		
 		
 		
