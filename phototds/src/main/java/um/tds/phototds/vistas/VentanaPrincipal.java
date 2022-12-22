@@ -156,6 +156,13 @@ public class VentanaPrincipal {
 												panelNorte.add(btnBuscar, gbc_btnBuscar);
 												
 														JButton btnUsuario = new JButton("");
+														btnUsuario.addActionListener(new ActionListener() {
+															public void actionPerformed(ActionEvent arg0) {
+																VentanaPerfil ventanaPerfil = new VentanaPerfil();
+																ventanaPerfil.mostrarVentana();
+																framePrincipal.dispose();
+															}
+														});
 														btnUsuario.setBackground(DEFAULT_BACKGROUND);
 														btnUsuario.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/perfil.png")));
 														GridBagConstraints gbc_btnUsuario = new GridBagConstraints();
@@ -221,9 +228,9 @@ public class VentanaPrincipal {
 		panelCentro.add(panelFoto1);
 		GridBagLayout gbl_panelFoto1 = new GridBagLayout();
 		gbl_panelFoto1.columnWidths = new int[]{192, 97, 97, 0, 0};
-		gbl_panelFoto1.rowHeights = new int[]{40, 0, 0};
+		gbl_panelFoto1.rowHeights = new int[]{20, 40, 0, 0, 0};
 		gbl_panelFoto1.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panelFoto1.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gbl_panelFoto1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panelFoto1.setLayout(gbl_panelFoto1);
 		
 		JLabel foto = new JLabel("");
@@ -232,70 +239,95 @@ public class VentanaPrincipal {
 		gbc_foto.fill = GridBagConstraints.HORIZONTAL;
 		gbc_foto.gridheight = 2;
 		gbc_foto.anchor = GridBagConstraints.NORTH;
-		gbc_foto.insets = new Insets(0, 0, 0, 5);
+		gbc_foto.insets = new Insets(0, 0, 5, 5);
 		gbc_foto.gridx = 0;
-		gbc_foto.gridy = 0;
+		gbc_foto.gridy = 1;
 		panelFoto1.add(foto, gbc_foto);
 		
-		JButton btnNewButton = new JButton("New button");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.anchor = GridBagConstraints.WEST;
-		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton.gridx = 1;
-		gbc_btnNewButton.gridy = 0;
-		panelFoto1.add(btnNewButton, gbc_btnNewButton);
+		JButton button = new JButton("");
+		button.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/Corazon.png")));
+		button.setBackground(Color.WHITE);
+		GridBagConstraints gbc_button = new GridBagConstraints();
+		gbc_button.insets = new Insets(0, 0, 5, 5);
+		gbc_button.gridx = 1;
+		gbc_button.gridy = 1;
+		panelFoto1.add(button, gbc_button);
 		
-		JButton btnNewButton_1 = new JButton("New button");
+		JButton btnNewButton_1 = new JButton("");
+		btnNewButton_1.setBackground(Color.WHITE);
+		btnNewButton_1.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/Comentario.png")));
 		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
 		gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 5);
 		gbc_btnNewButton_1.anchor = GridBagConstraints.WEST;
 		gbc_btnNewButton_1.gridx = 2;
-		gbc_btnNewButton_1.gridy = 0;
+		gbc_btnNewButton_1.gridy = 1;
 		panelFoto1.add(btnNewButton_1, gbc_btnNewButton_1);
 		
 		JLabel lblMeGusta = new JLabel("26 Me gusta");
 		GridBagConstraints gbc_lblMeGusta = new GridBagConstraints();
 		gbc_lblMeGusta.insets = new Insets(0, 0, 5, 0);
 		gbc_lblMeGusta.gridx = 3;
-		gbc_lblMeGusta.gridy = 0;
+		gbc_lblMeGusta.gridy = 1;
 		panelFoto1.add(lblMeGusta, gbc_lblMeGusta);
+		
+		JLabel label = new JLabel("");
+		label.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/perfil.png")));
+		GridBagConstraints gbc_label = new GridBagConstraints();
+		gbc_label.insets = new Insets(0, 0, 5, 5);
+		gbc_label.gridx = 1;
+		gbc_label.gridy = 2;
+		panelFoto1.add(label, gbc_label);
+		
+		JLabel lblRaulgarcia = new JLabel("raul.garcia");
+		GridBagConstraints gbc_lblRaulgarcia = new GridBagConstraints();
+		gbc_lblRaulgarcia.insets = new Insets(0, 0, 5, 5);
+		gbc_lblRaulgarcia.gridx = 2;
+		gbc_lblRaulgarcia.gridy = 2;
+		panelFoto1.add(lblRaulgarcia, gbc_lblRaulgarcia);
 		
 		JPanel panelFoto2 = new JPanel();
 		panelCentro.add(panelFoto2);
 		GridBagLayout gbl_panelFoto2 = new GridBagLayout();
 		gbl_panelFoto2.columnWidths = new int[] {192, 97, 97, 0, 0};
-		gbl_panelFoto2.rowHeights = new int[]{16, 0};
+		gbl_panelFoto2.rowHeights = new int[]{20, 16, 0, 0, 0};
 		gbl_panelFoto2.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panelFoto2.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		gbl_panelFoto2.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panelFoto2.setLayout(gbl_panelFoto2);
 		
 		JLabel lblFoto2 = new JLabel("");
 		lblFoto2.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/paisajeTDS.png")));
 		GridBagConstraints gbc_lblFoto2 = new GridBagConstraints();
-		gbc_lblFoto2.insets = new Insets(0, 0, 0, 5);
+		gbc_lblFoto2.gridheight = 2;
+		gbc_lblFoto2.insets = new Insets(0, 0, 5, 5);
 		gbc_lblFoto2.anchor = GridBagConstraints.NORTHWEST;
 		gbc_lblFoto2.gridx = 0;
-		gbc_lblFoto2.gridy = 0;
+		gbc_lblFoto2.gridy = 1;
 		panelFoto2.add(lblFoto2, gbc_lblFoto2);
 		
-		JButton btnNewButton_2 = new JButton("New button");
-		GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
-		gbc_btnNewButton_2.insets = new Insets(0, 0, 0, 5);
-		gbc_btnNewButton_2.gridx = 1;
-		gbc_btnNewButton_2.gridy = 0;
-		panelFoto2.add(btnNewButton_2, gbc_btnNewButton_2);
+		JButton button_1 = new JButton("");
+		button_1.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/Corazon.png")));
+		button_1.setBackground(Color.WHITE);
+		GridBagConstraints gbc_button_1 = new GridBagConstraints();
+		gbc_button_1.insets = new Insets(0, 0, 5, 5);
+		gbc_button_1.gridx = 1;
+		gbc_button_1.gridy = 1;
+		panelFoto2.add(button_1, gbc_button_1);
 		
-		JButton btnNewButton_3 = new JButton("New button");
-		GridBagConstraints gbc_btnNewButton_3 = new GridBagConstraints();
-		gbc_btnNewButton_3.insets = new Insets(0, 0, 0, 5);
-		gbc_btnNewButton_3.gridx = 2;
-		gbc_btnNewButton_3.gridy = 0;
-		panelFoto2.add(btnNewButton_3, gbc_btnNewButton_3);
+		JButton button_2 = new JButton("");
+		button_2.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/Comentario.png")));
+		button_2.setBackground(Color.WHITE);
+		GridBagConstraints gbc_button_2 = new GridBagConstraints();
+		gbc_button_2.anchor = GridBagConstraints.NORTHWEST;
+		gbc_button_2.insets = new Insets(0, 0, 5, 5);
+		gbc_button_2.gridx = 2;
+		gbc_button_2.gridy = 1;
+		panelFoto2.add(button_2, gbc_button_2);
 		
 		JLabel lblMeGusta_1 = new JLabel("14 Me gusta");
 		GridBagConstraints gbc_lblMeGusta_1 = new GridBagConstraints();
+		gbc_lblMeGusta_1.insets = new Insets(0, 0, 5, 0);
 		gbc_lblMeGusta_1.gridx = 3;
-		gbc_lblMeGusta_1.gridy = 0;
+		gbc_lblMeGusta_1.gridy = 1;
 		panelFoto2.add(lblMeGusta_1, gbc_lblMeGusta_1);
 		
 		JPanel panelFoto3 = new JPanel();

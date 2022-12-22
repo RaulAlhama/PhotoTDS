@@ -35,7 +35,7 @@ import java.awt.Component;
 
 public class VentanaPerfil {
 
-	private JFrame framePrincipal;
+	private JFrame framePerfil;
 	private JTextField txtBuscador;
 	private static final Color DEFAULT_BACKGROUND = new Color(102, 10, 45);
 
@@ -47,7 +47,7 @@ public class VentanaPerfil {
 			public void run() {
 				try {
 					VentanaPerfil window = new VentanaPerfil();
-					window.framePrincipal.setVisible(true);
+					window.framePerfil.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -63,20 +63,20 @@ public class VentanaPerfil {
 	}
 
 	public void mostrarVentana() {
-		framePrincipal.setLocationRelativeTo(null);
-		framePrincipal.setVisible(true);
+		framePerfil.setLocationRelativeTo(null);
+		framePerfil.setVisible(true);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		framePrincipal = new JFrame();
-		framePrincipal.setBounds(100, 100, 668, 458);
-		framePrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		framePerfil = new JFrame();
+		framePerfil.setBounds(100, 100, 668, 458);
+		framePerfil.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 				JPanel panelNorte = new JPanel();
-				framePrincipal.getContentPane().add(panelNorte, BorderLayout.NORTH);
+				framePerfil.getContentPane().add(panelNorte, BorderLayout.NORTH);
 				GridBagLayout gbl_panelNorte = new GridBagLayout();
 				gbl_panelNorte.columnWidths = new int[] { 0, 0, 50, 0, 0, 0, 0, 0, 0, 30, 50, 0, 0, 0, 0 };
 				gbl_panelNorte.rowHeights = new int[] { 10, 0, 0 };
@@ -84,21 +84,12 @@ public class VentanaPerfil {
 						Double.MIN_VALUE };
 				gbl_panelNorte.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
 				panelNorte.setLayout(gbl_panelNorte);
-				
-						JLabel lblPhototds = new JLabel("PhotoTDS");
-						lblPhototds.setForeground(DEFAULT_BACKGROUND);
-						lblPhototds.setFont(new Font("Verdana", Font.BOLD, 18));
-						GridBagConstraints gbc_lblPhototds = new GridBagConstraints();
-						gbc_lblPhototds.insets = new Insets(0, 0, 0, 5);
-						gbc_lblPhototds.gridx = 1;
-						gbc_lblPhototds.gridy = 1;
-						panelNorte.add(lblPhototds, gbc_lblPhototds);
 										
 												JButton btnAddFoto = new JButton("+");
 												btnAddFoto.addActionListener(new ActionListener() {
 													public void actionPerformed(ActionEvent e) {
 														JEditorPane editorPane = new JEditorPane();
-														framePrincipal.getContentPane().add(editorPane);
+														framePerfil.getContentPane().add(editorPane);
 														editorPane.setContentType("text/html");
 														editorPane.setText(
 																"<h1>Agregar Foto</h1><p>Anímate a compartir una foto con tus amigos.<br> Puedes arrastrar el fichero aquí. </p>");
@@ -125,6 +116,32 @@ public class VentanaPerfil {
 														});
 													}
 												});
+														
+														JButton button = new JButton("<-");
+														button.addActionListener(new ActionListener() {
+															public void actionPerformed(ActionEvent e) {
+																VentanaPrincipal ventanaPrincipal= new VentanaPrincipal();
+																ventanaPrincipal.mostrarVentana();
+																framePerfil.dispose();
+															}
+														});
+														button.setForeground(Color.WHITE);
+														button.setFont(new Font("Tahoma", Font.PLAIN, 16));
+														button.setBackground(new Color(102, 10, 45));
+														GridBagConstraints gbc_button = new GridBagConstraints();
+														gbc_button.insets = new Insets(0, 0, 0, 5);
+														gbc_button.gridx = 1;
+														gbc_button.gridy = 1;
+														panelNorte.add(button, gbc_button);
+												
+														JLabel lblPhototds = new JLabel("PhotoTDS");
+														lblPhototds.setForeground(DEFAULT_BACKGROUND);
+														lblPhototds.setFont(new Font("Verdana", Font.BOLD, 18));
+														GridBagConstraints gbc_lblPhototds = new GridBagConstraints();
+														gbc_lblPhototds.insets = new Insets(0, 0, 0, 5);
+														gbc_lblPhototds.gridx = 2;
+														gbc_lblPhototds.gridy = 1;
+														panelNorte.add(lblPhototds, gbc_lblPhototds);
 												btnAddFoto.setFont(new Font("Tahoma", Font.PLAIN, 16));
 												btnAddFoto.setBackground(DEFAULT_BACKGROUND);
 												btnAddFoto.setForeground(Color.WHITE);
@@ -217,7 +234,7 @@ public class VentanaPerfil {
 																panelNorte.add(btnMenu, gbc_btnMenu);
 																
 																JPanel panelCentro = new JPanel();
-																framePrincipal.getContentPane().add(panelCentro, BorderLayout.CENTER);
+																framePerfil.getContentPane().add(panelCentro, BorderLayout.CENTER);
 																GridBagLayout gbl_panelCentro = new GridBagLayout();
 																gbl_panelCentro.columnWidths = new int[]{20, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0};
 																gbl_panelCentro.rowHeights = new int[]{40, 0, 0, 0, 0};
@@ -270,7 +287,7 @@ public class VentanaPerfil {
 																panelCentro.add(lblNewLabel_3, gbc_lblNewLabel_3);
 																
 																JPanel panelSur = new JPanel();
-																framePrincipal.getContentPane().add(panelSur, BorderLayout.SOUTH);
+																framePerfil.getContentPane().add(panelSur, BorderLayout.SOUTH);
 																panelSur.setLayout(new BorderLayout(0, 0));
 																
 																JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
