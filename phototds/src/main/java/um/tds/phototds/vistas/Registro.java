@@ -5,6 +5,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,6 +26,8 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Registro {
 
@@ -32,12 +37,16 @@ public class Registro {
 	private JTextField textUsuario;
 	private JPasswordField passwordClave;
 	private JDateChooser textFecha;
+	private JPasswordField passwordClaveChk;
+	private JLabel lblError;
 
 	/**
 	 * Create the application.
 	 */
 	public Registro() {
 		initialize();
+		lblError.setVisible(false);
+		lblError.setForeground(Color.RED);
 	}
 
 	public void mostrarVentana() {
@@ -50,7 +59,7 @@ public class Registro {
 	 */
 	private void initialize() {
 		frameRegistro = new JFrame();
-		frameRegistro.setBounds(100, 100, 579, 396);
+		frameRegistro.setBounds(100, 100, 594, 407);
 		frameRegistro.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JPanel panelDatos = new JPanel();
@@ -63,9 +72,17 @@ public class Registro {
 		panelDatos.add(panelEmail);
 
 		textEmail = new JTextField();
+		textEmail.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (textEmail.getText().equals("Email")){
+				textEmail.setText("");
+				}
+			}
+		});
 		textEmail.setText("Email");
 		panelEmail.add(textEmail);
-		textEmail.setColumns(40);
+		textEmail.setColumns(42);
 
 		JPanel panelNombre = new JPanel();
 		FlowLayout flowLayout_4 = (FlowLayout) panelNombre.getLayout();
@@ -73,9 +90,15 @@ public class Registro {
 		panelDatos.add(panelNombre);
 
 		textNombre = new JTextField();
+		textNombre.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (textNombre.getText().equals("Nombre completo")) textNombre.setText("");
+			}
+		});
 		textNombre.setText("Nombre completo");
 		panelNombre.add(textNombre);
-		textNombre.setColumns(40);
+		textNombre.setColumns(42);
 
 		JPanel panelUsuario = new JPanel();
 		FlowLayout flowLayout_7 = (FlowLayout) panelUsuario.getLayout();
@@ -83,18 +106,38 @@ public class Registro {
 		panelDatos.add(panelUsuario);
 
 		textUsuario = new JTextField();
+		textUsuario.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(textUsuario.getText().equals("Nombre de usuario")) textUsuario.setText("");
+			}
+		});
 		textUsuario.setText("Nombre de usuario");
 		panelUsuario.add(textUsuario);
-		textUsuario.setColumns(40);
+		textUsuario.setColumns(42);
 
 		JPanel panelClave = new JPanel();
 		FlowLayout flowLayout_8 = (FlowLayout) panelClave.getLayout();
 		flowLayout_8.setAlignment(FlowLayout.LEFT);
 		panelDatos.add(panelClave);
+		
+		JLabel lblClave = new JLabel("Clave:");
+		panelClave.add(lblClave);
 
 		passwordClave = new JPasswordField();
-		passwordClave.setColumns(40);
+		passwordClave.setColumns(15);
 		panelClave.add(passwordClave);
+		
+		JLabel lblRepetirClave = new JLabel("Repetir Clave:");
+		panelClave.add(lblRepetirClave);
+		
+		passwordClaveChk = new JPasswordField();
+		passwordClaveChk.setColumns(15);
+		panelClave.add(passwordClaveChk);
+		
+		lblError = new JLabel("");
+		panelDatos.add(lblError);
+		
 
 		JPanel panelFechaNacimiento = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panelFechaNacimiento.getLayout();
@@ -242,6 +285,12 @@ public class Registro {
 		boolean verificar = true;
 
 		if (textNombre.getText().isEmpty()) {
+			textNombre.setBorder(BorderFactory.createLineBorder(Color.RED));
+			verificar = false;
+		}
+		
+		if(textEmail.getText().isEmpty()) {
+			textEmail.setBorder(BorderFactory.createLineBorder(Color.RED));
 			verificar = false;
 		}
 
@@ -250,13 +299,29 @@ public class Registro {
 		}
 
 		if (textUsuario.getText().isEmpty()) {
+			textUsuario.setBorder(BorderFactory.createLineBorder(Color.RED));
 			verificar = false;
 		}
 
 		if (passwordClave.getPassword().length == 0) {
+			passwordClave.setBorder(BorderFactory.createLineBorder(Color.RED));
 			verificar = false;
 		}
-
+		
+		if(passwordClaveChk.getPassword().length == 0) {
+			passwordClaveChk.setBorder(BorderFactory.createLineBorder(Color.RED));
+			verificar = false;
+		}
+		
+		if(!(String.valueOf(passwordClave.getPassword())
+				.equals(String.valueOf(passwordClaveChk.getPassword())))) {
+			lblError.setText("Las Claves no coinciden");
+			passwordClave.setBorder(BorderFactory.createLineBorder(Color.RED));
+			lblError.setVisible(true);
+			passwordClaveChk.setBorder(BorderFactory.createLineBorder(Color.RED));
+			verificar = false;
+		}
+		frameRegistro.revalidate();
 		return verificar;
 	}
 

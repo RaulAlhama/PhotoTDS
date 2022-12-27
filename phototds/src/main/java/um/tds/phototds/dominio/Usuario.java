@@ -23,6 +23,7 @@ public class Usuario {
 		this.fechaNacimiento = fechaNacimiento;
 		this.albumnes = new ArrayList<Album>();
 		this.fotos = new LinkedList<Foto>();
+		this.premium = false;
 	}
 
 	public int getId() {

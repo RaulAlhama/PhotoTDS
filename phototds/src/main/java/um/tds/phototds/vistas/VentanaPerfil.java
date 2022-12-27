@@ -4,7 +4,6 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,7 +15,6 @@ import javax.swing.JButton;
 import javax.swing.JEditorPane;
 
 import java.awt.Insets;
-import java.awt.Panel;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
@@ -31,7 +29,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import java.awt.GridLayout;
 import javax.swing.JTabbedPane;
-import java.awt.Component;
 
 public class VentanaPerfil {
 

@@ -1,5 +1,6 @@
 package um.tds.phototds.controlador;
 
+
 import um.tds.phototds.dominio.RepoUsuarios;
 import um.tds.phototds.dominio.Usuario;
 import um.tds.phototds.persistencia.DAOException;
@@ -66,5 +67,9 @@ public class Controlador {
 
 		RepoUsuarios.getUnicaInstancia().removeUsuario(usuario);
 		return true;
+	}
+	
+	public void hacerPremium() {
+		usuarioActual.setPremium(true);
 	}
 }
