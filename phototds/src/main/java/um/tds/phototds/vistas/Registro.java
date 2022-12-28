@@ -13,6 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.awt.Image;
+
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
@@ -28,6 +30,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 public class Registro {
 
@@ -163,6 +166,7 @@ public class Registro {
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser j = new JFileChooser();
 				j.showSaveDialog(null);
+				File imagen = j.getSelectedFile();
 			}
 		});
 		panelFotoUsuario.add(btnFotoUsuario);

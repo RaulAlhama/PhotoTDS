@@ -21,6 +21,9 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 
 import javax.swing.JTextField;
+
+import um.tds.phototds.controlador.Controlador;
+
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -34,6 +37,7 @@ public class VentanaPerfil {
 
 	private JFrame framePerfil;
 	private JTextField txtBuscador;
+	private Controlador controlador;
 	private static final Color DEFAULT_BACKGROUND = new Color(102, 10, 45);
 
 	/**
@@ -56,6 +60,7 @@ public class VentanaPerfil {
 	 * Create the application.
 	 */
 	public VentanaPerfil() {
+		controlador = Controlador.getUnicaInstancia();
 		initialize();
 	}
 
@@ -240,7 +245,7 @@ public class VentanaPerfil {
 																panelCentro.setLayout(gbl_panelCentro);
 																
 																JLabel label = new JLabel("");
-																label.setIcon(new ImageIcon(VentanaPerfil.class.getResource("/um/tds/phototds/imagenes/PerfilRecortado.png")));
+																label.setIcon(new ImageIcon(VentanaPerfil.class.getResource("/um/tds/phototds/imagenes/usuarioDef.png")));
 																GridBagConstraints gbc_label = new GridBagConstraints();
 																gbc_label.gridheight = 3;
 																gbc_label.gridwidth = 2;
@@ -249,7 +254,7 @@ public class VentanaPerfil {
 																gbc_label.gridy = 1;
 																panelCentro.add(label, gbc_label);
 																
-																JLabel lblNewLabel = new JLabel("raul.garcia");
+																JLabel lblNewLabel = new JLabel(controlador.getUsuarioActual().getEmail());
 																GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
 																gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
 																gbc_lblNewLabel.gridx = 5;
