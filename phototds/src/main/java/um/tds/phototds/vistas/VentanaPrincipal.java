@@ -1,6 +1,5 @@
 package um.tds.phototds.vistas;
 
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -44,7 +43,7 @@ public class VentanaPrincipal {
 	private JFrame framePrincipal;
 	private JTextField txtBuscador;
 	private Controlador controlador;
-	//private String userName;
+	// private String userName;
 	private static final Color DEFAULT_BACKGROUND = new Color(102, 10, 45);
 
 	/**
@@ -52,7 +51,7 @@ public class VentanaPrincipal {
 	 */
 	public VentanaPrincipal() {
 		controlador = Controlador.getUnicaInstancia();
-		//this.userName = controlador.getUsuarioActual().getUsername();
+		// this.userName = controlador.getUsuarioActual().getUsername();
 		initialize();
 	}
 
@@ -119,15 +118,15 @@ public class VentanaPrincipal {
 				});
 			}
 		});
-		
+
 		Luz luz = new Luz();
 		luz.addEncendidoListener(new IEncendidoListener() {
 			public void enteradoCambioEncendido(EventObject arg0) {
-				if(luz.isEncendido()) {
+				if (luz.isEncendido()) {
 					System.out.println("Encendido");
 					JFileChooser choser = new JFileChooser();
-					choser.setFileFilter(new FileNameExtensionFilter("XML","xml"));
-					
+					choser.setFileFilter(new FileNameExtensionFilter("XML", "xml"));
+
 				}
 			}
 		});
@@ -137,8 +136,7 @@ public class VentanaPrincipal {
 		gbc_luz.gridy = 1;
 		luz.setColor(Color.YELLOW);
 		panelNorte.add(luz, gbc_luz);
-		
-		
+
 		btnAddFoto.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnAddFoto.setBackground(DEFAULT_BACKGROUND);
 		btnAddFoto.setForeground(Color.WHITE);
@@ -181,8 +179,7 @@ public class VentanaPrincipal {
 			}
 		});
 		btnUsuario.setBackground(DEFAULT_BACKGROUND);
-		
-		
+
 		Image img = new ImageIcon(controlador.getUsuarioActual().getImagenPath()).getImage();
 		btnUsuario.setIcon(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
 		GridBagConstraints gbc_btnUsuario = new GridBagConstraints();
@@ -193,11 +190,11 @@ public class VentanaPrincipal {
 
 		JButton btnMenu = new JButton("");
 		btnMenu.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
-
+				framePrincipal.disable();
 				JFrame frame = new JFrame();
 				frame.setBounds(100, 100, 314, 164);
-
 				JPanel panel = new JPanel();
 				frame.getContentPane().add(panel, BorderLayout.CENTER);
 				panel.setLayout(new GridLayout(0, 1, 0, 0));
@@ -232,9 +229,13 @@ public class VentanaPrincipal {
 							btnGenerarPDF.setEnabled(true);
 							btnFotosConMas.setEnabled(true);
 							frame.dispose();
+							framePrincipal.enable();
+						} else {
+							JOptionPane.showMessageDialog(framePrincipal, "Ya eres usuario premium!", "Premium",
+									JOptionPane.INFORMATION_MESSAGE);
+							frame.dispose();
+							framePrincipal.enable();
 						}
-						else JOptionPane.showMessageDialog(framePrincipal, "Ya eres usuario premium!",
-								"Premium", JOptionPane.INFORMATION_MESSAGE);
 					}
 				});
 				panel.add(btnPremium);
