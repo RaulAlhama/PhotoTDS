@@ -45,11 +45,11 @@ public class Controlador {
 	}
 
 	public boolean registrarUsuario(String nombre, String email, String login, String password,
-			String fechaNacimiento) {
+			String fechaNacimiento,String imagenPath,String presentacion) {
 
 		if (esUsuarioRegistrado(login))
 			return false;
-		Usuario usuario = new Usuario(nombre, email, login, password, fechaNacimiento);
+		Usuario usuario = new Usuario(nombre, email, login, password, fechaNacimiento,imagenPath,presentacion);
 
 		UsuarioDAO usuarioDAO = factoria.getUsuarioDAO(); /* Adaptador DAO para almacenar el nuevo Usuario en la BD */
 		usuarioDAO.create(usuario);
@@ -67,6 +67,11 @@ public class Controlador {
 
 		RepoUsuarios.getUnicaInstancia().removeUsuario(usuario);
 		return true;
+	}
+	
+	public void actualizarUsuario(Usuario usuario) {
+		UsuarioDAO usuarioDAO = factoria.getUsuarioDAO();
+		usuarioDAO.update(usuario);
 	}
 	
 	public void hacerPremium() {

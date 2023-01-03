@@ -12,9 +12,11 @@ public class Usuario {
 	private String fechaNacimiento;
 	private List<Album> albumnes;
 	private List<Foto> fotos;
+	private String imagenPath;
+	private String presentacion;
 	
 	public Usuario(String nombre, String email, String login, String password,
-			String fechaNacimiento) {
+			String fechaNacimiento,String imagenPath,String presentacion) {
 		this.id = 0;
 		this.nombre = nombre;
 		this.email = email;
@@ -24,6 +26,8 @@ public class Usuario {
 		this.albumnes = new ArrayList<Album>();
 		this.fotos = new LinkedList<Foto>();
 		this.premium = false;
+		this.imagenPath = imagenPath;
+		this.presentacion = presentacion;
 	}
 
 	public int getId() {
@@ -99,6 +103,26 @@ public class Usuario {
 	public void setFotos(List<Foto> fotos) {
 		this.fotos = fotos;
 	}
+
+	public String getImagenPath() {
+		return imagenPath;
+	}
+
+	public void setImagenPath(String imangenPath) {
+		this.imagenPath = imangenPath;
+	}
+
+	public String getPresentacion() {
+		return presentacion;
+	}
+
+	public void setPresentacion(String presentacion) {
+		this.presentacion = presentacion;
+	}
+	
+	
+	
+	
 	
 	
 }

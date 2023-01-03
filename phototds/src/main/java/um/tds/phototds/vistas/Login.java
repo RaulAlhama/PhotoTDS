@@ -78,7 +78,7 @@ public class Login {
 		JButton btnCrearCuenta = new JButton("Crear una cuenta");
 		btnCrearCuenta.addActionListener(new ActionListener()/* Clase anonima */ {
 			public void actionPerformed(ActionEvent e) {
-				Registro ventanaRegistro = new Registro();
+				Registro ventanaRegistro = new Registro(false);
 				ventanaRegistro.mostrarVentana();
 				frameLogin.dispose();
 

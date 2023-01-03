@@ -9,6 +9,7 @@ import java.awt.Color;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -23,6 +24,7 @@ import javax.swing.JFileChooser;
 import com.toedter.calendar.JDateChooser;
 
 import um.tds.phototds.controlador.Controlador;
+import um.tds.phototds.dominio.Usuario;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
@@ -42,11 +44,18 @@ public class Registro {
 	private JDateChooser textFecha;
 	private JPasswordField passwordClaveChk;
 	private JLabel lblError;
+	private String imagenPath;
+	private JLabel labelFotoPerfil;
+	private boolean registrado;
+	private JTextArea areaPresentacion;
+	private Usuario usuarioActual;
 
 	/**
 	 * Create the application.
 	 */
-	public Registro() {
+	public Registro(boolean registrado) {
+		this.registrado = registrado;
+		if(registrado = true) usuarioActual = Controlador.getUnicaInstancia().getUsuarioActual();
 		initialize();
 		lblError.setVisible(false);
 		lblError.setForeground(Color.RED);
@@ -61,8 +70,15 @@ public class Registro {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		if(registrado) {
+			imagenPath = usuarioActual.getImagenPath();
+			
+		} else {
+			imagenPath = "C:/Users/raulg/git/PhotoTDS/phototds/target/classes/um/tds/phototds/imagenes/usuarioDef.png";
+		}
+		
 		frameRegistro = new JFrame();
-		frameRegistro.setBounds(100, 100, 594, 407);
+		frameRegistro.setBounds(100, 100, 647, 472);
 		frameRegistro.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JPanel panelDatos = new JPanel();
@@ -75,14 +91,6 @@ public class Registro {
 		panelDatos.add(panelEmail);
 
 		textEmail = new JTextField();
-		textEmail.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (textEmail.getText().equals("Email")){
-				textEmail.setText("");
-				}
-			}
-		});
 		textEmail.setText("Email");
 		panelEmail.add(textEmail);
 		textEmail.setColumns(42);
@@ -93,12 +101,6 @@ public class Registro {
 		panelDatos.add(panelNombre);
 
 		textNombre = new JTextField();
-		textNombre.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (textNombre.getText().equals("Nombre completo")) textNombre.setText("");
-			}
-		});
 		textNombre.setText("Nombre completo");
 		panelNombre.add(textNombre);
 		textNombre.setColumns(42);
@@ -109,38 +111,59 @@ public class Registro {
 		panelDatos.add(panelUsuario);
 
 		textUsuario = new JTextField();
-		textUsuario.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(textUsuario.getText().equals("Nombre de usuario")) textUsuario.setText("");
-			}
-		});
 		textUsuario.setText("Nombre de usuario");
 		panelUsuario.add(textUsuario);
 		textUsuario.setColumns(42);
+
+		// Aquiii
+		if (!registrado) {
+			textEmail.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (textEmail.getText().equals("Email")) {
+						textEmail.setText("");
+					}
+				}
+			});
+
+			textNombre.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (textNombre.getText().equals("Nombre completo"))
+						textNombre.setText("");
+				}
+			});
+
+			textUsuario.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (textUsuario.getText().equals("Nombre de usuario"))
+						textUsuario.setText("");
+				}
+			});
+		}
 
 		JPanel panelClave = new JPanel();
 		FlowLayout flowLayout_8 = (FlowLayout) panelClave.getLayout();
 		flowLayout_8.setAlignment(FlowLayout.LEFT);
 		panelDatos.add(panelClave);
-		
+
 		JLabel lblClave = new JLabel("Clave:");
 		panelClave.add(lblClave);
 
 		passwordClave = new JPasswordField();
 		passwordClave.setColumns(15);
 		panelClave.add(passwordClave);
-		
+
 		JLabel lblRepetirClave = new JLabel("Repetir Clave:");
 		panelClave.add(lblRepetirClave);
-		
+
 		passwordClaveChk = new JPasswordField();
 		passwordClaveChk.setColumns(15);
 		panelClave.add(passwordClaveChk);
-		
+
 		lblError = new JLabel("");
 		panelDatos.add(lblError);
-		
 
 		JPanel panelFechaNacimiento = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panelFechaNacimiento.getLayout();
@@ -153,24 +176,6 @@ public class Registro {
 		textFecha = new JDateChooser();
 		panelFechaNacimiento.add(textFecha);
 
-		JPanel panelFotoUsuario = new JPanel();
-		FlowLayout flowLayout_1 = (FlowLayout) panelFotoUsuario.getLayout();
-		flowLayout_1.setAlignment(FlowLayout.LEFT);
-		panelDatos.add(panelFotoUsuario);
-
-		JLabel lblFotoUsuario = new JLabel("Añadir foto del usuario (opcional)");
-		panelFotoUsuario.add(lblFotoUsuario);
-
-		JButton btnFotoUsuario = new JButton("+");
-		btnFotoUsuario.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser j = new JFileChooser();
-				j.showSaveDialog(null);
-				File imagen = j.getSelectedFile();
-			}
-		});
-		panelFotoUsuario.add(btnFotoUsuario);
-
 		JPanel panelPresentacion = new JPanel();
 		FlowLayout flowLayout_2 = (FlowLayout) panelPresentacion.getLayout();
 		flowLayout_2.setAlignment(FlowLayout.LEFT);
@@ -182,20 +187,18 @@ public class Registro {
 		JButton btnPresentacion = new JButton(". . .");
 		btnPresentacion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				final JFrame frame = new JFrame();
+				JFrame frame = new JFrame();
 				frame.setBounds(100, 100, 450, 300);
-				// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-				final JTextArea textArea = new JTextArea();
-				frame.getContentPane().add(textArea, BorderLayout.CENTER);
-
+				// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
+				areaPresentacion = new JTextArea();
+				areaPresentacion.setText("");
+				if(registrado) areaPresentacion.setText(usuarioActual.getPresentacion());
+				frame.getContentPane().add(areaPresentacion, BorderLayout.CENTER);
 				JPanel panelBotones = new JPanel();
 				frame.getContentPane().add(panelBotones, BorderLayout.SOUTH);
-
 				JButton btnOk = new JButton("OK");
 				btnOk.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						System.out.println(textArea.getText());
 						frame.dispose();
 					}
 				});
@@ -220,6 +223,37 @@ public class Registro {
 			}
 		});
 		panelPresentacion.add(btnPresentacion);
+
+		JPanel panelFotoUsuario = new JPanel();
+		FlowLayout flowLayout_1 = (FlowLayout) panelFotoUsuario.getLayout();
+		flowLayout_1.setAlignment(FlowLayout.LEFT);
+		panelDatos.add(panelFotoUsuario);
+
+		JLabel lblFotoUsuario = new JLabel("Añadir foto del usuario (opcional)");
+		panelFotoUsuario.add(lblFotoUsuario);
+
+		JButton btnFotoUsuario = new JButton("+");
+		btnFotoUsuario.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser j = new JFileChooser();
+				int result = j.showSaveDialog(null);
+				if (result == JFileChooser.APPROVE_OPTION) {
+					File file = j.getSelectedFile();
+					imagenPath = file.getAbsolutePath();
+					Image img = new ImageIcon(imagenPath).getImage();
+					// JLabel lblFoto = new JLabel("");
+					labelFotoPerfil.setIcon(new ImageIcon(img.getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
+					panelFotoUsuario.add(labelFotoPerfil);
+					panelFotoUsuario.revalidate();
+					panelFotoUsuario.repaint();
+				}
+			}
+		});
+		panelFotoUsuario.add(btnFotoUsuario);
+
+		labelFotoPerfil = new JLabel("");
+		labelFotoPerfil.setIcon(new ImageIcon(imagenPath));
+		panelFotoUsuario.add(labelFotoPerfil);
 
 		JPanel panelTitulo = new JPanel();
 		frameRegistro.getContentPane().add(panelTitulo, BorderLayout.NORTH);
@@ -249,27 +283,65 @@ public class Registro {
 		JButton btnOK = new JButton("OK");
 		btnOK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				boolean OK = false;
-				OK = validarRegistro();
-				if (!OK) {
-					JOptionPane.showMessageDialog(frameRegistro, "Algunos campos obligatorios están vacíos",
-							"Error en el registro", JOptionPane.WARNING_MESSAGE);
-				} else {
-					try {
-						Controlador.getUnicaInstancia().registrarUsuario(textNombre.getText(),
-								textEmail.getText(), textUsuario.getText(), String.valueOf(passwordClave.getPassword()), textFecha.getDate().toString());
-						JOptionPane.showMessageDialog(frameRegistro, "Se ha registrado correctamente",
-								"Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
-						Login ventanaLogin = new Login();
-						ventanaLogin.mostrarVentana();
-						frameRegistro.dispose();
-					} catch (Exception e2){
-						JOptionPane.showMessageDialog(frameRegistro, e2.getMessage(),
+
+				if (!registrado) {
+					boolean OK = false;
+					OK = validarRegistro();
+					if (!OK) {
+						JOptionPane.showMessageDialog(frameRegistro, "Algunos campos obligatorios están vacíos",
 								"Error en el registro", JOptionPane.WARNING_MESSAGE);
+					} else {
+						try {
+							Controlador.getUnicaInstancia().registrarUsuario(textNombre.getText(), textEmail.getText(),
+									textUsuario.getText(), String.valueOf(passwordClave.getPassword()),
+									textFecha.getDate().toString(), imagenPath, areaPresentacion.getText());
+							JOptionPane.showMessageDialog(frameRegistro, "Se ha registrado correctamente",
+									"Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
+							Login ventanaLogin = new Login();
+							ventanaLogin.mostrarVentana();
+							frameRegistro.dispose();
+						} catch (Exception e2) {
+							JOptionPane.showMessageDialog(frameRegistro, e2.getMessage(), "Error en el registro",
+									JOptionPane.WARNING_MESSAGE);
+						}
+
+					}
+
+				}
+				else { //EDITAR PERFIL
+					usuarioActual.setImagenPath(imagenPath);
+					if(!areaPresentacion.getText().equals(usuarioActual.getPresentacion())) {
+						usuarioActual.setPresentacion(areaPresentacion.getText());
+						System.out.println(usuarioActual.getPresentacion());
+					}
+					if (passwordClave.getPassword().length == 0) { //Comprobación contraseñas
+						Controlador.getUnicaInstancia().actualizarUsuario(usuarioActual);
+						System.out.println(usuarioActual.getPresentacion());
+						VentanaPerfil ventanaPerfil = new VentanaPerfil();
+						ventanaPerfil.mostrarVentana();
+						frameRegistro.dispose();
+					} else {
+						if (passwordClaveChk.getPassword().length != 0) {
+							if (!(String.valueOf(passwordClave.getPassword()).equals(String.valueOf(passwordClaveChk.getPassword())))) {
+								lblError.setText("Las Claves no coinciden");
+								passwordClave.setBorder(BorderFactory.createLineBorder(Color.RED));
+								lblError.setVisible(true);
+								passwordClaveChk.setBorder(BorderFactory.createLineBorder(Color.RED));
+							} else {
+								usuarioActual.setClave(String.valueOf(passwordClave.getPassword()));
+								Controlador.getUnicaInstancia().actualizarUsuario(usuarioActual);
+								VentanaPerfil ventanaPerfil = new VentanaPerfil();
+								ventanaPerfil.mostrarVentana();
+								frameRegistro.dispose();
+							}
+						} else {
+							lblError.setText("Las Claves no coinciden");
+							lblError.setVisible(true);
+							passwordClaveChk.setBorder(BorderFactory.createLineBorder(Color.RED));
+						}
 					}
 					
 				}
-				
 			}
 		});
 		panelBotones.add(btnOK);
@@ -277,12 +349,25 @@ public class Registro {
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(!registrado) {
 				Login ventanaLogin = new Login();
 				ventanaLogin.mostrarVentana();
 				frameRegistro.dispose();
+				} else {
+					VentanaPerfil ventanaPerfil = new VentanaPerfil();
+					ventanaPerfil.mostrarVentana();
+					frameRegistro.dispose();
+				}
 			}
 		});
 		panelBotones.add(btnCancel);
+
+		if (registrado) {
+			textEmail.setEnabled(false);
+			textFecha.setEnabled(false);
+			textNombre.setEnabled(false);
+			textUsuario.setEnabled(false);
+		}
 	}
 
 	private boolean validarRegistro() {
@@ -292,8 +377,8 @@ public class Registro {
 			textNombre.setBorder(BorderFactory.createLineBorder(Color.RED));
 			verificar = false;
 		}
-		
-		if(textEmail.getText().isEmpty()) {
+
+		if (textEmail.getText().isEmpty()) {
 			textEmail.setBorder(BorderFactory.createLineBorder(Color.RED));
 			verificar = false;
 		}
@@ -311,14 +396,13 @@ public class Registro {
 			passwordClave.setBorder(BorderFactory.createLineBorder(Color.RED));
 			verificar = false;
 		}
-		
-		if(passwordClaveChk.getPassword().length == 0) {
+
+		if (passwordClaveChk.getPassword().length == 0) {
 			passwordClaveChk.setBorder(BorderFactory.createLineBorder(Color.RED));
 			verificar = false;
 		}
-		
-		if(!(String.valueOf(passwordClave.getPassword())
-				.equals(String.valueOf(passwordClaveChk.getPassword())))) {
+
+		if (!(String.valueOf(passwordClave.getPassword()).equals(String.valueOf(passwordClaveChk.getPassword())))) {
 			lblError.setText("Las Claves no coinciden");
 			passwordClave.setBorder(BorderFactory.createLineBorder(Color.RED));
 			lblError.setVisible(true);
@@ -328,5 +412,8 @@ public class Registro {
 		frameRegistro.revalidate();
 		return verificar;
 	}
+	
+	
+	
 
 }

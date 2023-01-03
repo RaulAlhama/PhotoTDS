@@ -1,6 +1,5 @@
 package um.tds.phototds.vistas;
 
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -15,6 +14,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
+import javax.swing.JFileChooser;
 
 import java.awt.Insets;
 import java.awt.datatransfer.DataFlavor;
@@ -23,6 +23,7 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import um.tds.phototds.controlador.Controlador;
 
@@ -33,6 +34,10 @@ import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import java.awt.GridLayout;
+import java.awt.Image;
+import pulsador.Luz;
+import pulsador.IEncendidoListener;
+import java.util.EventObject;
 
 public class VentanaPrincipal {
 
@@ -41,22 +46,6 @@ public class VentanaPrincipal {
 	private Controlador controlador;
 	//private String userName;
 	private static final Color DEFAULT_BACKGROUND = new Color(102, 10, 45);
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaPrincipal window = new VentanaPrincipal();
-					window.framePrincipal.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
@@ -130,6 +119,26 @@ public class VentanaPrincipal {
 				});
 			}
 		});
+		
+		Luz luz = new Luz();
+		luz.addEncendidoListener(new IEncendidoListener() {
+			public void enteradoCambioEncendido(EventObject arg0) {
+				if(luz.isEncendido()) {
+					System.out.println("Encendido");
+					JFileChooser choser = new JFileChooser();
+					choser.setFileFilter(new FileNameExtensionFilter("XML","xml"));
+					
+				}
+			}
+		});
+		GridBagConstraints gbc_luz = new GridBagConstraints();
+		gbc_luz.insets = new Insets(0, 0, 0, 5);
+		gbc_luz.gridx = 2;
+		gbc_luz.gridy = 1;
+		luz.setColor(Color.YELLOW);
+		panelNorte.add(luz, gbc_luz);
+		
+		
 		btnAddFoto.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnAddFoto.setBackground(DEFAULT_BACKGROUND);
 		btnAddFoto.setForeground(Color.WHITE);
@@ -172,7 +181,10 @@ public class VentanaPrincipal {
 			}
 		});
 		btnUsuario.setBackground(DEFAULT_BACKGROUND);
-		btnUsuario.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/perfil.png")));
+		
+		
+		Image img = new ImageIcon(controlador.getUsuarioActual().getImagenPath()).getImage();
+		btnUsuario.setIcon(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
 		GridBagConstraints gbc_btnUsuario = new GridBagConstraints();
 		gbc_btnUsuario.insets = new Insets(0, 0, 0, 5);
 		gbc_btnUsuario.gridx = 11;
@@ -226,6 +238,16 @@ public class VentanaPrincipal {
 					}
 				});
 				panel.add(btnPremium);
+				JButton btnCerrarSesin = new JButton("Cerrar Sesión");
+				btnCerrarSesin.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						Login ventanaLogin = new Login();
+						ventanaLogin.mostrarVentana();
+						frame.dispose();
+						framePrincipal.dispose();
+					}
+				});
+				panel.add(btnCerrarSesin);
 				frame.setLocationRelativeTo(btnMenu);
 				frame.setVisible(true);
 

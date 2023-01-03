@@ -80,6 +80,16 @@ public class Opciones {
 		});
 		panel.add(btnPremium);
 		
+		JButton btnCerrarSesin = new JButton("Cerrar Sesión");
+		btnCerrarSesin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Login ventanaLogin = new Login();
+				ventanaLogin.mostrarVentana();
+				frame.dispose();
+			}
+		});
+		panel.add(btnCerrarSesin);
+		
 		frame.setVisible(true);
 	}
 

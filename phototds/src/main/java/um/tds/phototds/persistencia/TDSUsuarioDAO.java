@@ -1,7 +1,6 @@
 package um.tds.phototds.persistencia;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -22,13 +21,13 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 	private static final String PASSWORD = "password";
 	private static final String FECHA_NACIMIENTO = "fechaNacimiento";
 	private static final String PREMIUM = "premium";
+	private static final String IMAGEN_PATH = "imagen";
+	private static final String PRESENTACION = "presentacion";
 
 	private ServicioPersistencia servPersistencia;
-	private SimpleDateFormat dateFormat;
 
 	public TDSUsuarioDAO() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
-		dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	}
 
 	private Usuario entidadToUsuario(Entidad eUsuario) throws ParseException {
@@ -39,7 +38,9 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		String password = servPersistencia.recuperarPropiedadEntidad(eUsuario, PASSWORD);
 		String fechaNacimiento = servPersistencia.recuperarPropiedadEntidad(eUsuario, FECHA_NACIMIENTO);
 		String premium = servPersistencia.recuperarPropiedadEntidad(eUsuario, PREMIUM);
-		Usuario usuario = new Usuario(nombre, email, login, password, fechaNacimiento);
+		String imagenPath = servPersistencia.recuperarPropiedadEntidad(eUsuario, IMAGEN_PATH);
+		String presentacion = servPersistencia.recuperarPropiedadEntidad(eUsuario, PRESENTACION);
+		Usuario usuario = new Usuario(nombre, email, login, password, fechaNacimiento, imagenPath, presentacion);
 		usuario.setId(eUsuario.getId());
 		usuario.setPremium(Boolean.valueOf(premium));
 
@@ -53,7 +54,9 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		eUsuario.setPropiedades(new ArrayList<Propiedad>(
 				Arrays.asList(new Propiedad(NOMBRE, usuario.getNombre()), new Propiedad(EMAIL, usuario.getEmail()),
 						new Propiedad(LOGIN, usuario.getUsername()), new Propiedad(PASSWORD, usuario.getClave()),
-						new Propiedad(FECHA_NACIMIENTO, usuario.getFechaNacimiento().toString()))));
+						new Propiedad(FECHA_NACIMIENTO, usuario.getFechaNacimiento().toString()),
+						new Propiedad(IMAGEN_PATH, usuario.getImagenPath()),
+						new Propiedad(PRESENTACION, usuario.getPresentacion()))));
 		return eUsuario;
 	}
 
@@ -83,8 +86,10 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 				prop.setValor(usuario.getNombre());
 			} else if (prop.getNombre().equals(LOGIN)) {
 				prop.setValor(usuario.getUsername());
-			} else if (prop.getNombre().equals(FECHA_NACIMIENTO)) {
-				prop.setValor(dateFormat.format(usuario.getFechaNacimiento()));
+			} else if (prop.getNombre().equals(IMAGEN_PATH)) {
+				prop.setValor(usuario.getImagenPath());
+			} else if (prop.getNombre().equals(PRESENTACION)) {
+				prop.setValor(usuario.getPresentacion());
 			}
 			servPersistencia.modificarPropiedad(prop);
 		}
