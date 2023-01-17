@@ -1,30 +1,62 @@
 package um.tds.phototds.controlador;
 
 
+import java.util.EventObject;
+
+import um.tds.phototds.dominio.Publicacion;
+import um.tds.phototds.dominio.RepoPublicaciones;
 import um.tds.phototds.dominio.RepoUsuarios;
 import um.tds.phototds.dominio.Usuario;
 import um.tds.phototds.persistencia.DAOException;
 import um.tds.phototds.persistencia.FactoriaDAO;
+import um.tds.phototds.persistencia.PublicacionDAO;
 import um.tds.phototds.persistencia.UsuarioDAO;
+import umu.tds.fotos.CargadorFotos;
+import umu.tds.fotos.Fotos;
+import umu.tds.fotos.FotosEvent;
+import umu.tds.fotos.FotosListener;
 
-public class Controlador {
+public class Controlador implements FotosListener{
 	private Usuario usuarioActual;
 	private static Controlador unicaInstancia;
+	
 	private FactoriaDAO factoria;
-
+	private PublicacionDAO publicacionDAO;
+	private UsuarioDAO usuarioDAO;
+	
+	private CargadorFotos cargadorFotos;
+	private Fotos nuevasFotos;
+	
+	private RepoUsuarios repoUsuario;
+	private RepoPublicaciones repoPublicaciones;
+	
+	//patron Sigleton
 	private Controlador() {
 		usuarioActual = null;
+		cargadorFotos = new CargadorFotos();
+		cargadorFotos.addCancionesListener(this);
 		try {
-			factoria = FactoriaDAO.getInstancia();
+			factoria = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
 		} catch (DAOException e) {
-			e.printStackTrace();
+			// TODO: handle exception
 		}
+		inicializarAdaptadores();
 	}
-
+	//patron Singleton
 	public static Controlador getUnicaInstancia() {
 		if (unicaInstancia == null)
 			unicaInstancia = new Controlador();
 		return unicaInstancia;
+	}
+	
+	public void inicializarAdaptadores() {
+		publicacionDAO = factoria.getPublicacionDAO();
+		usuarioDAO = factoria.getUsuarioDAO();
+	}
+	
+	public void inicializarRepositorios() {
+		repoUsuario = RepoUsuarios.getUnicaInstancia();
+		repoPublicaciones = RepoPublicaciones.getUnicaInstancia();
 	}
 
 	public Usuario getUsuarioActual() {
@@ -59,22 +91,33 @@ public class Controlador {
 	}
 
 	public boolean borrarUsuario(Usuario usuario) {
-		if (!esUsuarioRegistrado(usuario.getUsername()))
-			return false;
-
-		UsuarioDAO usuarioDAO = factoria.getUsuarioDAO(); /* Adaptador DAO para borrar el Usuario de la BD */
+		if (!esUsuarioRegistrado(usuario.getUsername()))return false;
+		repoUsuario.removeUsuario(usuario);
 		usuarioDAO.delete(usuario);
-
-		RepoUsuarios.getUnicaInstancia().removeUsuario(usuario);
 		return true;
 	}
 	
 	public void actualizarUsuario(Usuario usuario) {
-		UsuarioDAO usuarioDAO = factoria.getUsuarioDAO();
 		usuarioDAO.update(usuario);
 	}
 	
 	public void hacerPremium() {
 		usuarioActual.setPremium(true);
+		actualizarUsuario(usuarioActual);
+	}
+	
+	public void compartirFoto(String texto,String path) {
+		usuarioActual.addFoto(texto,path);
+	}
+	
+	public void setFotosFile(String path) {
+		cargadorFotos.setArchivoFotos(path);
+	}
+	@Override
+	public void nuevasFotos(EventObject arg0) {
+		if(arg0 instanceof FotosListener) {
+			nuevasFotos = ((FotosEvent) arg0).getNuevasFotos();
+		}
+		
 	}
 }

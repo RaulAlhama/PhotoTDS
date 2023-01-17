@@ -10,6 +10,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Opciones {
 
@@ -71,7 +74,7 @@ public class Opciones {
 		btnPremium.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(frame, "Ahora eres usuario PREMIUM",
-						"¡Se han desbloqueado nuevas funciones1", JOptionPane.INFORMATION_MESSAGE);
+						"¡Se han desbloqueado nuevas funciones!", JOptionPane.INFORMATION_MESSAGE);
 				btnGenerarexcel.setEnabled(true);
 				btnGenerarPDF.setEnabled(true);
 				btnFotosConMas.setEnabled(true);
@@ -89,6 +92,17 @@ public class Opciones {
 			}
 		});
 		panel.add(btnCerrarSesin);
+		
+		JLabel lblCerrarSesion = new JLabel("Cerrar Sesion");
+		lblCerrarSesion.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				Login ventanaLogin = new Login();
+				ventanaLogin.mostrarVentana();
+				frame.dispose();
+			}
+		});
+		panel.add(lblCerrarSesion);
 		
 		frame.setVisible(true);
 	}

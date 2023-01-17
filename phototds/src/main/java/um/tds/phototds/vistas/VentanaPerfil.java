@@ -1,13 +1,14 @@
 package um.tds.phototds.vistas;
 
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 
 import java.awt.GridBagConstraints;
@@ -22,12 +23,19 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
+import javax.swing.UIManager;
 
 import um.tds.phototds.controlador.Controlador;
+import um.tds.phototds.dominio.Foto;
+import um.tds.phototds.dominio.Usuario;
 
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.time.LocalDate;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
@@ -41,9 +49,8 @@ public class VentanaPerfil {
 	private JFrame framePerfil;
 	private JTextField txtBuscador;
 	private Controlador controlador;
+	private Usuario usuarioActual;
 	private static final Color DEFAULT_BACKGROUND = new Color(102, 10, 45);
-
-
 
 	/**
 	 * Create the application.
@@ -62,6 +69,7 @@ public class VentanaPerfil {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		usuarioActual = controlador.getUsuarioActual();
 		framePerfil = new JFrame();
 		framePerfil.setBounds(100, 100, 668, 458);
 		framePerfil.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -335,24 +343,45 @@ public class VentanaPerfil {
 		panelCentro2.add(panel);
 		panel.setLayout(new GridLayout(0, 3, 0, 0));
 
-		JLabel lblFoto1 = new JLabel("");
-		lblFoto1.setIcon(new ImageIcon(VentanaPerfil.class.getResource("/um/tds/phototds/imagenes/Sierra Espuña.png")));
-		panel.add(lblFoto1);
-
-		JLabel lblFoto2 = new JLabel("");
-		lblFoto2.setIcon(new ImageIcon(VentanaPerfil.class.getResource("/um/tds/phototds/imagenes/Sierra Espuña.png")));
-		panel.add(lblFoto2);
-
-		JLabel label_1 = new JLabel("");
-		label_1.setIcon(new ImageIcon(VentanaPerfil.class.getResource("/um/tds/phototds/imagenes/Sierra Espuña.png")));
-		panel.add(label_1);
-
-		JLabel label_2 = new JLabel("");
-		label_2.setIcon(new ImageIcon(VentanaPerfil.class.getResource("/um/tds/phototds/imagenes/Sierra Espuña.png")));
-		panel.add(label_2);
 
 		JPanel PanelAlbumes = new JPanel();
 		tabbedPane.addTab("ÁLBUMES", null, PanelAlbumes, null);
+		
+		JScrollPane panel_1 = new JScrollPane();
+		panel_1.setBackground(Color.WHITE);
+		PanelAlbumes.add(panel_1, BorderLayout.CENTER);
+		JList<Foto> listafotos = new JList<Foto>();
+		DefaultListModel<Foto> fotoslistModel = new DefaultListModel<Foto>();
+		listafotos.setModel(fotoslistModel);
+		usuarioActual.getFotos().forEach(f -> fotoslistModel.addElement(f));
+		listafotos.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		listafotos.setVisibleRowCount(-1);
+		//listafotos.ensureIndexIsVisible(getHeight());
+		listafotos.setCellRenderer(createListRenderer());
+		panel_1.setViewportView(listafotos);}
+
+	private static ListCellRenderer<? super Foto> createListRenderer() {
+		return new DefaultListCellRenderer() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+			private Color background = new Color(0, 100, 255, 15);
+			private Color defaultBackground = (Color) UIManager.get("List.background");
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				if (c instanceof JLabel) {
+					JLabel label = (JLabel) c;
+					label.setIcon(new ImageIcon(VentanaPerfil.class.getResource("/um/tds/phototds/imagenes/lupa.png")));
+					if (!isSelected)
+						label.setBackground(index % 2 == 0 ? background : defaultBackground);
+				}
+				return c;
+			}
+		};
 
 	}
 

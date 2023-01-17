@@ -1,5 +1,6 @@
 package um.tds.phototds.dominio;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -118,6 +119,11 @@ public class Usuario {
 
 	public void setPresentacion(String presentacion) {
 		this.presentacion = presentacion;
+	}
+	
+	public void addFoto(String texto,String path) {
+		Foto foto = new Foto("Foto1", LocalDate.now().toString(), texto, 0, new ArrayList<String>(), new ArrayList<Comentario>(), path);
+		this.fotos.add(foto);
 	}
 	
 	
