@@ -3,7 +3,6 @@ package um.tds.phototds.controlador;
 
 import java.util.EventObject;
 
-import um.tds.phototds.dominio.Publicacion;
 import um.tds.phototds.dominio.RepoPublicaciones;
 import um.tds.phototds.dominio.RepoUsuarios;
 import um.tds.phototds.dominio.Usuario;
@@ -82,11 +81,8 @@ public class Controlador implements FotosListener{
 		if (esUsuarioRegistrado(login))
 			return false;
 		Usuario usuario = new Usuario(nombre, email, login, password, fechaNacimiento,imagenPath,presentacion);
-
-		UsuarioDAO usuarioDAO = factoria.getUsuarioDAO(); /* Adaptador DAO para almacenar el nuevo Usuario en la BD */
 		usuarioDAO.create(usuario);
-
-		RepoUsuarios.getUnicaInstancia().addUsuario(usuario);
+		repoUsuario.addUsuario(usuario);
 		return true;
 	}
 

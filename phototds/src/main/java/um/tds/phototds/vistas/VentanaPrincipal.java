@@ -20,7 +20,7 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import um.tds.phototds.controlador.Controlador;
-import um.tds.phototds.dominio.Foto;
+import um.tds.phototds.dominio.Photo;
 import um.tds.phototds.dominio.Usuario;
 
 import javax.swing.ImageIcon;
@@ -284,7 +284,7 @@ public class VentanaPrincipal {
 		
 		System.out.println(!usuarioActual.getFotos().isEmpty());
 		if (!usuarioActual.getFotos().isEmpty()) {
-			for(Foto foto : usuarioActual.getFotos()) {
+			for(Photo foto : usuarioActual.getFotos()) {
 				JPanel panelFoto = new JPanel();
 				panelCentro.add(panelFoto);
 				GridBagLayout gbl_panelFoto1 = new GridBagLayout();

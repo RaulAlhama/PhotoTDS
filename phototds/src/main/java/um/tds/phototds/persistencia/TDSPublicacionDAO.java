@@ -11,7 +11,7 @@ import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 import um.tds.phototds.dominio.Comentario;
-import um.tds.phototds.dominio.Foto;
+import um.tds.phototds.dominio.Photo;
 import um.tds.phototds.dominio.Publicacion;
 
 public class TDSPublicacionDAO implements PublicacionDAO {
@@ -81,7 +81,7 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 		String comentarios = servPersistencia.recuperarPropiedadEntidad(ePubli, COMENTARIOS);
 		String fecha = servPersistencia.recuperarPropiedadEntidad(ePubli, FECHA);
 		String path = "hola";
-		Publicacion publicacion = new Foto(titulo, fecha, descripcion, meGustas, recuperarHashtags(hashtags),
+		Publicacion publicacion = new Photo(titulo, fecha, descripcion, meGustas, recuperarHashtags(hashtags),
 				recuperarComentarios(comentarios), path);
 		
 		return publicacion;

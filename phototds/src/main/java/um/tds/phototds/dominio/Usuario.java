@@ -12,7 +12,7 @@ public class Usuario {
 	private boolean premium;
 	private String fechaNacimiento;
 	private List<Album> albumnes;
-	private List<Foto> fotos;
+	private List<Photo> fotos;
 	private String imagenPath;
 	private String presentacion;
 	
@@ -25,7 +25,7 @@ public class Usuario {
 		this.clave = password;
 		this.fechaNacimiento = fechaNacimiento;
 		this.albumnes = new ArrayList<Album>();
-		this.fotos = new LinkedList<Foto>();
+		this.fotos = new LinkedList<Photo>();
 		this.premium = false;
 		this.imagenPath = imagenPath;
 		this.presentacion = presentacion;
@@ -97,11 +97,11 @@ public class Usuario {
 		this.albumnes = albumnes;
 	}
 
-	public List<Foto> getFotos() {
-		return new LinkedList<Foto>(fotos);
+	public List<Photo> getFotos() {
+		return new LinkedList<Photo>(fotos);
 	}
 
-	public void setFotos(List<Foto> fotos) {
+	public void setFotos(List<Photo> fotos) {
 		this.fotos = fotos;
 	}
 
@@ -122,7 +122,7 @@ public class Usuario {
 	}
 	
 	public void addFoto(String texto,String path) {
-		Foto foto = new Foto("Foto1", LocalDate.now().toString(), texto, 0, new ArrayList<String>(), new ArrayList<Comentario>(), path);
+		Photo foto = new Photo("Foto1", LocalDate.now().toString(), texto, 0, new ArrayList<String>(), new ArrayList<Comentario>(), path);
 		this.fotos.add(foto);
 	}
 	

@@ -27,7 +27,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 
 import um.tds.phototds.controlador.Controlador;
-import um.tds.phototds.dominio.Foto;
+import um.tds.phototds.dominio.Photo;
 import um.tds.phototds.dominio.Usuario;
 
 import javax.swing.DefaultListCellRenderer;
@@ -35,7 +35,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.time.LocalDate;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
@@ -350,8 +349,8 @@ public class VentanaPerfil {
 		JScrollPane panel_1 = new JScrollPane();
 		panel_1.setBackground(Color.WHITE);
 		PanelAlbumes.add(panel_1, BorderLayout.CENTER);
-		JList<Foto> listafotos = new JList<Foto>();
-		DefaultListModel<Foto> fotoslistModel = new DefaultListModel<Foto>();
+		JList<Photo> listafotos = new JList<Photo>();
+		DefaultListModel<Photo> fotoslistModel = new DefaultListModel<Photo>();
 		listafotos.setModel(fotoslistModel);
 		usuarioActual.getFotos().forEach(f -> fotoslistModel.addElement(f));
 		listafotos.setLayoutOrientation(JList.HORIZONTAL_WRAP);
@@ -360,7 +359,7 @@ public class VentanaPerfil {
 		listafotos.setCellRenderer(createListRenderer());
 		panel_1.setViewportView(listafotos);}
 
-	private static ListCellRenderer<? super Foto> createListRenderer() {
+	private static ListCellRenderer<? super Photo> createListRenderer() {
 		return new DefaultListCellRenderer() {
 			/**
 			 * 

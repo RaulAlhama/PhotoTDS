@@ -4,10 +4,10 @@ import java.util.List;
 
 public class Album extends Publicacion {
 	//Lista de fotos
-	private List<Foto> fotos;
+	private List<Photo> fotos;
 	
 	public Album(String titulo, String fecha, String descripcion, int meGusta, List<String> hashtags,
-			List<Comentario> comentarios,List<Foto> fotos) {
+			List<Comentario> comentarios,List<Photo> fotos) {
 		super(titulo, fecha, descripcion, meGusta, hashtags, comentarios);
 		this.fotos = fotos;
 	}
@@ -21,7 +21,7 @@ public class Album extends Publicacion {
 	
 	
 
-	public List<Foto> getFotos() {
+	public List<Photo> getFotos() {
 		return fotos;
 	}
 
