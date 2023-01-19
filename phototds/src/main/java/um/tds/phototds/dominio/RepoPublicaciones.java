@@ -3,7 +3,6 @@ package um.tds.phototds.dominio;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,7 +73,7 @@ public class RepoPublicaciones {
 			String path = foto.getPath();
 			String descripcion = foto.getPath();
 			ArrayList<String> hastags = (ArrayList<String>) hashtagToString(foto.getHashTags());
-			Photo photo = new Photo(titulo, LocalDate.now().toString(), descripcion,0, hastags, new LinkedList<Comentario>(), path);
+			Photo photo = new Photo(titulo, LocalDate.now().toString(), descripcion, hastags, path);
 			pubs.add(photo);
 					
 		}

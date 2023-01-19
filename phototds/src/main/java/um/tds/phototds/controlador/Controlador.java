@@ -1,11 +1,14 @@
 package um.tds.phototds.controlador;
 
 
+import java.util.Date;
 import java.util.EventObject;
+import java.util.List;
 
 import um.tds.phototds.dominio.RepoPublicaciones;
 import um.tds.phototds.dominio.RepoUsuarios;
 import um.tds.phototds.dominio.Usuario;
+import um.tds.phototds.dominio.Photo;
 import um.tds.phototds.persistencia.DAOException;
 import um.tds.phototds.persistencia.FactoriaDAO;
 import um.tds.phototds.persistencia.PublicacionDAO;
@@ -76,7 +79,7 @@ public class Controlador implements FotosListener{
 	}
 
 	public boolean registrarUsuario(String nombre, String email, String login, String password,
-			String fechaNacimiento,String imagenPath,String presentacion) {
+			Date fechaNacimiento,String imagenPath,String presentacion) {
 
 		if (esUsuarioRegistrado(login))
 			return false;
@@ -104,6 +107,7 @@ public class Controlador implements FotosListener{
 	
 	public void compartirFoto(String texto,String path) {
 		usuarioActual.addFoto(texto,path);
+		actualizarUsuario(usuarioActual);
 	}
 	
 	public void setFotosFile(String path) {
@@ -115,5 +119,13 @@ public class Controlador implements FotosListener{
 			nuevasFotos = ((FotosEvent) arg0).getNuevasFotos();
 		}
 		
+	}
+	
+	public int obtenerNumeroPubls() {
+		return usuarioActual.getFotos().size();
+	}
+	
+	public List<Photo> obtenerFotos() {
+		return usuarioActual.getFotos();
 	}
 }

@@ -12,13 +12,13 @@ public abstract class Publicacion {
 	private List<String> hashtags;
 	private List<Comentario> comentarios;
 	
-	public Publicacion(String titulo, String fecha, String descripcion, int meGusta, List<String> hashtags, List<Comentario> comentarios) {
+	public Publicacion(String titulo, String fecha, String descripcion, List<String> hashtags) {
 		this.titulo = titulo;
 		this.fecha = fecha;
 		this.descripcion = descripcion;
-		this.meGusta = meGusta;
+		this.meGusta = 0;
 		this.hashtags = hashtags;
-		this.comentarios = comentarios;
+		this.comentarios = new ArrayList<Comentario>();
 		this.id = 0;
 	}
 
@@ -45,6 +45,15 @@ public abstract class Publicacion {
 	public List<Comentario> getComentarios() {
 		//Devolvemos una copia
 		return new ArrayList<Comentario>(comentarios);
+	}
+	
+	public void setComentarios(List<Comentario> comentarios) {
+		this.comentarios = comentarios;
+		
+	}
+	
+	public void setMeGustas(int mGustas) {
+		this.meGusta = mGustas;
 	}
 	
 	public int getId() {

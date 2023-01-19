@@ -1,29 +1,33 @@
 package um.tds.phototds.dominio;
 
 public class DescuentoEdad implements Descuento {
+	private double descuento;
+	private String message;
 
+	public DescuentoEdad() {
+		this.descuento = 0.2;
+		this.message = "DESCUENTO JOVEN - 20%";
+	}
+	
 	@Override
 	public double aplicarDescuento(double precio) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return precio * (1- descuento);
 	}
 
 	@Override
 	public boolean isApplicable(Usuario usuario) {
-		// TODO Auto-generated method stub
-		return false;
+		return usuario.isJoven();
 	}
 
 	@Override
 	public double getDescuento() {
-		// TODO Auto-generated method stub
-		return 0;
+		return descuento;
 	}
 
 	@Override
-	public String getMessage() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getMensaje() {
+		return message;
 	}
 
 }

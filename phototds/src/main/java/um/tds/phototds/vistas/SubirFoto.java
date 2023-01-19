@@ -31,6 +31,8 @@ public class SubirFoto {
 	/**
 	 * Create the application.
 	 */
+	// Si true -> VentanaPrincipal
+	// Si false -> VentanaPerfil
 	public SubirFoto(String path) {
 		controlador = Controlador.getUnicaInstancia();
 		initialize(path);
@@ -46,6 +48,7 @@ public class SubirFoto {
 	private void initialize(String path) {
 		frameAddFoto = new JFrame();
 		frameAddFoto.setBounds(100, 100, 746, 444);
+		frameAddFoto.setUndecorated(true);
 		frameAddFoto.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panelBotones = new JPanel();

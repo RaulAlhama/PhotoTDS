@@ -294,7 +294,7 @@ public class Registro {
 						try {
 							Controlador.getUnicaInstancia().registrarUsuario(textNombre.getText(), textEmail.getText(),
 									textUsuario.getText(), String.valueOf(passwordClave.getPassword()),
-									textFecha.getDate().toString(), imagenPath, areaPresentacion.getText());
+									textFecha.getDate(), imagenPath, areaPresentacion.getText());
 							JOptionPane.showMessageDialog(frameRegistro, "Se ha registrado correctamente",
 									"Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
 							Login ventanaLogin = new Login();
@@ -317,8 +317,8 @@ public class Registro {
 					if (passwordClave.getPassword().length == 0) { //Comprobación contraseñas
 						Controlador.getUnicaInstancia().actualizarUsuario(usuarioActual);
 						System.out.println(usuarioActual.getPresentacion());
-						VentanaPerfil ventanaPerfil = new VentanaPerfil();
-						ventanaPerfil.mostrarVentana();
+						VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
+						ventanaPrincipal.mostrarVentana();
 						frameRegistro.dispose();
 					} else {
 						if (passwordClaveChk.getPassword().length != 0) {
@@ -330,8 +330,8 @@ public class Registro {
 							} else {
 								usuarioActual.setClave(String.valueOf(passwordClave.getPassword()));
 								Controlador.getUnicaInstancia().actualizarUsuario(usuarioActual);
-								VentanaPerfil ventanaPerfil = new VentanaPerfil();
-								ventanaPerfil.mostrarVentana();
+								VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
+								ventanaPrincipal.mostrarVentana();
 								frameRegistro.dispose();
 							}
 						} else {
@@ -354,8 +354,8 @@ public class Registro {
 				ventanaLogin.mostrarVentana();
 				frameRegistro.dispose();
 				} else {
-					VentanaPerfil ventanaPerfil = new VentanaPerfil();
-					ventanaPerfil.mostrarVentana();
+					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
+					ventanaPrincipal.mostrarVentana();
 					frameRegistro.dispose();
 				}
 			}

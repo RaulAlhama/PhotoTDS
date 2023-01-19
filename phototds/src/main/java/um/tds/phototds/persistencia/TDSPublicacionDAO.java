@@ -81,9 +81,13 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 		String comentarios = servPersistencia.recuperarPropiedadEntidad(ePubli, COMENTARIOS);
 		String fecha = servPersistencia.recuperarPropiedadEntidad(ePubli, FECHA);
 		String path = "hola";
-		Publicacion publicacion = new Photo(titulo, fecha, descripcion, meGustas, recuperarHashtags(hashtags),
-				recuperarComentarios(comentarios), path);
+		Publicacion publicacion = new Photo(titulo, fecha, descripcion, recuperarHashtags(hashtags), path);
 		
+		if(comentarios.equals(""))
+			publicacion.setComentarios(new ArrayList<Comentario>());
+		else publicacion.setComentarios(recuperarComentarios(comentarios));
+		
+		publicacion.setMeGustas(meGustas);
 		return publicacion;
 	}
 
@@ -129,8 +133,8 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 	@Override
 	public void update(Publicacion publicacion) {
 		Entidad ePubli = servPersistencia.recuperarEntidad(publicacion.getId());
-		
-		for(Propiedad prop : ePubli.getPropiedades()) {
+
+		for (Propiedad prop : ePubli.getPropiedades()) {
 			if (prop.getNombre().equals(TITULO)) {
 				prop.setValor(publicacion.getTitulo());
 			} else if (prop.getNombre().equals(DESCRIPCION)) {
@@ -158,7 +162,7 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 	public List<Publicacion> getAll() {
 		List<Entidad> entidades = servPersistencia.recuperarEntidades(PUBLICACION);
 		List<Publicacion> publicaciones = new ArrayList<Publicacion>();
-		for(Entidad ePubli : entidades) {
+		for (Entidad ePubli : entidades) {
 			publicaciones.add(entidadToPublicacion(ePubli));
 		}
 		return publicaciones;

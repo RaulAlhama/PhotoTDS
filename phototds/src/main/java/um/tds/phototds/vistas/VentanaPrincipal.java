@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,13 +22,12 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import um.tds.phototds.controlador.Controlador;
 import um.tds.phototds.dominio.Photo;
-import um.tds.phototds.dominio.Usuario;
-
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -41,21 +41,22 @@ public class VentanaPrincipal {
 	private JTextField txtBuscador;
 	private Controlador controlador;
 	private JFrame opciones;
-	private Usuario usuarioActual;
 	private String fotosFile;
-	
+
 	// private String userName;
 	private static final Color DEFAULT_BACKGROUND = new Color(102, 10, 45);
-	private JPanel panelCentral;
+	private JPanel panelCentralVentPrin;
 	private JPanel panelCentro;
 	private JScrollPane scrollFotos;
+	private JPanel panelNorte;
+	private JPanel panelCentralPerfil;
+	private JPanel panelSurPerfil;
 
 	/**
 	 * Create the application.
 	 */
 	public VentanaPrincipal() {
 		controlador = Controlador.getUnicaInstancia();
-		usuarioActual = controlador.getUsuarioActual();
 		// this.userName = controlador.getUsuarioActual().getUsername();
 		initialize();
 	}
@@ -73,7 +74,8 @@ public class VentanaPrincipal {
 		framePrincipal.setBounds(100, 100, 668, 458);
 		framePrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JPanel panelNorte = new JPanel();
+		// Estático
+		panelNorte = new JPanel();
 		framePrincipal.getContentPane().add(panelNorte, BorderLayout.NORTH);
 		GridBagLayout gbl_panelNorte = new GridBagLayout();
 		gbl_panelNorte.columnWidths = new int[] { 0, 0, 50, 0, 0, 0, 0, 0, 0, 30, 50, 0, 0, 0, 0 };
@@ -103,12 +105,12 @@ public class VentanaPrincipal {
 					framePrincipal.dispose();
 					frameSubir.mostrarVentana();
 
-					
-					//usuarioActual.setImagenPath(fichero.getAbsolutePath());
+					// usuarioActual.setImagenPath(fichero.getAbsolutePath());
 				}
 			}
 		});
 
+		// Estático
 		Luz luz = new Luz();
 		luz.addEncendidoListener(new IEncendidoListener() {
 			public void enteradoCambioEncendido(EventObject arg0) {
@@ -117,7 +119,7 @@ public class VentanaPrincipal {
 					JFileChooser choser = new JFileChooser();
 					choser.setFileFilter(new FileNameExtensionFilter("XML", "xml"));
 					int eleccion = choser.showOpenDialog(framePrincipal);
-					if(eleccion == JFileChooser.APPROVE_OPTION) {
+					if (eleccion == JFileChooser.APPROVE_OPTION) {
 						File fichero = choser.getSelectedFile();
 						fotosFile = fichero.getAbsolutePath();
 						controlador.setFotosFile(fotosFile);
@@ -131,6 +133,17 @@ public class VentanaPrincipal {
 		gbc_luz.gridy = 1;
 		luz.setColor(Color.YELLOW);
 		panelNorte.add(luz, gbc_luz);
+
+		JButton buttonAlbum = new JButton("A+");
+		buttonAlbum.setForeground(Color.WHITE);
+		buttonAlbum.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		buttonAlbum.setBackground(new Color(102, 10, 45));
+		GridBagConstraints gbc_buttonAlbum = new GridBagConstraints();
+		gbc_buttonAlbum.insets = new Insets(0, 0, 0, 5);
+		gbc_buttonAlbum.gridx = 3;
+		gbc_buttonAlbum.gridy = 1;
+		panelNorte.add(buttonAlbum, gbc_buttonAlbum);
+		buttonAlbum.setVisible(false);
 
 		btnAddFoto.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnAddFoto.setBackground(DEFAULT_BACKGROUND);
@@ -165,12 +178,41 @@ public class VentanaPrincipal {
 		gbc_btnBuscar.gridy = 1;
 		panelNorte.add(btnBuscar, gbc_btnBuscar);
 
+		JButton buttonVolver = new JButton("<-");
+		buttonVolver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonVolver.setVisible(false);
+				framePrincipal.getContentPane().remove(panelCentralPerfil);
+				framePrincipal.getContentPane().add(scrollFotos);
+				panelSurPerfil.setVisible(false);
+				lblPhototds.setVisible(true);
+				buttonAlbum.setVisible(false);
+			}
+		});
+		buttonVolver.setForeground(Color.WHITE);
+		buttonVolver.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		buttonVolver.setBackground(new Color(102, 10, 45));
+		GridBagConstraints gbc_button = new GridBagConstraints();
+		gbc_button.insets = new Insets(0, 0, 0, 5);
+		gbc_button.gridx = 1;
+		gbc_button.gridy = 1;
+		panelNorte.add(buttonVolver, gbc_button);
+		buttonVolver.setVisible(false);
+
 		JButton btnUsuario = new JButton("");
 		btnUsuario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				VentanaPerfil ventanaPerfil = new VentanaPerfil();
-				ventanaPerfil.mostrarVentana();
-				framePrincipal.dispose();
+				framePrincipal.getContentPane().remove(scrollFotos);
+				framePrincipal.getContentPane().add(panelCentralPerfil);
+				panelSurPerfil.setVisible(true);
+				lblPhototds.setVisible(false);
+				buttonVolver.setVisible(true);
+				buttonAlbum.setVisible(true);
+
+				/*
+				 * VentanaPerfil ventanaPerfil = new VentanaPerfil();
+				 * ventanaPerfil.mostrarVentana(); framePrincipal.dispose();
+				 */
 			}
 		});
 		btnUsuario.setBackground(DEFAULT_BACKGROUND);
@@ -194,19 +236,38 @@ public class VentanaPrincipal {
 				JPanel panel = new JPanel();
 				opciones.getContentPane().add(panel, BorderLayout.CENTER);
 				panel.setLayout(new GridLayout(0, 1, 0, 0));
-			
+
 				JButton btnGenerarPDF = new JButton("GenerarPDF");
 				btnGenerarPDF.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						opciones.dispose();
+						JOptionPane.showMessageDialog(framePrincipal, "FUNCION SIN IMPLEMENTAR", "¡AVISO!",
+								JOptionPane.INFORMATION_MESSAGE);
+						framePrincipal.enable();
 					}
 				});
 				panel.add(btnGenerarPDF);
 
 				JButton btnFotosConMas = new JButton("Fotos con mas MG");
+				btnFotosConMas.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						opciones.dispose();
+						JOptionPane.showMessageDialog(framePrincipal, "FUNCION SIN IMPLEMENTAR", "¡AVISO!",
+								JOptionPane.INFORMATION_MESSAGE);
+						framePrincipal.enable();
+					}
+				});
 				panel.add(btnFotosConMas);
 
 				JButton btnGenerarexcel = new JButton("GenerarExcel");
+				btnGenerarexcel.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						opciones.dispose();
+						JOptionPane.showMessageDialog(framePrincipal, "FUNCION SIN IMPLEMENTAR", "¡AVISO!",
+								JOptionPane.INFORMATION_MESSAGE);
+						framePrincipal.enable();
+					}
+				});
 				panel.add(btnGenerarexcel);
 
 				JButton btnPremium = new JButton("Premium");
@@ -223,16 +284,16 @@ public class VentanaPrincipal {
 							btnGenerarPDF.setEnabled(true);
 							btnFotosConMas.setEnabled(true);
 							opciones.dispose();
-							framePrincipal.enable();
-							JOptionPane.showMessageDialog(framePrincipal, "Ahora eres usuario PREMIUM", "¡Nuevas Funciones!",
-									JOptionPane.INFORMATION_MESSAGE);
-							
+							JOptionPane.showMessageDialog(framePrincipal, "Ahora eres usuario PREMIUM",
+									"¡Nuevas Funciones!", JOptionPane.INFORMATION_MESSAGE);
+
 						} else {
+							opciones.dispose();
 							JOptionPane.showMessageDialog(framePrincipal, "Ya eres usuario premium!", "Premium",
 									JOptionPane.INFORMATION_MESSAGE);
-							opciones.dispose();
-							framePrincipal.enable();
+
 						}
+						framePrincipal.enable();
 					}
 				});
 				panel.add(btnPremium);
@@ -267,24 +328,24 @@ public class VentanaPrincipal {
 		gbc_btnMenu.gridx = 12;
 		gbc_btnMenu.gridy = 1;
 		panelNorte.add(btnMenu, gbc_btnMenu);
-		
-		panelCentral = new JPanel();
+
+		panelCentralVentPrin = new JPanel();
 		BorderLayout bl_panelCentral = new BorderLayout();
 		bl_panelCentral.setVgap(10);
-		panelCentral.setLayout(bl_panelCentral);
-		// framePrincipal.getContentPane().add(panelCentral, BorderLayout.CENTER);
+		panelCentralVentPrin.setLayout(bl_panelCentral);
+		// framePrincipal.getContentPane().add(panelCentralVentPrin,
+		// BorderLayout.CENTER);
 
-		scrollFotos = new JScrollPane(panelCentral);
-		panelCentral.setAutoscrolls(true);
+		scrollFotos = new JScrollPane(panelCentralVentPrin);
+		panelCentralVentPrin.setAutoscrolls(true);
 
 		panelCentro = new JPanel();
 		panelCentro.setBackground(Color.LIGHT_GRAY);
-		panelCentral.add(panelCentro, BorderLayout.CENTER);
+		panelCentralVentPrin.add(panelCentro, BorderLayout.CENTER);
 		panelCentro.setLayout(new GridLayout(0, 1, 0, 10));
-		
-		System.out.println(!usuarioActual.getFotos().isEmpty());
-		if (!usuarioActual.getFotos().isEmpty()) {
-			for(Photo foto : usuarioActual.getFotos()) {
+
+		if (!controlador.obtenerFotos().isEmpty()) {
+			for (Photo foto : controlador.obtenerFotos()) {
 				JPanel panelFoto = new JPanel();
 				panelCentro.add(panelFoto);
 				GridBagLayout gbl_panelFoto1 = new GridBagLayout();
@@ -293,8 +354,10 @@ public class VentanaPrincipal {
 				gbl_panelFoto1.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 				gbl_panelFoto1.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 				panelFoto.setLayout(gbl_panelFoto1);
-				JLabel imagen = new JLabel("");
-				imagen.setIcon(new ImageIcon(foto.getPath()));
+
+				Image imgPanel = new ImageIcon(foto.getPath()).getImage();
+				JLabel lblimagen = new JLabel("");
+				lblimagen.setIcon(new ImageIcon(imgPanel.getScaledInstance(240, 160, Image.SCALE_SMOOTH)));
 				GridBagConstraints gbc_foto = new GridBagConstraints();
 				gbc_foto.fill = GridBagConstraints.HORIZONTAL;
 				gbc_foto.gridheight = 2;
@@ -302,29 +365,30 @@ public class VentanaPrincipal {
 				gbc_foto.insets = new Insets(0, 0, 5, 5);
 				gbc_foto.gridx = 0;
 				gbc_foto.gridy = 1;
-				panelFoto.add(imagen, gbc_foto);
+				panelFoto.add(lblimagen, gbc_foto);
 
-				JButton button = new JButton("");
-				button.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/Corazon.png")));
-				button.setBackground(Color.WHITE);
-				GridBagConstraints gbc_button = new GridBagConstraints();
-				gbc_button.insets = new Insets(0, 0, 5, 5);
-				gbc_button.gridx = 1;
-				gbc_button.gridy = 1;
-				panelFoto.add(button, gbc_button);
+				JButton buttonCorazon = new JButton("");
+				buttonCorazon.setIcon(
+						new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/Corazon.png")));
+				buttonCorazon.setBackground(Color.WHITE);
+				GridBagConstraints gbc_buttonCorazon = new GridBagConstraints();
+				gbc_buttonCorazon.insets = new Insets(0, 0, 5, 5);
+				gbc_buttonCorazon.gridx = 1;
+				gbc_buttonCorazon.gridy = 1;
+				panelFoto.add(buttonCorazon, gbc_buttonCorazon);
 
-				JButton btnNewButton_1 = new JButton("");
-				btnNewButton_1.setBackground(Color.WHITE);
-				btnNewButton_1
-						.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/Comentario.png")));
-				GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
-				gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 5);
-				gbc_btnNewButton_1.anchor = GridBagConstraints.WEST;
-				gbc_btnNewButton_1.gridx = 2;
-				gbc_btnNewButton_1.gridy = 1;
-				panelFoto.add(btnNewButton_1, gbc_btnNewButton_1);
+				JButton buttonComentarios = new JButton("");
+				buttonComentarios.setBackground(Color.WHITE);
+				buttonComentarios.setIcon(
+						new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/Comentario.png")));
+				GridBagConstraints gbc_buttonComentarios = new GridBagConstraints();
+				gbc_buttonComentarios.insets = new Insets(0, 0, 5, 5);
+				gbc_buttonComentarios.anchor = GridBagConstraints.WEST;
+				gbc_buttonComentarios.gridx = 2;
+				gbc_buttonComentarios.gridy = 1;
+				panelFoto.add(buttonComentarios, gbc_buttonComentarios);
 
-				JLabel lblMeGusta = new JLabel("26 Me gusta");
+				JLabel lblMeGusta = new JLabel(Integer.toString(foto.getMeGusta()) + " Me Gustas");
 				GridBagConstraints gbc_lblMeGusta = new GridBagConstraints();
 				gbc_lblMeGusta.insets = new Insets(0, 0, 5, 0);
 				gbc_lblMeGusta.gridx = 3;
@@ -332,14 +396,14 @@ public class VentanaPrincipal {
 				panelFoto.add(lblMeGusta, gbc_lblMeGusta);
 
 				JLabel label = new JLabel("");
-				label.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/perfil.png")));
+				label.setIcon(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
 				GridBagConstraints gbc_label = new GridBagConstraints();
 				gbc_label.insets = new Insets(0, 0, 5, 5);
 				gbc_label.gridx = 1;
 				gbc_label.gridy = 2;
 				panelFoto.add(label, gbc_label);
 
-				JLabel lblRaulgarcia = new JLabel("raul.garcia");
+				JLabel lblRaulgarcia = new JLabel(Controlador.getUnicaInstancia().getUsuarioActual().getUsername());
 				GridBagConstraints gbc_lblRaulgarcia = new GridBagConstraints();
 				gbc_lblRaulgarcia.insets = new Insets(0, 0, 5, 5);
 				gbc_lblRaulgarcia.gridx = 2;
@@ -348,119 +412,156 @@ public class VentanaPrincipal {
 			}
 		}
 
-		/*JPanel panelFoto1 = new JPanel();
-		panelCentro.add(panelFoto1);
-		GridBagLayout gbl_panelFoto1 = new GridBagLayout();
-		gbl_panelFoto1.columnWidths = new int[] { 192, 97, 97, 0, 0 };
-		gbl_panelFoto1.rowHeights = new int[] { 20, 40, 0, 0, 0 };
-		gbl_panelFoto1.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		gbl_panelFoto1.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		panelFoto1.setLayout(gbl_panelFoto1);
+		framePrincipal.getContentPane().add(scrollFotos, BorderLayout.CENTER);
 
-		JLabel foto = new JLabel("");
-		foto.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/paisajeTDS.png")));
-		GridBagConstraints gbc_foto = new GridBagConstraints();
-		gbc_foto.fill = GridBagConstraints.HORIZONTAL;
-		gbc_foto.gridheight = 2;
-		gbc_foto.anchor = GridBagConstraints.NORTH;
-		gbc_foto.insets = new Insets(0, 0, 5, 5);
-		gbc_foto.gridx = 0;
-		gbc_foto.gridy = 1;
-		panelFoto1.add(foto, gbc_foto);
+		// PANELES PERFIL
+		panelCentralPerfil = new JPanel();
+		// framePrincipal.getContentPane().add(panelCentralPerfil, BorderLayout.CENTER);
+		GridBagLayout gbl_panelCentro = new GridBagLayout();
+		gbl_panelCentro.columnWidths = new int[] { 20, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_panelCentro.rowHeights = new int[] { 40, 0, 0, 0, 0 };
+		gbl_panelCentro.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+				Double.MIN_VALUE };
+		gbl_panelCentro.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		panelCentralPerfil.setLayout(gbl_panelCentro);
 
-		JButton button = new JButton("");
-		button.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/Corazon.png")));
-		button.setBackground(Color.WHITE);
-		GridBagConstraints gbc_button = new GridBagConstraints();
-		gbc_button.insets = new Insets(0, 0, 5, 5);
-		gbc_button.gridx = 1;
-		gbc_button.gridy = 1;
-		panelFoto1.add(button, gbc_button);
-
-		JButton btnNewButton_1 = new JButton("");
-		btnNewButton_1.setBackground(Color.WHITE);
-		btnNewButton_1
-				.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/Comentario.png")));
-		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
-		gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton_1.anchor = GridBagConstraints.WEST;
-		gbc_btnNewButton_1.gridx = 2;
-		gbc_btnNewButton_1.gridy = 1;
-		panelFoto1.add(btnNewButton_1, gbc_btnNewButton_1);
-
-		JLabel lblMeGusta = new JLabel("26 Me gusta");
-		GridBagConstraints gbc_lblMeGusta = new GridBagConstraints();
-		gbc_lblMeGusta.insets = new Insets(0, 0, 5, 0);
-		gbc_lblMeGusta.gridx = 3;
-		gbc_lblMeGusta.gridy = 1;
-		panelFoto1.add(lblMeGusta, gbc_lblMeGusta);
-
+		// Image img = new
+		// ImageIcon(controlador.getUsuarioActual().getImagenPath()).getImage();
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/perfil.png")));
+		label.setIcon(new ImageIcon(img.getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
 		GridBagConstraints gbc_label = new GridBagConstraints();
+		gbc_label.gridheight = 3;
+		gbc_label.gridwidth = 2;
 		gbc_label.insets = new Insets(0, 0, 5, 5);
 		gbc_label.gridx = 1;
-		gbc_label.gridy = 2;
-		panelFoto1.add(label, gbc_label);
+		gbc_label.gridy = 1;
+		panelCentralPerfil.add(label, gbc_label);
 
-		JLabel lblRaulgarcia = new JLabel("raul.garcia");
-		GridBagConstraints gbc_lblRaulgarcia = new GridBagConstraints();
-		gbc_lblRaulgarcia.insets = new Insets(0, 0, 5, 5);
-		gbc_lblRaulgarcia.gridx = 2;
-		gbc_lblRaulgarcia.gridy = 2;
-		panelFoto1.add(lblRaulgarcia, gbc_lblRaulgarcia);
+		JLabel lblNewLabel = new JLabel(controlador.getUsuarioActual().getNombre());
+		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel.gridx = 5;
+		gbc_lblNewLabel.gridy = 1;
+		panelCentralPerfil.add(lblNewLabel, gbc_lblNewLabel);
 
-		JPanel panelFoto2 = new JPanel();
-		panelCentro.add(panelFoto2);
-		GridBagLayout gbl_panelFoto2 = new GridBagLayout();
-		gbl_panelFoto2.columnWidths = new int[] { 192, 97, 97, 0, 0 };
-		gbl_panelFoto2.rowHeights = new int[] { 20, 16, 0, 0, 0 };
-		gbl_panelFoto2.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		gbl_panelFoto2.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		panelFoto2.setLayout(gbl_panelFoto2);
+		JButton btnNewButton = new JButton("Editar Perfil");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Registro ventanaRegistro = new Registro(true);
+				ventanaRegistro.mostrarVentana();
+				framePrincipal.dispose();
+			}
+		});
+		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton.gridx = 7;
+		gbc_btnNewButton.gridy = 1;
+		panelCentralPerfil.add(btnNewButton, gbc_btnNewButton);
 
-		JLabel lblFoto2 = new JLabel("");
-		lblFoto2.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/paisajeTDS.png")));
-		GridBagConstraints gbc_lblFoto2 = new GridBagConstraints();
-		gbc_lblFoto2.gridheight = 2;
-		gbc_lblFoto2.insets = new Insets(0, 0, 5, 5);
-		gbc_lblFoto2.anchor = GridBagConstraints.NORTHWEST;
-		gbc_lblFoto2.gridx = 0;
-		gbc_lblFoto2.gridy = 1;
-		panelFoto2.add(lblFoto2, gbc_lblFoto2);
+		JLabel lblNewLabel_1 = new JLabel(Integer.toString(controlador.obtenerNumeroPubls()) + " publicaciones");
+		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
+		gbc_lblNewLabel_1.insets = new Insets(0, 0, 0, 5);
+		gbc_lblNewLabel_1.gridx = 5;
+		gbc_lblNewLabel_1.gridy = 3;
+		panelCentralPerfil.add(lblNewLabel_1, gbc_lblNewLabel_1);
 
-		JButton button_1 = new JButton("");
-		button_1.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/Corazon.png")));
-		button_1.setBackground(Color.WHITE);
-		GridBagConstraints gbc_button_1 = new GridBagConstraints();
-		gbc_button_1.insets = new Insets(0, 0, 5, 5);
-		gbc_button_1.gridx = 1;
-		gbc_button_1.gridy = 1;
-		panelFoto2.add(button_1, gbc_button_1);
+		JLabel lblNewLabel_2 = new JLabel("0 seguidores");
+		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
+		gbc_lblNewLabel_2.insets = new Insets(0, 0, 0, 5);
+		gbc_lblNewLabel_2.gridx = 7;
+		gbc_lblNewLabel_2.gridy = 3;
+		panelCentralPerfil.add(lblNewLabel_2, gbc_lblNewLabel_2);
 
-		JButton button_2 = new JButton("");
-		button_2.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/Comentario.png")));
-		button_2.setBackground(Color.WHITE);
-		GridBagConstraints gbc_button_2 = new GridBagConstraints();
-		gbc_button_2.anchor = GridBagConstraints.NORTHWEST;
-		gbc_button_2.insets = new Insets(0, 0, 5, 5);
-		gbc_button_2.gridx = 2;
-		gbc_button_2.gridy = 1;
-		panelFoto2.add(button_2, gbc_button_2);
+		JLabel lblNewLabel_3 = new JLabel("0 seguidos");
+		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
+		gbc_lblNewLabel_3.gridx = 9;
+		gbc_lblNewLabel_3.gridy = 3;
+		panelCentralPerfil.add(lblNewLabel_3, gbc_lblNewLabel_3);
 
-		JLabel lblMeGusta_1 = new JLabel("14 Me gusta");
-		GridBagConstraints gbc_lblMeGusta_1 = new GridBagConstraints();
-		gbc_lblMeGusta_1.insets = new Insets(0, 0, 5, 0);
-		gbc_lblMeGusta_1.gridx = 3;
-		gbc_lblMeGusta_1.gridy = 1;
-		panelFoto2.add(lblMeGusta_1, gbc_lblMeGusta_1);
+		panelSurPerfil = new JPanel();
+		panelSurPerfil.setPreferredSize(new Dimension(300, 200));
+		framePrincipal.getContentPane().add(panelSurPerfil, BorderLayout.SOUTH);
+		panelSurPerfil.setLayout(new BorderLayout(0, 0));
 
-		JPanel panelFoto3 = new JPanel();
-		panelCentro.add(panelFoto3);
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		panelSurPerfil.add(tabbedPane, BorderLayout.CENTER);
+		panelSurPerfil.setVisible(false);
 
-		JPanel panelFoto4 = new JPanel();
-		panelCentro.add(panelFoto4);*/
-		framePrincipal.getContentPane().add(scrollFotos, BorderLayout.CENTER);
+		JPanel PanelFotos = new JPanel();
+		tabbedPane.addTab("FOTOS", null, PanelFotos, null);
+		PanelFotos.setLayout(new BorderLayout(0, 0));
+
+		JPanel panelScroll = new JPanel();
+		panelScroll.setLayout(new BorderLayout());
+		PanelFotos.add(panelScroll, BorderLayout.CENTER);
+
+		JScrollPane scrollPane = new JScrollPane(panelScroll);
+		PanelFotos.add(scrollPane);
+
+		JPanel panelCentro2 = new JPanel();
+		panelCentro2.setBackground(Color.LIGHT_GRAY);
+		panelScroll.add(panelCentro2, BorderLayout.CENTER);
+		GridBagLayout gbl_panelCentro2 = new GridBagLayout();
+		gbl_panelCentro2.columnWidths = new int[] { 200, 200, 200, 0 };
+		gbl_panelCentro2.rowHeights = new int[] { 168, 0, 0, 0 };
+		gbl_panelCentro2.columnWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panelCentro2.rowWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		panelCentro2.setLayout(gbl_panelCentro2);
+
+		if (!controlador.obtenerFotos().isEmpty()) {
+			int i = 0; //Columna
+			int j = 0; //fila
+			for (Photo foto : controlador.obtenerFotos()) {
+				if(i != 0 && i%3 == 0) {
+					i=0;
+					j+=1;
+				}
+				Image imgPanel = new ImageIcon(foto.getPath()).getImage();
+				
+
+				JLabel lblHola = new JLabel();
+				lblHola.setIcon(new ImageIcon(imgPanel.getScaledInstance(210, 160, Image.SCALE_SMOOTH)));
+				GridBagConstraints gbc_lblHola = new GridBagConstraints();
+				gbc_lblHola.anchor = GridBagConstraints.WEST;
+				gbc_lblHola.insets = new Insets(0, 0, 5, 5);
+				gbc_lblHola.gridx = i;
+				gbc_lblHola.gridy = j;
+				panelCentro2.add(lblHola, gbc_lblHola);
+				i++;
+			}
+		}
+
+		JPanel PanelAlbumes = new JPanel();
+		tabbedPane.addTab("ÁLBUMES", null, PanelAlbumes, null);
+
+		/*
+		 * JScrollPane panel_1 = new JScrollPane(); panel_1.setBackground(Color.WHITE);
+		 * PanelAlbumes.add(panel_1, BorderLayout.CENTER); JList<Photo> matrizFotos =
+		 * new JList<Photo>(); DefaultListModel<Photo> fotoslistModel = new
+		 * DefaultListModel<Photo>(); matrizFotos.setModel(fotoslistModel);
+		 * controlador.obtenerFotos().forEach(f -> fotoslistModel.addElement(f));
+		 * matrizFotos.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		 * matrizFotos.setVisibleRowCount(-1);
+		 * //listafotos.ensureIndexIsVisible(getHeight());
+		 * matrizFotos.setCellRenderer(createListRenderer());
+		 * panel_1.setViewportView(matrizFotos);}
+		 * 
+		 * private static ListCellRenderer<? super Photo> createListRenderer() { return
+		 * new DefaultListCellRenderer() {
+		 * 
+		 * private static final long serialVersionUID = 1L; private Color background =
+		 * new Color(0, 100, 255, 15); private Color defaultBackground = (Color)
+		 * UIManager.get("List.background");
+		 * 
+		 * @Override public Component getListCellRendererComponent(JList<?> list, Object
+		 * value, int index, boolean isSelected, boolean cellHasFocus) { Component c =
+		 * super.getListCellRendererComponent(list, value, index, isSelected,
+		 * cellHasFocus); if (c instanceof JLabel) { JLabel label = (JLabel) c;
+		 * label.setIcon(new ImageIcon(VentanaPrincipal.class.getResource(
+		 * "/um/tds/phototds/imagenes/lupa.png"))); if (!isSelected)
+		 * label.setBackground(index % 2 == 0 ? background : defaultBackground); }
+		 * return c; } };
+		 */
 
 	}
 
