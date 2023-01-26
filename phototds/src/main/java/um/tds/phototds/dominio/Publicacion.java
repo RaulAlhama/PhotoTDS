@@ -5,25 +5,20 @@ import java.util.List;
 
 public abstract class Publicacion {
 	private int id;
-	private String titulo;
 	private String fecha;
 	private String descripcion;
 	private int meGusta;
 	private List<String> hashtags;
 	private List<Comentario> comentarios;
+	public static final int IDERROR = -1;
 	
-	public Publicacion(String titulo, String fecha, String descripcion, List<String> hashtags) {
-		this.titulo = titulo;
+	public Publicacion(String fecha, String descripcion, List<String> hashtags) {
 		this.fecha = fecha;
 		this.descripcion = descripcion;
 		this.meGusta = 0;
 		this.hashtags = hashtags;
 		this.comentarios = new ArrayList<Comentario>();
-		this.id = 0;
-	}
-
-	public String getTitulo() {
-		return titulo;
+		this.id = IDERROR;
 	}
 
 	public String getFecha() {

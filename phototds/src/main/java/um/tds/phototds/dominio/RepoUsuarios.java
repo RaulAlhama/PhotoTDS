@@ -30,6 +30,7 @@ public class RepoUsuarios {
 			
 			List<Usuario> listaAsistentes = factoria.getUsuarioDAO().getAll();
 			for (Usuario usuario : listaAsistentes) {
+				//factoria.getUsuarioDAO().delete(usuario);
 				asistentesPorID.put(usuario.getId(), usuario);
 				asistentesPorLogin.put(usuario.getUsername(), usuario);
 			}

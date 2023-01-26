@@ -21,7 +21,6 @@ public class RepoPublicaciones {
 	private PublicacionDAO adaptadorPublicacion;
 	
 	private HashMap<Integer, Publicacion> publicacionesID;
-	private HashMap<String, Publicacion> publicacionesPorTitulo;
 	
 	public static RepoPublicaciones getUnicaInstancia() {
 		if(!(unicaInstancia == null)) unicaInstancia = new RepoPublicaciones();
@@ -33,7 +32,6 @@ public class RepoPublicaciones {
 			factoria = FactoriaDAO.getInstancia();
 			adaptadorPublicacion = factoria.getPublicacionDAO();
 			publicacionesID = new HashMap<Integer, Publicacion>();
-			publicacionesPorTitulo = new HashMap<String, Publicacion>();
 			this.cargarRepo();
 		} catch (DAOException e) {
 			e.printStackTrace();
@@ -42,18 +40,16 @@ public class RepoPublicaciones {
 	
 	public void addPublicacion(Publicacion publicacion) {
 		publicacionesID.put(publicacion.getId(), publicacion);
-		publicacionesPorTitulo.put(publicacion.getTitulo(), publicacion);
 	}
 	
 	public void removePublicacion (Publicacion publicacion) {
 		publicacionesID.remove(publicacion.getId());
-		publicacionesPorTitulo.remove(publicacion.getTitulo());
 	}
 	
-	public List<Publicacion> findPublicacion(String titulo) {
+	public List<Publicacion> findPublicacion(String hashtag) {
 		ArrayList<Publicacion> todasPub = (ArrayList<Publicacion>) factoria.getPublicacionDAO().getAll();
 		ArrayList<Publicacion> publiEncontradas = (ArrayList<Publicacion>) todasPub.stream()
-											.filter(pu -> pu.getTitulo().equals(titulo))
+											.filter(pu -> pu.getHashtags().equals(hashtag))
 											.collect(Collectors.toList());
 		return publiEncontradas;
 	
@@ -69,11 +65,10 @@ public class RepoPublicaciones {
 	public List<Publicacion> obtenerFotos(Fotos fotos){
 		ArrayList<Publicacion> pubs = new ArrayList<Publicacion>();
 		for(Foto foto : fotos.getFoto()) {
-			String titulo = foto.getTitulo();
 			String path = foto.getPath();
 			String descripcion = foto.getPath();
 			ArrayList<String> hastags = (ArrayList<String>) hashtagToString(foto.getHashTags());
-			Photo photo = new Photo(titulo, LocalDate.now().toString(), descripcion, hastags, path);
+			Photo photo = new Photo(LocalDate.now().toString(), descripcion, hastags, path);
 			pubs.add(photo);
 					
 		}

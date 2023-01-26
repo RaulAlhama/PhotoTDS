@@ -22,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JSpinnerDateEditor;
 
 import um.tds.phototds.controlador.Controlador;
 import um.tds.phototds.dominio.Usuario;
@@ -55,7 +56,7 @@ public class Registro {
 	 */
 	public Registro(boolean registrado) {
 		this.registrado = registrado;
-		if(registrado = true) usuarioActual = Controlador.getUnicaInstancia().getUsuarioActual();
+		if(registrado == true) usuarioActual = Controlador.getUnicaInstancia().getUsuarioActual();
 		initialize();
 		lblError.setVisible(false);
 		lblError.setForeground(Color.RED);
@@ -80,7 +81,10 @@ public class Registro {
 		frameRegistro = new JFrame();
 		frameRegistro.setBounds(100, 100, 647, 472);
 		frameRegistro.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		
+		areaPresentacion = new JTextArea();
+		areaPresentacion.setText("");
+		
 		JPanel panelDatos = new JPanel();
 		frameRegistro.getContentPane().add(panelDatos, BorderLayout.CENTER);
 		panelDatos.setLayout(new BoxLayout(panelDatos, BoxLayout.Y_AXIS));
@@ -174,6 +178,7 @@ public class Registro {
 		panelFechaNacimiento.add(lblFecha);
 
 		textFecha = new JDateChooser();
+		textFecha.setDateFormatString("dd/MM/yyyy");
 		panelFechaNacimiento.add(textFecha);
 
 		JPanel panelPresentacion = new JPanel();
@@ -190,8 +195,6 @@ public class Registro {
 				JFrame frame = new JFrame();
 				frame.setBounds(100, 100, 450, 300);
 				// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
-				areaPresentacion = new JTextArea();
-				areaPresentacion.setText("");
 				if(registrado) areaPresentacion.setText(usuarioActual.getPresentacion());
 				frame.getContentPane().add(areaPresentacion, BorderLayout.CENTER);
 				JPanel panelBotones = new JPanel();
@@ -291,7 +294,7 @@ public class Registro {
 						JOptionPane.showMessageDialog(frameRegistro, "Algunos campos obligatorios están vacíos",
 								"Error en el registro", JOptionPane.WARNING_MESSAGE);
 					} else {
-						try {
+						
 							Controlador.getUnicaInstancia().registrarUsuario(textNombre.getText(), textEmail.getText(),
 									textUsuario.getText(), String.valueOf(passwordClave.getPassword()),
 									textFecha.getDate(), imagenPath, areaPresentacion.getText());
@@ -300,10 +303,7 @@ public class Registro {
 							Login ventanaLogin = new Login();
 							ventanaLogin.mostrarVentana();
 							frameRegistro.dispose();
-						} catch (Exception e2) {
-							JOptionPane.showMessageDialog(frameRegistro, e2.getMessage(), "Error en el registro",
-									JOptionPane.WARNING_MESSAGE);
-						}
+						
 
 					}
 

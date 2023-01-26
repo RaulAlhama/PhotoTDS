@@ -4,8 +4,8 @@ import java.util.List;
 
 public class Album extends Publicacion {
 	private List<Photo> fotos;
-	public Album(String titulo, String fecha, String descripcion, List<String> hashtags, List<Photo> fotos) {
-		super(titulo, fecha, descripcion, hashtags);
+	public Album(String fecha, String descripcion, List<String> hashtags, List<Photo> fotos) {
+		super(fecha, descripcion, hashtags);
 		this.fotos = fotos;
 	}
 

@@ -1,13 +1,19 @@
 package um.tds.phototds.controlador;
 
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.EventObject;
 import java.util.List;
+import java.util.Optional;
 
 import um.tds.phototds.dominio.RepoPublicaciones;
 import um.tds.phototds.dominio.RepoUsuarios;
 import um.tds.phototds.dominio.Usuario;
+import um.tds.phototds.dominio.Descuento;
+import um.tds.phototds.dominio.DescuentoEdad;
+import um.tds.phototds.dominio.DescuentoPopularidad;
 import um.tds.phototds.dominio.Photo;
 import um.tds.phototds.persistencia.DAOException;
 import um.tds.phototds.persistencia.FactoriaDAO;
@@ -31,18 +37,21 @@ public class Controlador implements FotosListener{
 	
 	private RepoUsuarios repoUsuario;
 	private RepoPublicaciones repoPublicaciones;
+	private List<Descuento> descuentos;
 	
 	//patron Sigleton
 	private Controlador() {
 		usuarioActual = null;
-		cargadorFotos = new CargadorFotos();
-		cargadorFotos.addCancionesListener(this);
 		try {
 			factoria = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
 		} catch (DAOException e) {
 			// TODO: handle exception
 		}
+		cargadorFotos = new CargadorFotos();
+		cargadorFotos.addCancionesListener(this);
 		inicializarAdaptadores();
+		inicializarRepositorios();
+		inicializarDescuentos();
 	}
 	//patron Singleton
 	public static Controlador getUnicaInstancia() {
@@ -65,12 +74,12 @@ public class Controlador implements FotosListener{
 		return usuarioActual;
 	}
 
-	public boolean esUsuarioRegistrado(String login) {
+	/*public boolean esUsuarioRegistrado(String login) {
 		return RepoUsuarios.getUnicaInstancia().getUsuario(login) != null;
-	}
+	}*/
 
 	public boolean loginUsuario(String nombre, String password) {
-		Usuario usuario = RepoUsuarios.getUnicaInstancia().getUsuario(nombre);
+		Usuario usuario = repoUsuario.getUsuario(nombre);
 		if (usuario != null && usuario.getClave().equals(password)) {
 			this.usuarioActual = usuario;
 			return true;
@@ -81,8 +90,8 @@ public class Controlador implements FotosListener{
 	public boolean registrarUsuario(String nombre, String email, String login, String password,
 			Date fechaNacimiento,String imagenPath,String presentacion) {
 
-		if (esUsuarioRegistrado(login))
-			return false;
+		/*if (esUsuarioRegistrado(login))
+			return false;*/
 		Usuario usuario = new Usuario(nombre, email, login, password, fechaNacimiento,imagenPath,presentacion);
 		usuarioDAO.create(usuario);
 		repoUsuario.addUsuario(usuario);
@@ -90,7 +99,7 @@ public class Controlador implements FotosListener{
 	}
 
 	public boolean borrarUsuario(Usuario usuario) {
-		if (!esUsuarioRegistrado(usuario.getUsername()))return false;
+		/*if (!esUsuarioRegistrado(usuario.getUsername()))return false;*/
 		repoUsuario.removeUsuario(usuario);
 		usuarioDAO.delete(usuario);
 		return true;
@@ -128,4 +137,18 @@ public class Controlador implements FotosListener{
 	public List<Photo> obtenerFotos() {
 		return usuarioActual.getFotos();
 	}
+	
+	private void inicializarDescuentos() {
+		descuentos = new ArrayList<Descuento>();
+		descuentos.add(new DescuentoEdad());
+		descuentos.add(new DescuentoPopularidad());
+	}
+	
+	public Optional<Descuento> getDescuento(){
+		return descuentos.stream()
+				.filter(d -> d.isApplicable(usuarioActual))
+				.sorted(Comparator.comparing(Descuento::getDescuento).reversed())
+				.findFirst();
+	}
+	
 }

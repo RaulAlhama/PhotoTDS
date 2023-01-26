@@ -127,7 +127,7 @@ public class Usuario {
 	}
 	
 	public void addFoto(String texto,String path) {
-		Photo foto = new Photo("Foto1", LocalDate.now().toString(),texto, new ArrayList<String>(), path);
+		Photo foto = new Photo(LocalDate.now().toString(),texto, new ArrayList<String>(), path);
 		this.fotos.add(foto);
 	}
 	

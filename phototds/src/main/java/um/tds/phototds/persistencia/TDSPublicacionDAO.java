@@ -1,6 +1,5 @@
 package um.tds.phototds.persistencia;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,19 +16,17 @@ import um.tds.phototds.dominio.Publicacion;
 public class TDSPublicacionDAO implements PublicacionDAO {
 
 	private static final String PUBLICACION = "publicacion";
-	private static final String TITULO = "titulo";
 	private static final String DESCRIPCION = "descripcion";
 	private static final String MGUSTAS = "meGustas";
 	private static final String HASHTAGS = "hashtags";
 	private static final String COMENTARIOS = "comentarios";
 	private static final String FECHA = "fechaPublicacion";
+	private static final String PATH = "path";
 
 	private ServicioPersistencia servPersistencia;
-	private SimpleDateFormat dateFormat;
 
 	public TDSPublicacionDAO() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
-		dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	}
 
 	private Entidad publicacionToEntidad(Publicacion publicacion) {
@@ -37,12 +34,12 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 		ePubli.setNombre(PUBLICACION);
 		List<Propiedad> propiedades = new ArrayList<Propiedad>();
 
-		propiedades.add(new Propiedad(TITULO, publicacion.getTitulo()));
 		propiedades.add(new Propiedad(DESCRIPCION, publicacion.getDescripcion()));
 		propiedades.add(new Propiedad(MGUSTAS, String.valueOf(publicacion.getMeGusta())));
 		propiedades.add(new Propiedad(HASHTAGS, obtenerHashtags(publicacion.getHashtags())));
 		propiedades.add(new Propiedad(COMENTARIOS, obtenerComentarios(publicacion.getComentarios())));
 		propiedades.add(new Propiedad(FECHA, publicacion.getFecha().toString()));
+		propiedades.add(new Propiedad(PATH, ((Photo) publicacion).getPath()));
 
 		ePubli.setPropiedades(propiedades);
 
@@ -74,14 +71,13 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 
 	private Publicacion entidadToPublicacion(Entidad ePubli) {
 
-		String titulo = servPersistencia.recuperarPropiedadEntidad(ePubli, TITULO);
 		String descripcion = servPersistencia.recuperarPropiedadEntidad(ePubli, DESCRIPCION);
 		int meGustas = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(ePubli, MGUSTAS));
 		String hashtags = servPersistencia.recuperarPropiedadEntidad(ePubli, HASHTAGS);
 		String comentarios = servPersistencia.recuperarPropiedadEntidad(ePubli, COMENTARIOS);
 		String fecha = servPersistencia.recuperarPropiedadEntidad(ePubli, FECHA);
-		String path = "hola";
-		Publicacion publicacion = new Photo(titulo, fecha, descripcion, recuperarHashtags(hashtags), path);
+		String path = servPersistencia.recuperarPropiedadEntidad(ePubli, PATH);
+		Publicacion publicacion = new Photo(fecha, descripcion, recuperarHashtags(hashtags), path);
 		
 		if(comentarios.equals(""))
 			publicacion.setComentarios(new ArrayList<Comentario>());
@@ -135,16 +131,12 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 		Entidad ePubli = servPersistencia.recuperarEntidad(publicacion.getId());
 
 		for (Propiedad prop : ePubli.getPropiedades()) {
-			if (prop.getNombre().equals(TITULO)) {
-				prop.setValor(publicacion.getTitulo());
-			} else if (prop.getNombre().equals(DESCRIPCION)) {
+			 if (prop.getNombre().equals(DESCRIPCION)) {
 				prop.setValor(publicacion.getDescripcion());
 			} else if (prop.getNombre().equals(MGUSTAS)) {
 				prop.setValor(String.valueOf(publicacion.getMeGusta()));
 			} else if (prop.getNombre().equals(HASHTAGS)) {
 				prop.setValor(obtenerHashtags(publicacion.getHashtags()));
-			} else if (prop.getNombre().equals(FECHA)) {
-				prop.setValor(dateFormat.format(publicacion.getFecha()));
 			} else if (prop.getNombre().equals(COMENTARIOS)) {
 				prop.setValor(obtenerComentarios(publicacion.getComentarios()));
 			}

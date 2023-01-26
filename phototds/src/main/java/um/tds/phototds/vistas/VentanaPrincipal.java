@@ -286,6 +286,14 @@ public class VentanaPrincipal {
 							opciones.dispose();
 							JOptionPane.showMessageDialog(framePrincipal, "Ahora eres usuario PREMIUM",
 									"¡Nuevas Funciones!", JOptionPane.INFORMATION_MESSAGE);
+							if(controlador.getDescuento().isPresent()) {
+								String mensaje = controlador.getDescuento().get().getMensaje();
+								JOptionPane.showMessageDialog(framePrincipal, "Descuento aplicado: " + mensaje, "Premium",
+										JOptionPane.INFORMATION_MESSAGE);
+							} else {
+								JOptionPane.showMessageDialog(framePrincipal, "No se ha aplicado ningún Descuento.", "Premium",
+										JOptionPane.ERROR_MESSAGE);
+							}
 
 						} else {
 							opciones.dispose();
@@ -293,6 +301,7 @@ public class VentanaPrincipal {
 									JOptionPane.INFORMATION_MESSAGE);
 
 						}
+						
 						framePrincipal.enable();
 					}
 				});
@@ -308,6 +317,7 @@ public class VentanaPrincipal {
 				});
 				panel.add(btnCerrarSesin);
 				JButton btnCancelar = new JButton("Cancelar");
+				btnCancelar.setForeground(Color.RED);
 				btnCancelar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						opciones.dispose();
