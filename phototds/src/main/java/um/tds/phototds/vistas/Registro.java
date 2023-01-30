@@ -22,7 +22,6 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
 import com.toedter.calendar.JDateChooser;
-import com.toedter.calendar.JSpinnerDateEditor;
 
 import um.tds.phototds.controlador.Controlador;
 import um.tds.phototds.dominio.Usuario;
@@ -202,7 +201,13 @@ public class Registro {
 				JButton btnOk = new JButton("OK");
 				btnOk.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						if(areaPresentacion.getText().length() > 200) {
+							JOptionPane.showMessageDialog(frame, "La presentación debe contener como máximo 200 caracteres",
+									"Error en el registro", JOptionPane.WARNING_MESSAGE);
+						}
+						else {
 						frame.dispose();
+						}
 					}
 				});
 				panelBotones.add(btnOk);
@@ -312,7 +317,6 @@ public class Registro {
 					usuarioActual.setImagenPath(imagenPath);
 					if(!areaPresentacion.getText().equals(usuarioActual.getPresentacion())) {
 						usuarioActual.setPresentacion(areaPresentacion.getText());
-						System.out.println(usuarioActual.getPresentacion());
 					}
 					if (passwordClave.getPassword().length == 0) { //Comprobación contraseñas
 						Controlador.getUnicaInstancia().actualizarUsuario(usuarioActual);

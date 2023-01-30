@@ -115,7 +115,6 @@ public class VentanaPrincipal {
 		luz.addEncendidoListener(new IEncendidoListener() {
 			public void enteradoCambioEncendido(EventObject arg0) {
 				if (luz.isEncendido()) {
-					System.out.println("Encendido");
 					JFileChooser choser = new JFileChooser();
 					choser.setFileFilter(new FileNameExtensionFilter("XML", "xml"));
 					int eleccion = choser.showOpenDialog(framePrincipal);
@@ -286,13 +285,13 @@ public class VentanaPrincipal {
 							opciones.dispose();
 							JOptionPane.showMessageDialog(framePrincipal, "Ahora eres usuario PREMIUM",
 									"¡Nuevas Funciones!", JOptionPane.INFORMATION_MESSAGE);
-							if(controlador.getDescuento().isPresent()) {
+							if (controlador.getDescuento().isPresent()) {
 								String mensaje = controlador.getDescuento().get().getMensaje();
-								JOptionPane.showMessageDialog(framePrincipal, "Descuento aplicado: " + mensaje, "Premium",
-										JOptionPane.INFORMATION_MESSAGE);
+								JOptionPane.showMessageDialog(framePrincipal, "Descuento aplicado: " + mensaje,
+										"Premium", JOptionPane.INFORMATION_MESSAGE);
 							} else {
-								JOptionPane.showMessageDialog(framePrincipal, "No se ha aplicado ningún Descuento.", "Premium",
-										JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(framePrincipal, "No se ha aplicado ningún Descuento.",
+										"Premium", JOptionPane.ERROR_MESSAGE);
 							}
 
 						} else {
@@ -301,7 +300,7 @@ public class VentanaPrincipal {
 									JOptionPane.INFORMATION_MESSAGE);
 
 						}
-						
+
 						framePrincipal.enable();
 					}
 				});
@@ -385,6 +384,9 @@ public class VentanaPrincipal {
 				gbc_buttonCorazon.insets = new Insets(0, 0, 5, 5);
 				gbc_buttonCorazon.gridx = 1;
 				gbc_buttonCorazon.gridy = 1;
+
+			
+
 				panelFoto.add(buttonCorazon, gbc_buttonCorazon);
 
 				JButton buttonComentarios = new JButton("");
@@ -396,6 +398,15 @@ public class VentanaPrincipal {
 				gbc_buttonComentarios.anchor = GridBagConstraints.WEST;
 				gbc_buttonComentarios.gridx = 2;
 				gbc_buttonComentarios.gridy = 1;
+				
+				buttonComentarios.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						Comentar frameComentar = new Comentar(foto);
+						framePrincipal.dispose();
+						frameComentar.mostrarVentana();		
+					}
+				});
+				
 				panelFoto.add(buttonComentarios, gbc_buttonComentarios);
 
 				JLabel lblMeGusta = new JLabel(Integer.toString(foto.getMeGusta()) + " Me Gustas");
@@ -404,6 +415,20 @@ public class VentanaPrincipal {
 				gbc_lblMeGusta.gridx = 3;
 				gbc_lblMeGusta.gridy = 1;
 				panelFoto.add(lblMeGusta, gbc_lblMeGusta);
+				
+				buttonCorazon.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						controlador.addMeGusta(foto);
+						lblMeGusta.setText(foto.getMeGusta() + " Me Gustas");			
+					}
+				});
+				
+				JLabel lblComentarios = new JLabel(Integer.toString(foto.getComentarios().size()) + " Comentarios");
+				GridBagConstraints gbc_lblComentarios = new GridBagConstraints();
+				gbc_lblComentarios.insets = new Insets(0, 0, 5, 0);
+				gbc_lblComentarios.gridx = 4;
+				gbc_lblComentarios.gridy = 1;
+				panelFoto.add(lblComentarios, gbc_lblComentarios);
 
 				JLabel label = new JLabel("");
 				label.setIcon(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
@@ -519,15 +544,14 @@ public class VentanaPrincipal {
 		panelCentro2.setLayout(gbl_panelCentro2);
 
 		if (!controlador.obtenerFotos().isEmpty()) {
-			int i = 0; //Columna
-			int j = 0; //fila
+			int i = 0; // Columna
+			int j = 0; // fila
 			for (Photo foto : controlador.obtenerFotos()) {
-				if(i != 0 && i%3 == 0) {
-					i=0;
-					j+=1;
+				if (i != 0 && i % 3 == 0) {
+					i = 0;
+					j += 1;
 				}
 				Image imgPanel = new ImageIcon(foto.getPath()).getImage();
-				
 
 				JLabel lblHola = new JLabel();
 				lblHola.setIcon(new ImageIcon(imgPanel.getScaledInstance(210, 160, Image.SCALE_SMOOTH)));

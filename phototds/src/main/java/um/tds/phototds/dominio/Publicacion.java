@@ -47,8 +47,13 @@ public abstract class Publicacion {
 		
 	}
 	
+	public void setComentario(Comentario comentario) {
+		this.comentarios.add(comentario);
+	}
+	
 	public void setMeGustas(int mGustas) {
 		this.meGusta = mGustas;
+		
 	}
 	
 	public int getId() {

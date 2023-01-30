@@ -36,8 +36,8 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 
 		propiedades.add(new Propiedad(DESCRIPCION, publicacion.getDescripcion()));
 		propiedades.add(new Propiedad(MGUSTAS, String.valueOf(publicacion.getMeGusta())));
-		propiedades.add(new Propiedad(HASHTAGS, obtenerHashtags(publicacion.getHashtags())));
-		propiedades.add(new Propiedad(COMENTARIOS, obtenerComentarios(publicacion.getComentarios())));
+		propiedades.add(new Propiedad(HASHTAGS, guardarHashtags(publicacion.getHashtags())));
+		propiedades.add(new Propiedad(COMENTARIOS, guardarComentarios(publicacion.getComentarios())));
 		propiedades.add(new Propiedad(FECHA, publicacion.getFecha().toString()));
 		propiedades.add(new Propiedad(PATH, ((Photo) publicacion).getPath()));
 
@@ -47,7 +47,7 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 
 	}
 
-	private String obtenerHashtags(List<String> hashtags) {
+	private String guardarHashtags(List<String> hashtags) {
 		String lineas = "";
 		if (hashtags.isEmpty()) {
 			return lineas;
@@ -58,13 +58,13 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 		return lineas.substring(0, lineas.length() - 1);
 	}
 
-	private String obtenerComentarios(List<Comentario> comentarios) {
+	private String guardarComentarios(List<Comentario> comentarios) {
 		String lineas = "";
 		if (comentarios.isEmpty()) {
 			return lineas;
 		}
 		for (Comentario comentario : comentarios) {
-			lineas += comentario.getTexto() + " ";
+			lineas += comentario.getTexto() + "\t";
 		}
 		return lineas;
 	}
@@ -82,7 +82,8 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 		if(comentarios.equals(""))
 			publicacion.setComentarios(new ArrayList<Comentario>());
 		else publicacion.setComentarios(recuperarComentarios(comentarios));
-		
+		//Asignamos el identificador de la persistencia a la foto
+		publicacion.setId(ePubli.getId());
 		publicacion.setMeGustas(meGustas);
 		return publicacion;
 	}
@@ -104,7 +105,7 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 		List<Comentario> resultado = new ArrayList<Comentario>();
 		if (comentarios == null)
 			return resultado;
-		StringTokenizer strTok = new StringTokenizer(comentarios, " ");
+		StringTokenizer strTok = new StringTokenizer(comentarios, "\t");
 		while (strTok.hasMoreTokens()) {
 			Comentario c = new Comentario(strTok.nextToken());
 			resultado.add(c);
@@ -117,6 +118,7 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 		Entidad ePublicacion = this.publicacionToEntidad(publicacion);
 		ePublicacion = servPersistencia.registrarEntidad(ePublicacion);
 		publicacion.setId(ePublicacion.getId());
+		
 
 	}
 
@@ -129,16 +131,15 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 	@Override
 	public void update(Publicacion publicacion) {
 		Entidad ePubli = servPersistencia.recuperarEntidad(publicacion.getId());
-
 		for (Propiedad prop : ePubli.getPropiedades()) {
 			 if (prop.getNombre().equals(DESCRIPCION)) {
 				prop.setValor(publicacion.getDescripcion());
 			} else if (prop.getNombre().equals(MGUSTAS)) {
 				prop.setValor(String.valueOf(publicacion.getMeGusta()));
 			} else if (prop.getNombre().equals(HASHTAGS)) {
-				prop.setValor(obtenerHashtags(publicacion.getHashtags()));
+				prop.setValor(guardarHashtags(publicacion.getHashtags()));
 			} else if (prop.getNombre().equals(COMENTARIOS)) {
-				prop.setValor(obtenerComentarios(publicacion.getComentarios()));
+				prop.setValor(guardarComentarios(publicacion.getComentarios()));
 			}
 			servPersistencia.modificarPropiedad(prop);
 		}

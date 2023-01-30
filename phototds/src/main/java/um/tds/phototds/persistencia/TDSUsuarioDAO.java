@@ -49,7 +49,7 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		String imagenPath = servPersistencia.recuperarPropiedadEntidad(eUsuario, IMAGEN_PATH);
 		String presentacion = servPersistencia.recuperarPropiedadEntidad(eUsuario, PRESENTACION);
 		idsFotos = servPersistencia.recuperarPropiedadEntidad(eUsuario, FOTOS);
-		System.out.println(idsFotos);
+		//System.out.println(idsFotos);
 		if (idsFotos == null) {
 			fotos = new ArrayList<Photo>();
 		} else

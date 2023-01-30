@@ -11,6 +11,7 @@ import java.util.Optional;
 import um.tds.phototds.dominio.RepoPublicaciones;
 import um.tds.phototds.dominio.RepoUsuarios;
 import um.tds.phototds.dominio.Usuario;
+import um.tds.phototds.dominio.Comentario;
 import um.tds.phototds.dominio.Descuento;
 import um.tds.phototds.dominio.DescuentoEdad;
 import um.tds.phototds.dominio.DescuentoPopularidad;
@@ -149,6 +150,16 @@ public class Controlador implements FotosListener{
 				.filter(d -> d.isApplicable(usuarioActual))
 				.sorted(Comparator.comparing(Descuento::getDescuento).reversed())
 				.findFirst();
+	}
+	
+	public void addMeGusta(Photo f) {
+		f.setMeGustas(f.getMeGusta()+1);
+		publicacionDAO.update(f);
+	}
+	
+	public void addComentario(Photo f, String comentario) {
+		f.setComentario(new Comentario(comentario));
+		publicacionDAO.update(f);
 	}
 	
 }
