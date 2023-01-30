@@ -8,12 +8,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 
-
 public class Usuario {
 	private static final int EDADJOVENMAX = 23;
 	private static final int EDADJOVENMIN = 18;
 	private static final int POPULAR = 100;
-	
+
 	private int id;
 	private String username, clave, nombre, email;
 	private boolean premium;
@@ -22,9 +21,9 @@ public class Usuario {
 	private List<Photo> fotos;
 	private String imagenPath;
 	private String presentacion;
-	
-	public Usuario(String nombre, String email, String login, String password,
-			Date fechaNacimiento,String imagenPath,String presentacion) {
+
+	public Usuario(String nombre, String email, String login, String password, Date fechaNacimiento, String imagenPath,
+			String presentacion) {
 		this.id = 0;
 		this.nombre = nombre;
 		this.email = email;
@@ -125,28 +124,25 @@ public class Usuario {
 	public void setPresentacion(String presentacion) {
 		this.presentacion = presentacion;
 	}
-	
-	public void addFoto(String texto,String path) {
-		Photo foto = new Photo(LocalDate.now().toString(),texto, new ArrayList<String>(), path);
+
+	public void addFoto(String texto, String path,List<String> hashtags) {
+		Photo foto = new Photo(LocalDate.now().toString(), texto, hashtags, path);
 		this.fotos.add(foto);
 	}
+
 	
+
 	public boolean isJoven() {
 		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europa/Madrid"));
 		cal.setTime(fechaNacimiento);
-		int añoNac = cal.get(Calendar.YEAR); //año de nacimiento
-		return ((LocalDate.now().getYear() - añoNac) <= EDADJOVENMAX && (LocalDate.now().getYear() - añoNac) >= EDADJOVENMIN);
+		int añoNac = cal.get(Calendar.YEAR); // año de nacimiento
+		return ((LocalDate.now().getYear() - añoNac) <= EDADJOVENMAX
+				&& (LocalDate.now().getYear() - añoNac) >= EDADJOVENMIN);
 	}
-	
+
 	public boolean esPopular() {
-		return getFotos().stream()
-							.anyMatch(f -> f.getMeGusta() > POPULAR);
-						
+		return getFotos().stream().anyMatch(f -> f.getMeGusta() > POPULAR);
+
 	}
-	
-	
-	
-	
-	
-	
+
 }

@@ -115,8 +115,8 @@ public class Controlador implements FotosListener{
 		actualizarUsuario(usuarioActual);
 	}
 	
-	public void compartirFoto(String texto,String path) {
-		usuarioActual.addFoto(texto,path);
+	public void compartirFoto(String texto,String path,List<String> hashtags) {
+		usuarioActual.addFoto(texto,path,hashtags);
 		actualizarUsuario(usuarioActual);
 	}
 	

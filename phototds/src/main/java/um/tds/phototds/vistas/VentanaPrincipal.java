@@ -154,7 +154,6 @@ public class VentanaPrincipal {
 		panelNorte.add(btnAddFoto, gbc_btnAddFoto);
 
 		txtBuscador = new JTextField();
-		txtBuscador.setText("Buscador");
 		GridBagConstraints gbc_txtBuscador = new GridBagConstraints();
 		gbc_txtBuscador.gridwidth = 3;
 		gbc_txtBuscador.insets = new Insets(0, 0, 0, 5);
@@ -356,6 +355,7 @@ public class VentanaPrincipal {
 		if (!controlador.obtenerFotos().isEmpty()) {
 			for (Photo foto : controlador.obtenerFotos()) {
 				JPanel panelFoto = new JPanel();
+				System.out.println(foto.getHashtags());
 				panelCentro.add(panelFoto);
 				GridBagLayout gbl_panelFoto1 = new GridBagLayout();
 				gbl_panelFoto1.columnWidths = new int[] { 192, 97, 97, 0, 0 };
