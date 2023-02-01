@@ -22,8 +22,14 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import um.tds.phototds.controlador.Controlador;
 import um.tds.phototds.dominio.Photo;
+import um.tds.phototds.dominio.Usuario;
+
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
@@ -34,14 +40,18 @@ import java.awt.Image;
 import pulsador.Luz;
 import pulsador.IEncendidoListener;
 import java.util.EventObject;
+import java.util.List;
 
 public class VentanaPrincipal {
 
 	private JFrame framePrincipal;
 	private JTextField txtBuscador;
 	private Controlador controlador;
-	private JFrame opciones;
 	private String fotosFile;
+	private JFrame frameListaUsuarios;
+	private boolean isPrincipal; // Si la ventana actual es la principal o la de perfil
+	private boolean perfilBuscado; // Se utiliza cuando se buscan un perfil
+	private JPanel panelPerfilBuscado;
 
 	// private String userName;
 	private static final Color DEFAULT_BACKGROUND = new Color(102, 10, 45);
@@ -51,12 +61,18 @@ public class VentanaPrincipal {
 	private JPanel panelNorte;
 	private JPanel panelCentralPerfil;
 	private JPanel panelSurPerfil;
+	private JButton buttonVolver;
+	private JButton btnBuscar;
+	private JButton buttonAlbum;
+	private JLabel lblPhototds;
 
 	/**
 	 * Create the application.
 	 */
 	public VentanaPrincipal() {
 		controlador = Controlador.getUnicaInstancia();
+		this.isPrincipal = true;
+		this.perfilBuscado = false;
 		// this.userName = controlador.getUsuarioActual().getUsername();
 		initialize();
 	}
@@ -85,7 +101,7 @@ public class VentanaPrincipal {
 		gbl_panelNorte.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
 		panelNorte.setLayout(gbl_panelNorte);
 
-		JLabel lblPhototds = new JLabel("PhotoTDS");
+		lblPhototds = new JLabel("PhotoTDS");
 		lblPhototds.setForeground(DEFAULT_BACKGROUND);
 		lblPhototds.setFont(new Font("Verdana", Font.BOLD, 18));
 		GridBagConstraints gbc_lblPhototds = new GridBagConstraints();
@@ -133,7 +149,7 @@ public class VentanaPrincipal {
 		luz.setColor(Color.YELLOW);
 		panelNorte.add(luz, gbc_luz);
 
-		JButton buttonAlbum = new JButton("A+");
+		buttonAlbum = new JButton("A+");
 		buttonAlbum.setForeground(Color.WHITE);
 		buttonAlbum.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		buttonAlbum.setBackground(new Color(102, 10, 45));
@@ -163,12 +179,15 @@ public class VentanaPrincipal {
 		panelNorte.add(txtBuscador, gbc_txtBuscador);
 		txtBuscador.setColumns(10);
 
-		JButton btnBuscar = new JButton("");
+		// Lista de usuarios
+		btnBuscar = new JButton("");
 		btnBuscar.setBackground(DEFAULT_BACKGROUND);
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				generarFrameListaUsuarios();
 			}
 		});
+		
 		btnBuscar.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/lupa.png")));
 		GridBagConstraints gbc_btnBuscar = new GridBagConstraints();
 		gbc_btnBuscar.insets = new Insets(0, 0, 0, 5);
@@ -176,41 +195,61 @@ public class VentanaPrincipal {
 		gbc_btnBuscar.gridy = 1;
 		panelNorte.add(btnBuscar, gbc_btnBuscar);
 
-		JButton buttonVolver = new JButton("<-");
+		buttonVolver = new JButton("<-");
 		buttonVolver.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				isPrincipal = true;
 				buttonVolver.setVisible(false);
-				framePrincipal.getContentPane().remove(panelCentralPerfil);
-				framePrincipal.getContentPane().add(scrollFotos);
+				if (perfilBuscado) { // Si el panel mostrado es un perfil buscado
+					perfilBuscado = false;
+					framePrincipal.getContentPane().remove(panelPerfilBuscado);
+					framePrincipal.getContentPane().add(scrollFotos);
+				} else {
+					framePrincipal.getContentPane().remove(panelCentralPerfil);
+					framePrincipal.getContentPane().add(scrollFotos);
+				}
 				panelSurPerfil.setVisible(false);
 				lblPhototds.setVisible(true);
+				buttonVolver.setVisible(false);
 				buttonAlbum.setVisible(false);
+				framePrincipal.getContentPane().revalidate();
+				framePrincipal.getContentPane().repaint();
+				framePrincipal.getContentPane().validate();
 			}
 		});
+		
 		buttonVolver.setForeground(Color.WHITE);
 		buttonVolver.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		buttonVolver.setBackground(new Color(102, 10, 45));
-		GridBagConstraints gbc_button = new GridBagConstraints();
-		gbc_button.insets = new Insets(0, 0, 0, 5);
-		gbc_button.gridx = 1;
-		gbc_button.gridy = 1;
-		panelNorte.add(buttonVolver, gbc_button);
+		GridBagConstraints gbc_buttonVolver = new GridBagConstraints();
+		gbc_buttonVolver.insets = new Insets(0, 0, 0, 5);
+		gbc_buttonVolver.gridx = 1;
+		gbc_buttonVolver.gridy = 1;
+		panelNorte.add(buttonVolver, gbc_buttonVolver);
 		buttonVolver.setVisible(false);
 
 		JButton btnUsuario = new JButton("");
 		btnUsuario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				framePrincipal.getContentPane().remove(scrollFotos);
-				framePrincipal.getContentPane().add(panelCentralPerfil);
-				panelSurPerfil.setVisible(true);
-				lblPhototds.setVisible(false);
-				buttonVolver.setVisible(true);
-				buttonAlbum.setVisible(true);
+				if (isPrincipal) {
+					isPrincipal = false;
+					framePrincipal.getContentPane().remove(scrollFotos);
+					framePrincipal.getContentPane().add(panelCentralPerfil);
+					panelSurPerfil.setVisible(true);
+					lblPhototds.setVisible(false);
+					buttonVolver.setVisible(true);
+					buttonAlbum.setVisible(true);
+				} else {
+					perfilBuscado = false;
+					framePrincipal.getContentPane().remove(panelPerfilBuscado);
+					framePrincipal.getContentPane().add(panelCentralPerfil);
+					panelSurPerfil.setVisible(true);
+					framePrincipal.getContentPane().revalidate();
+					framePrincipal.getContentPane().repaint();
+					framePrincipal.getContentPane().validate();
+					buttonAlbum.setVisible(true);
+				}
 
-				/*
-				 * VentanaPerfil ventanaPerfil = new VentanaPerfil();
-				 * ventanaPerfil.mostrarVentana(); framePrincipal.dispose();
-				 */
 			}
 		});
 		btnUsuario.setBackground(DEFAULT_BACKGROUND);
@@ -225,108 +264,8 @@ public class VentanaPrincipal {
 
 		JButton btnMenu = new JButton("");
 		btnMenu.addActionListener(new ActionListener() {
-			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
-				framePrincipal.disable();
-				opciones = new JFrame();
-				opciones.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				opciones.setBounds(100, 100, 314, 164);
-				JPanel panel = new JPanel();
-				opciones.getContentPane().add(panel, BorderLayout.CENTER);
-				panel.setLayout(new GridLayout(0, 1, 0, 0));
-
-				JButton btnGenerarPDF = new JButton("GenerarPDF");
-				btnGenerarPDF.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						opciones.dispose();
-						JOptionPane.showMessageDialog(framePrincipal, "FUNCION SIN IMPLEMENTAR", "¡AVISO!",
-								JOptionPane.INFORMATION_MESSAGE);
-						framePrincipal.enable();
-					}
-				});
-				panel.add(btnGenerarPDF);
-
-				JButton btnFotosConMas = new JButton("Fotos con mas MG");
-				btnFotosConMas.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						opciones.dispose();
-						JOptionPane.showMessageDialog(framePrincipal, "FUNCION SIN IMPLEMENTAR", "¡AVISO!",
-								JOptionPane.INFORMATION_MESSAGE);
-						framePrincipal.enable();
-					}
-				});
-				panel.add(btnFotosConMas);
-
-				JButton btnGenerarexcel = new JButton("GenerarExcel");
-				btnGenerarexcel.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						opciones.dispose();
-						JOptionPane.showMessageDialog(framePrincipal, "FUNCION SIN IMPLEMENTAR", "¡AVISO!",
-								JOptionPane.INFORMATION_MESSAGE);
-						framePrincipal.enable();
-					}
-				});
-				panel.add(btnGenerarexcel);
-
-				JButton btnPremium = new JButton("Premium");
-				if (!controlador.getUsuarioActual().isPremium()) {
-					btnGenerarPDF.setEnabled(false);
-					btnFotosConMas.setEnabled(false);
-					btnGenerarexcel.setEnabled(false);
-				}
-				btnPremium.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if (!controlador.getUsuarioActual().isPremium()) {
-							controlador.hacerPremium();
-							btnGenerarexcel.setEnabled(true);
-							btnGenerarPDF.setEnabled(true);
-							btnFotosConMas.setEnabled(true);
-							opciones.dispose();
-							JOptionPane.showMessageDialog(framePrincipal, "Ahora eres usuario PREMIUM",
-									"¡Nuevas Funciones!", JOptionPane.INFORMATION_MESSAGE);
-							if (controlador.getDescuento().isPresent()) {
-								String mensaje = controlador.getDescuento().get().getMensaje();
-								JOptionPane.showMessageDialog(framePrincipal, "Descuento aplicado: " + mensaje,
-										"Premium", JOptionPane.INFORMATION_MESSAGE);
-							} else {
-								JOptionPane.showMessageDialog(framePrincipal, "No se ha aplicado ningún Descuento.",
-										"Premium", JOptionPane.ERROR_MESSAGE);
-							}
-
-						} else {
-							opciones.dispose();
-							JOptionPane.showMessageDialog(framePrincipal, "Ya eres usuario premium!", "Premium",
-									JOptionPane.INFORMATION_MESSAGE);
-
-						}
-
-						framePrincipal.enable();
-					}
-				});
-				panel.add(btnPremium);
-				JButton btnCerrarSesin = new JButton("Cerrar Sesión");
-				btnCerrarSesin.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						Login ventanaLogin = new Login();
-						ventanaLogin.mostrarVentana();
-						opciones.dispose();
-						framePrincipal.dispose();
-					}
-				});
-				panel.add(btnCerrarSesin);
-				JButton btnCancelar = new JButton("Cancelar");
-				btnCancelar.setForeground(Color.RED);
-				btnCancelar.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						opciones.dispose();
-						framePrincipal.enable();
-					}
-				});
-				panel.add(btnCancelar);
-				opciones.setLocationRelativeTo(btnMenu);
-				opciones.setUndecorated(true);
-				opciones.setVisible(true);
-
+				new Opciones(framePrincipal, btnMenu);
 			}
 		});
 		btnMenu.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/list.png")));
@@ -385,8 +324,6 @@ public class VentanaPrincipal {
 				gbc_buttonCorazon.gridx = 1;
 				gbc_buttonCorazon.gridy = 1;
 
-			
-
 				panelFoto.add(buttonCorazon, gbc_buttonCorazon);
 
 				JButton buttonComentarios = new JButton("");
@@ -398,15 +335,15 @@ public class VentanaPrincipal {
 				gbc_buttonComentarios.anchor = GridBagConstraints.WEST;
 				gbc_buttonComentarios.gridx = 2;
 				gbc_buttonComentarios.gridy = 1;
-				
+
 				buttonComentarios.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						Comentar frameComentar = new Comentar(foto);
 						framePrincipal.dispose();
-						frameComentar.mostrarVentana();		
+						frameComentar.mostrarVentana();
 					}
 				});
-				
+
 				panelFoto.add(buttonComentarios, gbc_buttonComentarios);
 
 				JLabel lblMeGusta = new JLabel(Integer.toString(foto.getMeGusta()) + " Me Gustas");
@@ -415,14 +352,14 @@ public class VentanaPrincipal {
 				gbc_lblMeGusta.gridx = 3;
 				gbc_lblMeGusta.gridy = 1;
 				panelFoto.add(lblMeGusta, gbc_lblMeGusta);
-				
+
 				buttonCorazon.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						controlador.addMeGusta(foto);
-						lblMeGusta.setText(foto.getMeGusta() + " Me Gustas");			
+						lblMeGusta.setText(foto.getMeGusta() + " Me Gustas");
 					}
 				});
-				
+
 				JLabel lblComentarios = new JLabel(Integer.toString(foto.getComentarios().size()) + " Comentarios");
 				GridBagConstraints gbc_lblComentarios = new GridBagConstraints();
 				gbc_lblComentarios.insets = new Insets(0, 0, 5, 0);
@@ -450,6 +387,7 @@ public class VentanaPrincipal {
 		framePrincipal.getContentPane().add(scrollFotos, BorderLayout.CENTER);
 
 		// PANELES PERFIL
+		// PANEL DATOS PERFIL
 		panelCentralPerfil = new JPanel();
 		// framePrincipal.getContentPane().add(panelCentralPerfil, BorderLayout.CENTER);
 		GridBagLayout gbl_panelCentro = new GridBagLayout();
@@ -472,26 +410,26 @@ public class VentanaPrincipal {
 		gbc_label.gridy = 1;
 		panelCentralPerfil.add(label, gbc_label);
 
-		JLabel lblNewLabel = new JLabel(controlador.getUsuarioActual().getNombre());
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel.gridx = 5;
-		gbc_lblNewLabel.gridy = 1;
-		panelCentralPerfil.add(lblNewLabel, gbc_lblNewLabel);
+		JLabel lblNombre = new JLabel(controlador.getUsuarioActual().getNombre());
+		GridBagConstraints gbc_lblNombre = new GridBagConstraints();
+		gbc_lblNombre.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNombre.gridx = 5;
+		gbc_lblNombre.gridy = 1;
+		panelCentralPerfil.add(lblNombre, gbc_lblNombre);
 
-		JButton btnNewButton = new JButton("Editar Perfil");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton btnEditar = new JButton("Editar Perfil");
+		btnEditar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Registro ventanaRegistro = new Registro(true);
 				ventanaRegistro.mostrarVentana();
 				framePrincipal.dispose();
 			}
 		});
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton.gridx = 7;
-		gbc_btnNewButton.gridy = 1;
-		panelCentralPerfil.add(btnNewButton, gbc_btnNewButton);
+		GridBagConstraints gbc_btnEditar = new GridBagConstraints();
+		gbc_btnEditar.insets = new Insets(0, 0, 5, 5);
+		gbc_btnEditar.gridx = 7;
+		gbc_btnEditar.gridy = 1;
+		panelCentralPerfil.add(btnEditar, gbc_btnEditar);
 
 		JLabel lblNewLabel_1 = new JLabel(Integer.toString(controlador.obtenerNumeroPubls()) + " publicaciones");
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
@@ -513,6 +451,7 @@ public class VentanaPrincipal {
 		gbc_lblNewLabel_3.gridy = 3;
 		panelCentralPerfil.add(lblNewLabel_3, gbc_lblNewLabel_3);
 
+		// PANEL FOTOS Y ALBUMNES
 		panelSurPerfil = new JPanel();
 		panelSurPerfil.setPreferredSize(new Dimension(300, 200));
 		framePrincipal.getContentPane().add(panelSurPerfil, BorderLayout.SOUTH);
@@ -568,35 +507,145 @@ public class VentanaPrincipal {
 		JPanel PanelAlbumes = new JPanel();
 		tabbedPane.addTab("ÁLBUMES", null, PanelAlbumes, null);
 
-		/*
-		 * JScrollPane panel_1 = new JScrollPane(); panel_1.setBackground(Color.WHITE);
-		 * PanelAlbumes.add(panel_1, BorderLayout.CENTER); JList<Photo> matrizFotos =
-		 * new JList<Photo>(); DefaultListModel<Photo> fotoslistModel = new
-		 * DefaultListModel<Photo>(); matrizFotos.setModel(fotoslistModel);
-		 * controlador.obtenerFotos().forEach(f -> fotoslistModel.addElement(f));
-		 * matrizFotos.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-		 * matrizFotos.setVisibleRowCount(-1);
-		 * //listafotos.ensureIndexIsVisible(getHeight());
-		 * matrizFotos.setCellRenderer(createListRenderer());
-		 * panel_1.setViewportView(matrizFotos);}
-		 * 
-		 * private static ListCellRenderer<? super Photo> createListRenderer() { return
-		 * new DefaultListCellRenderer() {
-		 * 
-		 * private static final long serialVersionUID = 1L; private Color background =
-		 * new Color(0, 100, 255, 15); private Color defaultBackground = (Color)
-		 * UIManager.get("List.background");
-		 * 
-		 * @Override public Component getListCellRendererComponent(JList<?> list, Object
-		 * value, int index, boolean isSelected, boolean cellHasFocus) { Component c =
-		 * super.getListCellRendererComponent(list, value, index, isSelected,
-		 * cellHasFocus); if (c instanceof JLabel) { JLabel label = (JLabel) c;
-		 * label.setIcon(new ImageIcon(VentanaPrincipal.class.getResource(
-		 * "/um/tds/phototds/imagenes/lupa.png"))); if (!isSelected)
-		 * label.setBackground(index % 2 == 0 ? background : defaultBackground); }
-		 * return c; } };
-		 */
 
+		
+//FUNCIONES
+	}
+
+	public void generarFrameListaUsuarios() {
+		frameListaUsuarios = new JFrame();
+		frameListaUsuarios.setBounds(100, 100, 342, 324);
+		frameListaUsuarios.setTitle("Lista de Usuarios");
+
+		JPanel panelCentral = new JPanel();
+
+		JScrollPane scrollPane = new JScrollPane(panelCentral);
+		panelCentral.setLayout(new GridLayout(0, 1, 0, 0));
+		String filtro = txtBuscador.getText();
+		if (filtro.startsWith("#")) {
+			System.out.println(filtro);
+		}
+		if (!controlador.obtenerUsuariosFiltro(txtBuscador.getText()).isEmpty()) {
+			List<Usuario> usuarios = controlador.obtenerUsuariosFiltro(txtBuscador.getText());
+			for (Usuario usu : usuarios) {
+				JPanel panel = new JPanel();
+				panelCentral.add(panel);
+				panel.setLayout(new GridLayout(1, 0, 0, 0));
+
+				Image imgPanel = new ImageIcon(usu.getImagenPath()).getImage();
+				JLabel lblUsuario = new JLabel();
+				lblUsuario.setIcon(new ImageIcon(imgPanel.getScaledInstance(120, 80, Image.SCALE_SMOOTH)));
+				panel.add(lblUsuario);
+
+				JLabel lblNombreusuario = new JLabel(usu.getUsername());
+				panel.add(lblNombreusuario);
+
+				panel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						System.out.println(usu.getUsername());
+						if (perfilBuscado) { // Estamos ya en el panelPerfilBuscado
+							System.out.println("Estamos ya");
+							framePrincipal.getContentPane().remove(panelPerfilBuscado);
+						}
+						panelPerfilBuscado = obtenerPanelPerfil(usu);
+						if (isPrincipal) {
+							framePrincipal.getContentPane().remove(scrollFotos);
+							framePrincipal.getContentPane().add(panelPerfilBuscado);
+							lblPhototds.setVisible(false);
+							buttonVolver.setVisible(true);
+							isPrincipal = false;
+							perfilBuscado = true; // Cambiamos al panel PerfilBuscado
+						} else { // Si Estamos en el panel de perfil o PanelPerfilBuscado (se actualiza)
+							framePrincipal.getContentPane().remove(panelCentralPerfil);
+							framePrincipal.getContentPane().add(panelPerfilBuscado);
+							buttonAlbum.setVisible(false);
+							perfilBuscado = true;
+							panelSurPerfil.setVisible(false);
+							framePrincipal.getContentPane().revalidate();
+							framePrincipal.getContentPane().repaint();
+							framePrincipal.getContentPane().validate();
+						}
+						frameListaUsuarios.dispose();
+
+					}
+				});
+			}
+		}
+		frameListaUsuarios.getContentPane().add(scrollPane, BorderLayout.CENTER);
+		frameListaUsuarios.setLocationRelativeTo(btnBuscar);
+		frameListaUsuarios.setResizable(false);
+		frameListaUsuarios.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frameListaUsuarios.addWindowListener(new WindowAdapter() {
+			public void windowDeactivated(WindowEvent e) {
+				frameListaUsuarios.dispose();
+			}
+		});
+		frameListaUsuarios.setVisible(true);
+	}
+
+	public JPanel obtenerPanelPerfil(Usuario usu) {
+		JPanel panelInfoPerfil = new JPanel();
+		GridBagLayout gbl_panelCentro = new GridBagLayout();
+		gbl_panelCentro.columnWidths = new int[] { 20, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_panelCentro.rowHeights = new int[] { 40, 0, 0, 0, 0 };
+		gbl_panelCentro.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+				Double.MIN_VALUE };
+		gbl_panelCentro.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		panelInfoPerfil.setLayout(gbl_panelCentro);
+
+		JLabel label = new JLabel("");
+		Image img = new ImageIcon(usu.getImagenPath()).getImage();
+		label.setIcon(new ImageIcon(img.getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
+		GridBagConstraints gbc_label = new GridBagConstraints();
+		gbc_label.gridheight = 3;
+		gbc_label.gridwidth = 2;
+		gbc_label.insets = new Insets(0, 0, 5, 5);
+		gbc_label.gridx = 1;
+		gbc_label.gridy = 1;
+		panelInfoPerfil.add(label, gbc_label);
+
+		JLabel lblUsuario = new JLabel(usu.getNombre());
+		GridBagConstraints gbc_lblUsuario = new GridBagConstraints();
+		gbc_lblUsuario.insets = new Insets(0, 0, 5, 5);
+		gbc_lblUsuario.gridx = 5;
+		gbc_lblUsuario.gridy = 1;
+		panelInfoPerfil.add(lblUsuario, gbc_lblUsuario);
+		
+		
+		JButton btnSeguir = new JButton("Seguir");
+		btnSeguir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(framePrincipal, "FUNCION SIN IMPLEMENTAR", "¡AVISO!",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton.gridx = 7;
+		gbc_btnNewButton.gridy = 1;
+		panelInfoPerfil.add(btnSeguir, gbc_btnNewButton);
+
+		JLabel lblPublicaciones = new JLabel(Integer.toString(controlador.obtenerNumeroPubls(usu)) + " publicaciones");
+		GridBagConstraints gbc_lblPublicaciones = new GridBagConstraints();
+		gbc_lblPublicaciones.insets = new Insets(0, 0, 0, 5);
+		gbc_lblPublicaciones.gridx = 5;
+		gbc_lblPublicaciones.gridy = 3;
+		panelInfoPerfil.add(lblPublicaciones, gbc_lblPublicaciones);
+
+		JLabel lblSeguidores = new JLabel("0 seguidores");
+		GridBagConstraints gbc_lblSeguidores = new GridBagConstraints();
+		gbc_lblSeguidores.insets = new Insets(0, 0, 0, 5);
+		gbc_lblSeguidores.gridx = 7;
+		gbc_lblSeguidores.gridy = 3;
+		panelInfoPerfil.add(lblSeguidores, gbc_lblSeguidores);
+
+		JLabel lblSeguidos = new JLabel("0 seguidos");
+		GridBagConstraints gbc_lblSeguidos = new GridBagConstraints();
+		gbc_lblSeguidos.gridx = 9;
+		gbc_lblSeguidos.gridy = 3;
+		panelInfoPerfil.add(lblSeguidos, gbc_lblSeguidos);
+		return panelInfoPerfil;
 	}
 
 }
