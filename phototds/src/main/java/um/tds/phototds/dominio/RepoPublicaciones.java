@@ -45,7 +45,7 @@ public class RepoPublicaciones {
 	public void removePublicacion (Publicacion publicacion) {
 		publicacionesID.remove(publicacion.getId());
 	}
-	
+	/*
 	public List<Publicacion> findPublicacion(String hashtag) {
 		ArrayList<Publicacion> todasPub = (ArrayList<Publicacion>) factoria.getPublicacionDAO().getAll();
 		ArrayList<Publicacion> publiEncontradas = (ArrayList<Publicacion>) todasPub.stream()
@@ -54,7 +54,7 @@ public class RepoPublicaciones {
 		return publiEncontradas;
 	
 											
-	}
+	}*/
 	
 	public void cargarRepo() {
 		List<Publicacion> publicacionesBD = adaptadorPublicacion.getAll();

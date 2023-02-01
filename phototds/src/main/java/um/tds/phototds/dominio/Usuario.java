@@ -129,6 +129,10 @@ public class Usuario {
 		Photo foto = new Photo(LocalDate.now().toString(), texto, hashtags, path);
 		this.fotos.add(foto);
 	}
+	
+	public void borrarFoto(Photo foto) {
+		this.fotos.remove(foto);
+	}
 
 	
 

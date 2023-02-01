@@ -1,5 +1,6 @@
 package um.tds.phototds.controlador;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -108,6 +109,17 @@ public class Controlador implements FotosListener {
 		usuarioDAO.delete(usuario);
 		return true;
 	}
+	
+	public void borrarImagen(Photo foto) {
+		usuarioActual.borrarFoto(foto);
+		publicacionDAO.delete(foto);
+		actualizarUsuario(usuarioActual);
+	}
+	
+	public void compartirFoto(String texto, String path, List<String> hashtags) {
+		usuarioActual.addFoto(texto, path, hashtags);
+		actualizarUsuario(usuarioActual);
+	}
 
 	public void actualizarUsuario(Usuario usuario) {
 		usuarioDAO.update(usuario);
@@ -118,10 +130,10 @@ public class Controlador implements FotosListener {
 		actualizarUsuario(usuarioActual);
 	}
 
-	public void compartirFoto(String texto, String path, List<String> hashtags) {
+	/*public void compartirFoto(String texto, String path, List<String> hashtags) {
 		usuarioActual.addFoto(texto, path, hashtags);
 		actualizarUsuario(usuarioActual);
-	}
+	}*/
 
 	public void setFotosFile(String path) {
 		cargadorFotos.setArchivoFotos(path);
@@ -186,5 +198,14 @@ public class Controlador implements FotosListener {
 		
 		return usuarios.stream().filter(u -> u.getNombre().startsWith(filtro)).collect(Collectors.toList());
 	}
+	
+	public List<Photo> obtenerTodasLasFotos() {
+		List<Usuario> usuarios = obtenerUsuarios();
+		List<Photo> fotos = new ArrayList<Photo>();
+		usuarios.stream().forEach(u -> fotos.addAll(u.getFotos()));
+		return fotos;
+	}
+	
+
 
 }

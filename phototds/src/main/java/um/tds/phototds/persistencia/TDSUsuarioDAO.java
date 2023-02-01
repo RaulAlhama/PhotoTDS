@@ -208,7 +208,9 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 
 	public List<Usuario> getAll() {
 		List<Entidad> entidades = servPersistencia.recuperarEntidades(USUARIO);
-		if(entidades.isEmpty()) return new ArrayList<Usuario>();
+		/*for(Entidad e: entidades) {
+			servPersistencia.borrarEntidad(e);
+		}*/
 		List<Usuario> usuarios = entidades.stream().map(e -> get(e.getId())).collect(Collectors.toList());
 		return usuarios;
 	}

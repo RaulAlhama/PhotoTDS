@@ -124,6 +124,7 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 
 	@Override
 	public boolean delete(Publicacion publicacion) {
+		System.out.println("Eliminado foto");
 		Entidad ePubli = servPersistencia.recuperarEntidad(publicacion.getId());
 		return servPersistencia.borrarEntidad(ePubli);
 	}
