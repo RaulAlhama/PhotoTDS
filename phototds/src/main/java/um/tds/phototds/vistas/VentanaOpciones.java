@@ -16,12 +16,12 @@ import javax.swing.JPanel;
 import um.tds.phototds.controlador.Controlador;
 
 @SuppressWarnings("serial")
-public class Opciones extends JFrame{
+public class VentanaOpciones extends JFrame{
 
 	private JFrame opciones;
 	private Controlador controlador;
 
-	public Opciones(JFrame framePrincipal,JButton menu) {
+	public VentanaOpciones(JFrame framePrincipal,JButton menu) {
 		controlador = Controlador.getUnicaInstancia();
 		initialize(framePrincipal,menu);
 	}
@@ -113,7 +113,7 @@ public class Opciones extends JFrame{
 		JButton btnCerrarSesin = new JButton("Cerrar Sesión");
 		btnCerrarSesin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Login ventanaLogin = new Login();
+				VentanaLogin ventanaLogin = new VentanaLogin();
 				ventanaLogin.mostrarVentana();
 				opciones.dispose();
 				framePrincipal.dispose();

@@ -10,14 +10,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 
-public class Imagen {
+public class MostrarImagen {
 
 	private JFrame frame;
 
 	/**
 	 * Create the application.
 	 */
-	public Imagen(String path) {
+	public MostrarImagen(String path) {
 		initialize(path);
 	}
 

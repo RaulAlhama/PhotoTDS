@@ -2,7 +2,7 @@ package um.tds.phototds;
 
 import java.awt.EventQueue;
 
-import um.tds.phototds.vistas.Login;
+import um.tds.phototds.vistas.VentanaLogin;
 
 public class App {
 	public static void main(String[] args) {
@@ -10,7 +10,7 @@ public class App {
 			
 			public void run() {
 				try {
-					Login ventanaLogin = new Login();
+					VentanaLogin ventanaLogin = new VentanaLogin();
 					ventanaLogin.mostrarVentana();
 				} catch (Exception e) {
 					e.printStackTrace();

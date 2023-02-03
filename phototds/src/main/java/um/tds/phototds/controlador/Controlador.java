@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import um.tds.phototds.dominio.RepoPublicaciones;
 import um.tds.phototds.dominio.RepoUsuarios;
 import um.tds.phototds.dominio.Usuario;
+import um.tds.phototds.dominio.Album;
 import um.tds.phototds.dominio.Comentario;
 import um.tds.phototds.dominio.Descuento;
 import um.tds.phototds.dominio.DescuentoEdad;
@@ -116,9 +117,22 @@ public class Controlador implements FotosListener {
 		actualizarUsuario(usuarioActual);
 	}
 	
+	public void borrarAlbum(Album album) {
+		usuarioActual.borrarAlbum(album);
+		
+	}
+	
 	public void compartirFoto(String texto, String path, List<String> hashtags) {
 		usuarioActual.addFoto(texto, path, hashtags);
 		actualizarUsuario(usuarioActual);
+	}
+	
+	public void compartirAlbum(String titulo, String texto, String path, List<String> hashtags) {
+		usuarioActual.addAlbum(titulo,texto,path,hashtags);
+	}
+	
+	public boolean comprobarTitulo(String titulo) {
+		return !(usuarioActual.getAlbumnes().stream().anyMatch(a -> a.getTitulo().equals(titulo)));
 	}
 
 	public void actualizarUsuario(Usuario usuario) {

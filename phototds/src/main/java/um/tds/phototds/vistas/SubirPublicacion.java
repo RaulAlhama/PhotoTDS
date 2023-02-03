@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
-public class SubirFoto {
+public class SubirPublicacion {
 
 	private JFrame frameAddFoto;
 	private Controlador controlador;
@@ -36,9 +36,9 @@ public class SubirFoto {
 	 */
 	// Si true -> VentanaPrincipal
 	// Si false -> VentanaPerfil
-	public SubirFoto(String path) {
+	public SubirPublicacion(String path, boolean isAlbum,String titulo) {
 		controlador = Controlador.getUnicaInstancia();
-		initialize(path);
+		initialize(path, isAlbum,titulo);
 	}
 
 	public void mostrarVentana() {
@@ -49,7 +49,7 @@ public class SubirFoto {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(String path) {
+	private void initialize(String path, boolean isAlbum, String titulo) {
 		frameAddFoto = new JFrame();
 		frameAddFoto.setBounds(100, 100, 746, 444);
 		frameAddFoto.setUndecorated(true);
@@ -116,7 +116,10 @@ public class SubirFoto {
 					String texto = textArea.getText();
 					List<String> hashtags = obtenerHashtags(texto);
 					if (verificarHashtags(hashtags)) {
-						controlador.compartirFoto(texto, path, hashtags);
+						if (isAlbum)
+							controlador.compartirAlbum(titulo,texto,path,hashtags);
+						else
+							controlador.compartirFoto(texto, path, hashtags);
 						VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
 						ventanaPrincipal.mostrarVentana();
 						frameAddFoto.dispose();
@@ -138,6 +141,15 @@ public class SubirFoto {
 			}
 		});
 		panelBotones.add(btnCancelar);
+		
+		if(isAlbum) {
+			JPanel panel = new JPanel();
+			frameAddFoto.getContentPane().add(panel, BorderLayout.NORTH);
+			
+			JLabel lblNewLabel = new JLabel(titulo);
+			panel.add(lblNewLabel);
+		}
+	
 	}
 
 	public List<String> obtenerHashtags(String texto) {

@@ -34,7 +34,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 
-public class Registro {
+public class VentanaRegistro {
 
 	private JFrame frameRegistro;
 	private JTextField textEmail;
@@ -53,7 +53,7 @@ public class Registro {
 	/**
 	 * Create the application.
 	 */
-	public Registro(boolean registrado) {
+	public VentanaRegistro(boolean registrado) {
 		this.registrado = registrado;
 		if(registrado == true) usuarioActual = Controlador.getUnicaInstancia().getUsuarioActual();
 		initialize();
@@ -194,7 +194,7 @@ public class Registro {
 				JFrame frame = new JFrame();
 				frame.setBounds(100, 100, 450, 300);
 				// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
-				if(registrado) areaPresentacion.setText(usuarioActual.getPresentacion());
+				if(registrado && !(usuarioActual.getPresentacion().isEmpty())) areaPresentacion.setText(usuarioActual.getPresentacion());
 				frame.getContentPane().add(areaPresentacion, BorderLayout.CENTER);
 				JPanel panelBotones = new JPanel();
 				frame.getContentPane().add(panelBotones, BorderLayout.SOUTH);
@@ -305,7 +305,7 @@ public class Registro {
 									textFecha.getDate(), imagenPath, areaPresentacion.getText());
 							JOptionPane.showMessageDialog(frameRegistro, "Se ha registrado correctamente",
 									"Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
-							Login ventanaLogin = new Login();
+							VentanaLogin ventanaLogin = new VentanaLogin();
 							ventanaLogin.mostrarVentana();
 							frameRegistro.dispose();
 						
@@ -354,7 +354,7 @@ public class Registro {
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(!registrado) {
-				Login ventanaLogin = new Login();
+				VentanaLogin ventanaLogin = new VentanaLogin();
 				ventanaLogin.mostrarVentana();
 				frameRegistro.dispose();
 				} else {

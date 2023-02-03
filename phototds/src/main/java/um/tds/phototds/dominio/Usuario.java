@@ -21,6 +21,8 @@ public class Usuario {
 	private List<Photo> fotos;
 	private String imagenPath;
 	private String presentacion;
+	private List<Notificacion> notificaciones;
+	private List<Usuario> seguidores;
 
 	public Usuario(String nombre, String email, String login, String password, Date fechaNacimiento, String imagenPath,
 			String presentacion) {
@@ -35,6 +37,8 @@ public class Usuario {
 		this.premium = false;
 		this.imagenPath = imagenPath;
 		this.presentacion = presentacion;
+		this.notificaciones = new ArrayList<Notificacion>();
+		this.seguidores = new ArrayList<Usuario>();
 	}
 
 	public int getId() {
@@ -124,16 +128,43 @@ public class Usuario {
 	public void setPresentacion(String presentacion) {
 		this.presentacion = presentacion;
 	}
+	
+	public List<Notificacion> getNotificaciones() {
+		return notificaciones;
+	}
+
+	public void setNotificaciones(List<Notificacion> notificaciones) {
+		this.notificaciones = notificaciones;
+	}
+	
+
+	public List<Usuario> getSeguidores() {
+		return seguidores;
+	}
+
+	public void setSeguidores(List<Usuario> seguidores) {
+		this.seguidores = seguidores;
+	}
 
 	public void addFoto(String texto, String path,List<String> hashtags) {
 		Photo foto = new Photo(LocalDate.now().toString(), texto, hashtags, path);
 		this.fotos.add(foto);
 	}
 	
+	public void addAlbum(String titulo, String texto, String path,List<String> hashtags) {
+		Photo foto = new Photo(LocalDate.now().toString(), texto, hashtags, path);
+		Album album = new Album(titulo,LocalDate.now().toString(), texto, hashtags);
+		album.setFoto(foto);
+		this.albumnes.add(album);
+	}
+	
 	public void borrarFoto(Photo foto) {
 		this.fotos.remove(foto);
 	}
-
+	
+	public void borrarAlbum(Album album) {
+		this.albumnes.remove(album);
+	}
 	
 
 	public boolean isJoven() {

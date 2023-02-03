@@ -20,7 +20,7 @@ import javax.swing.border.TitledBorder;
 
 import um.tds.phototds.controlador.Controlador;
 
-public class Login {
+public class VentanaLogin {
 
 	private JFrame frameLogin;
 	private JTextField txtNombreDeUsuario;
@@ -29,7 +29,7 @@ public class Login {
 	/**
 	 * Create the application.
 	 */
-	public Login() {
+	public VentanaLogin() {
 		initialize();
 	}
 
@@ -78,7 +78,7 @@ public class Login {
 		JButton btnCrearCuenta = new JButton("Crear una cuenta");
 		btnCrearCuenta.addActionListener(new ActionListener()/* Clase anonima */ {
 			public void actionPerformed(ActionEvent e) {
-				Registro ventanaRegistro = new Registro(false);
+				VentanaRegistro ventanaRegistro = new VentanaRegistro(false);
 				ventanaRegistro.mostrarVentana();
 				frameLogin.dispose();
 

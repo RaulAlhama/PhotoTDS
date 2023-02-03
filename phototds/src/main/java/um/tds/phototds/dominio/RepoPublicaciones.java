@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import um.tds.phototds.persistencia.DAOException;
 import um.tds.phototds.persistencia.FactoriaDAO;
@@ -23,7 +22,7 @@ public class RepoPublicaciones {
 	private HashMap<Integer, Publicacion> publicacionesID;
 	
 	public static RepoPublicaciones getUnicaInstancia() {
-		if(!(unicaInstancia == null)) unicaInstancia = new RepoPublicaciones();
+		if(unicaInstancia == null) unicaInstancia = new RepoPublicaciones();
 		return unicaInstancia;
 	}
 	
@@ -36,6 +35,15 @@ public class RepoPublicaciones {
 		} catch (DAOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void cargarRepo() {
+		List<Publicacion> publicacionesBD = adaptadorPublicacion.getAll();
+		 for(Publicacion pub : publicacionesBD) {
+			 //adaptadorPublicacion.delete(pub);
+			 publicacionesID.put(pub.getId(), pub);
+		 }
+			
 	}
 	
 	public void addPublicacion(Publicacion publicacion) {
@@ -56,11 +64,7 @@ public class RepoPublicaciones {
 											
 	}*/
 	
-	public void cargarRepo() {
-		List<Publicacion> publicacionesBD = adaptadorPublicacion.getAll();
-		 for(Publicacion pub : publicacionesBD)
-			publicacionesID.put(pub.getId(), pub);
-	}
+	
 	
 	public List<Publicacion> obtenerFotos(Fotos fotos){
 		ArrayList<Publicacion> pubs = new ArrayList<Publicacion>();
