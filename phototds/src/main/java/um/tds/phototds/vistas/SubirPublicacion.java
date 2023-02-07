@@ -146,7 +146,7 @@ public class SubirPublicacion {
 			JPanel panel = new JPanel();
 			frameAddFoto.getContentPane().add(panel, BorderLayout.NORTH);
 			
-			JLabel lblNewLabel = new JLabel(titulo);
+			JLabel lblNewLabel = new JLabel("Titulo del album: " + titulo);
 			panel.add(lblNewLabel);
 		}
 	

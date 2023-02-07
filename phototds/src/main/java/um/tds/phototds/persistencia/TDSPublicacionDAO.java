@@ -9,6 +9,7 @@ import beans.Entidad;
 import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
+import um.tds.phototds.dominio.Album;
 import um.tds.phototds.dominio.Comentario;
 import um.tds.phototds.dominio.Photo;
 import um.tds.phototds.dominio.Publicacion;
@@ -22,6 +23,8 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 	private static final String COMENTARIOS = "comentarios";
 	private static final String FECHA = "fechaPublicacion";
 	private static final String PATH = "path";
+	private static final String TITULO = "titulo";
+	private static final String FOTOSALBUM = "fotosAlbum";
 
 	private ServicioPersistencia servPersistencia;
 
@@ -39,7 +42,13 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 		propiedades.add(new Propiedad(HASHTAGS, guardarHashtags(publicacion.getHashtags())));
 		propiedades.add(new Propiedad(COMENTARIOS, guardarComentarios(publicacion.getComentarios())));
 		propiedades.add(new Propiedad(FECHA, publicacion.getFecha().toString()));
-		propiedades.add(new Propiedad(PATH, ((Photo) publicacion).getPath()));
+		if (publicacion instanceof Photo) {
+			propiedades.add(new Propiedad(PATH, ((Photo) publicacion).getPath()));
+		} else {
+			propiedades.add(new Propiedad(TITULO, ((Album) publicacion).getTitulo()));
+			propiedades.add(new Propiedad(FOTOSALBUM,guardarFotosAlbum(((Album)publicacion).getFotos())));
+		}
+			
 
 		ePubli.setPropiedades(propiedades);
 
@@ -57,6 +66,14 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 		}
 		return lineas.substring(0, lineas.length() - 1);
 	}
+	
+	private String guardarFotosAlbum(List<Photo> fotosAlbum) {
+		String lineas = "";
+		for (Photo f : fotosAlbum) {
+			lineas += f.getId() + " ";
+		}
+		return lineas;
+	}
 
 	private String guardarComentarios(List<Comentario> comentarios) {
 		String lineas = "";
@@ -70,22 +87,40 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 	}
 
 	private Publicacion entidadToPublicacion(Entidad ePubli) {
-
+		String path = "";
 		String descripcion = servPersistencia.recuperarPropiedadEntidad(ePubli, DESCRIPCION);
 		int meGustas = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(ePubli, MGUSTAS));
 		String hashtags = servPersistencia.recuperarPropiedadEntidad(ePubli, HASHTAGS);
 		String comentarios = servPersistencia.recuperarPropiedadEntidad(ePubli, COMENTARIOS);
 		String fecha = servPersistencia.recuperarPropiedadEntidad(ePubli, FECHA);
-		String path = servPersistencia.recuperarPropiedadEntidad(ePubli, PATH);
-		Publicacion publicacion = new Photo(fecha, descripcion, recuperarHashtags(hashtags), path);
-		
-		if(comentarios.equals(""))
+		path = servPersistencia.recuperarPropiedadEntidad(ePubli, PATH);
+		String titulo = servPersistencia.recuperarPropiedadEntidad(ePubli, TITULO);
+		Publicacion publicacion;
+		if (path == null) {
+			String fotosAlbum = servPersistencia.recuperarPropiedadEntidad(ePubli, FOTOSALBUM);
+			publicacion = new Album(titulo, fecha, descripcion, recuperarHashtags(hashtags));
+			((Album) publicacion).setFotos(recuperarFotos(fotosAlbum));
+		}	
+		else
+			publicacion = new Photo(fecha, descripcion, recuperarHashtags(hashtags), path);
+
+		if (comentarios.equals(""))
 			publicacion.setComentarios(new ArrayList<Comentario>());
-		else publicacion.setComentarios(recuperarComentarios(comentarios));
-		//Asignamos el identificador de la persistencia a la foto
+		else
+			publicacion.setComentarios(recuperarComentarios(comentarios));
+		// Asignamos el identificador de la persistencia a la publicacion
 		publicacion.setId(ePubli.getId());
 		publicacion.setMeGustas(meGustas);
 		return publicacion;
+	}
+	private List<Photo> recuperarFotos(String codigosFotos){
+		List<Photo> resultado = new LinkedList<Photo>();
+		if(codigosFotos == null) return resultado;
+		StringTokenizer strTok = new StringTokenizer(codigosFotos, " ");
+		while (strTok.hasMoreTokens()) {
+			resultado.add((Photo) get(Integer.parseInt(strTok.nextToken())));
+		}
+		return resultado;
 	}
 
 	private List<String> recuperarHashtags(String hashtags) {
@@ -115,10 +150,14 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 
 	@Override
 	public void create(Publicacion publicacion) {
+		if(publicacion instanceof Album) {
+			for(Photo f : ((Album) publicacion).getFotos()) {
+				create(f);
+			}
+		}
 		Entidad ePublicacion = this.publicacionToEntidad(publicacion);
 		ePublicacion = servPersistencia.registrarEntidad(ePublicacion);
 		publicacion.setId(ePublicacion.getId());
-		
 
 	}
 
@@ -133,7 +172,7 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 	public void update(Publicacion publicacion) {
 		Entidad ePubli = servPersistencia.recuperarEntidad(publicacion.getId());
 		for (Propiedad prop : ePubli.getPropiedades()) {
-			 if (prop.getNombre().equals(DESCRIPCION)) {
+			if (prop.getNombre().equals(DESCRIPCION)) {
 				prop.setValor(publicacion.getDescripcion());
 			} else if (prop.getNombre().equals(MGUSTAS)) {
 				prop.setValor(String.valueOf(publicacion.getMeGusta()));
@@ -141,6 +180,15 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 				prop.setValor(guardarHashtags(publicacion.getHashtags()));
 			} else if (prop.getNombre().equals(COMENTARIOS)) {
 				prop.setValor(guardarComentarios(publicacion.getComentarios()));
+			} else if (prop.getNombre().equals(FOTOSALBUM)) {
+				for(Photo foto : ((Album)publicacion).getFotos()){
+					if(foto.getId() == Photo.IDERROR) {
+						create(foto);
+					} else {
+						update(foto);
+					}
+				}
+				prop.setValor(guardarFotosAlbum(((Album)publicacion).getFotos()));
 			}
 			servPersistencia.modificarPropiedad(prop);
 		}

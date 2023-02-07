@@ -15,6 +15,8 @@ import um.tds.phototds.controlador.Controlador;
 
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.awt.event.ActionEvent;
 
@@ -29,6 +31,14 @@ public class VentanaTitulo extends JDialog {
 		controlador = Controlador.getUnicaInstancia();
 		setBounds(100, 100, 409, 160);
 		getContentPane().setLayout(new BorderLayout());
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				dispose();
+			}
+		});
+		
 		contentPanel.setLayout(new FlowLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setTitle("Introduce un título");
@@ -57,7 +67,7 @@ public class VentanaTitulo extends JDialog {
 								framePrincipal.dispose();
 							}
 						} else {
-							JOptionPane.showMessageDialog(getContentPane(), "Ya existe un albúm con ese nombre",
+							JOptionPane.showMessageDialog(framePrincipal, "Ya existe un albúm con ese nombre",
 									"Error", JOptionPane.ERROR_MESSAGE);
 						}
 

@@ -122,7 +122,7 @@ public class VentanaPrincipal {
 				int result = chooser.showSaveDialog(null);
 				if (result == JFileChooser.APPROVE_OPTION) {
 					File fichero = chooser.getSelectedFile();
-					SubirPublicacion frameSubir = new SubirPublicacion(fichero.getAbsolutePath(),false,"");
+					SubirPublicacion frameSubir = new SubirPublicacion(fichero.getAbsolutePath(), false, "");
 					framePrincipal.dispose();
 					frameSubir.mostrarVentana();
 
@@ -160,14 +160,13 @@ public class VentanaPrincipal {
 				VentanaTitulo frameTituloAlbum = new VentanaTitulo(framePrincipal);
 				frameTituloAlbum.setLocationRelativeTo(null);
 				frameTituloAlbum.setVisible(true);
-				/*JFileChooser chooser = new JFileChooser();
-				int result = chooser.showSaveDialog(null);
-				if (result == JFileChooser.APPROVE_OPTION) {
-					File fichero = chooser.getSelectedFile();
-					SubirPublicacion frameSubir = new SubirPublicacion(fichero.getAbsolutePath(),true);
-					framePrincipal.dispose();
-					frameSubir.mostrarVentana();
-				}*/
+				/*
+				 * JFileChooser chooser = new JFileChooser(); int result =
+				 * chooser.showSaveDialog(null); if (result == JFileChooser.APPROVE_OPTION) {
+				 * File fichero = chooser.getSelectedFile(); SubirPublicacion frameSubir = new
+				 * SubirPublicacion(fichero.getAbsolutePath(),true); framePrincipal.dispose();
+				 * frameSubir.mostrarVentana(); }
+				 */
 			}
 		});
 		buttonAlbum.setForeground(Color.WHITE);
@@ -636,8 +635,7 @@ public class VentanaPrincipal {
 						public void actionPerformed(ActionEvent arg0) {
 							controlador.borrarImagen(foto);
 							System.out.println("Borrandoo");
-							framePrincipal.revalidate();
-							framePrincipal.repaint();
+							popupMenu.setVisible(false);
 
 						}
 					});
@@ -688,7 +686,6 @@ public class VentanaPrincipal {
 					i = 0;
 					j += 1;
 				}
-				System.out.println(album.getFotos().get(0).getPath());
 				Image imgPanel = new ImageIcon(album.getFotos().get(0).getPath()).getImage();
 				JLabel lblAlbum3X3 = new JLabel();
 				lblAlbum3X3.setIcon(new ImageIcon(imgPanel.getScaledInstance(210, 160, Image.SCALE_SMOOTH)));
@@ -716,12 +713,13 @@ public class VentanaPrincipal {
 				gbc_lblAlbum3X3.gridy = j;
 				panelCentroAlbumes.add(lblAlbum3X3, gbc_lblAlbum3X3);
 
-				/*
-				 * lblFoto3X3.addMouseListener(new MouseAdapter() {
-				 * 
-				 * @Override public void mouseClicked(MouseEvent arg0) { new
-				 * Imagen(foto.getPath()); } });
-				 */
+				lblAlbum3X3.addMouseListener(new MouseAdapter() {
+
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						new MostrarAlbum(album);
+					}
+				});
 
 				i++;
 			}

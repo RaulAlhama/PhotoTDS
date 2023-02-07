@@ -17,6 +17,11 @@ import java.awt.Image;
 import javax.swing.JLabel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JPopupMenu;
+import javax.swing.JButton;
+import java.awt.Component;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ListaUsuarios {
 
@@ -57,7 +62,7 @@ public class ListaUsuarios {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JPanel panelCentral = new JPanel();
-
+		panelCentral.setVisible(false);
 		JScrollPane scrollPane = new JScrollPane(panelCentral);
 		panelCentral.setLayout(new GridLayout(0, 1, 0, 0));
 
@@ -86,7 +91,42 @@ public class ListaUsuarios {
 			}
 		}
 		frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+		
+		JPanel panel = new JPanel();
+		frame.getContentPane().add(panel, BorderLayout.NORTH);
+		
+		JLabel lblNewLabel = new JLabel("CLICK DERECHO AQUÍ");
+		panel.add(lblNewLabel);
+		
+		JPopupMenu popupMenu = new JPopupMenu();
+		addPopup(lblNewLabel, popupMenu);
+		
+		JButton btnHacerVisible = new JButton("Hacer Visible");
+		btnHacerVisible.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				panelCentral.setVisible(true);
+				popupMenu.setVisible(false);
+			}
+		});
+		popupMenu.add(btnHacerVisible);
 
 	}
 
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
+	}
 }

@@ -38,9 +38,10 @@ public class MostrarImagen {
 			frame.setSize(imgPanel.getWidth(null), imgPanel.getHeight(null));
 			lblimagen.setIcon(new ImageIcon(imgPanel));
 		}
+		
+		panel.add(lblimagen);
 
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		panel.add(lblimagen);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		

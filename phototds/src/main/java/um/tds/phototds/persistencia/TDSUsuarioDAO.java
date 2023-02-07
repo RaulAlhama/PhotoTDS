@@ -13,6 +13,7 @@ import beans.Entidad;
 import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
+import um.tds.phototds.dominio.Album;
 import um.tds.phototds.dominio.Photo;
 import um.tds.phototds.dominio.Usuario;
 
@@ -28,6 +29,7 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 	private static final String IMAGEN_PATH = "imagen";
 	private static final String PRESENTACION = "presentacion";
 	private static final String FOTOS = "fotos";
+	private static final String ALBUMS = "albums";
 
 	private ServicioPersistencia servPersistencia;
 	private TDSPublicacionDAO persistenciaPublicaciones;
@@ -39,7 +41,9 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 
 	private Usuario entidadToUsuario(Entidad eUsuario) throws ParseException {
 		List<Photo> fotos;
+		List<Album> albums;
 		String idsFotos = "";
+		String idsAlbums = "";
 		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, NOMBRE);
 		String email = servPersistencia.recuperarPropiedadEntidad(eUsuario, EMAIL);
 		String login = servPersistencia.recuperarPropiedadEntidad(eUsuario, LOGIN);
@@ -49,18 +53,33 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		String imagenPath = servPersistencia.recuperarPropiedadEntidad(eUsuario, IMAGEN_PATH);
 		String presentacion = servPersistencia.recuperarPropiedadEntidad(eUsuario, PRESENTACION);
 		idsFotos = servPersistencia.recuperarPropiedadEntidad(eUsuario, FOTOS);
-		//System.out.println(idsFotos);
+		idsAlbums = servPersistencia.recuperarPropiedadEntidad(eUsuario, ALBUMS);
+		// System.out.println(idsFotos);
 		if (idsFotos == null) {
 			fotos = new ArrayList<Photo>();
 		} else
 			fotos = obtenerFotosDeCodigos(idsFotos);
+		if (idsAlbums == null) {
+			albums = new ArrayList<Album>();
+		} else
+			albums = obtenerAlbumsDeCodigos(idsAlbums);
 		Usuario usuario = new Usuario(nombre, email, login, password, obtenerFecha(fechaNacimiento), imagenPath,
 				presentacion);
 		usuario.setId(eUsuario.getId());
 		usuario.setPremium(Boolean.valueOf(premium));
 		usuario.setFotos(fotos);
+		usuario.setAlbumnes(albums);
 
 		return usuario;
+	}
+
+	private List<Album> obtenerAlbumsDeCodigos(String ids) {
+		List<Album> resultado = new LinkedList<Album>();
+		StringTokenizer strTok = new StringTokenizer(ids, " ");
+		while (strTok.hasMoreTokens()) {
+			resultado.add((Album) persistenciaPublicaciones.get(Integer.valueOf(strTok.nextToken())));
+		}
+		return resultado;
 	}
 
 	private List<Photo> obtenerFotosDeCodigos(String ids) {
@@ -127,13 +146,15 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		eUsuario.setNombre(USUARIO);
 		System.out.println(usuario.getFechaNacimiento().toString());
 		String idsFotos = obtenerCodigos(usuario.getFotos());
-		eUsuario.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad(NOMBRE, usuario.getNombre()),
-				new Propiedad(EMAIL, usuario.getEmail()), new Propiedad(LOGIN, usuario.getUsername()),
-				new Propiedad(PASSWORD, usuario.getClave()),
-				new Propiedad(FECHA_NACIMIENTO, usuario.getFechaNacimiento().toString()),
-				new Propiedad(IMAGEN_PATH, usuario.getImagenPath()),
-				new Propiedad(PRESENTACION, usuario.getPresentacion()),
-				new Propiedad(PREMIUM, Boolean.toString(usuario.isPremium())), new Propiedad(FOTOS, idsFotos))));
+		String idsAlbums = obtenerCodigosAlbums(usuario.getAlbumnes());
+		eUsuario.setPropiedades(new ArrayList<Propiedad>(
+				Arrays.asList(new Propiedad(NOMBRE, usuario.getNombre()), new Propiedad(EMAIL, usuario.getEmail()),
+						new Propiedad(LOGIN, usuario.getUsername()), new Propiedad(PASSWORD, usuario.getClave()),
+						new Propiedad(FECHA_NACIMIENTO, usuario.getFechaNacimiento().toString()),
+						new Propiedad(IMAGEN_PATH, usuario.getImagenPath()),
+						new Propiedad(PRESENTACION, usuario.getPresentacion()),
+						new Propiedad(PREMIUM, Boolean.toString(usuario.isPremium())), new Propiedad(FOTOS, idsFotos),
+						new Propiedad(ALBUMS, idsAlbums))));
 		return eUsuario;
 	}
 
@@ -141,6 +162,13 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		String resultado = "";
 		for (Photo f : photos)
 			resultado += f.getId() + " ";
+		return resultado;
+	}
+
+	public String obtenerCodigosAlbums(List<Album> albums) {
+		String resultado = "";
+		for (Album b : albums)
+			resultado += b.getId() + " ";
 		return resultado;
 	}
 
@@ -180,15 +208,26 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 				prop.setValor(usuario.getPresentacion());
 			} else if (prop.getNombre().equals(PREMIUM)) {
 				prop.setValor(Boolean.toString(usuario.isPremium()));
+
+			} else if (prop.getNombre().equals(ALBUMS)) {
+				for (Album alb : usuario.getAlbumnes()) {
+					if(alb.getId() == Album.IDERROR) {
+						persistenciaPublicaciones.create(alb);
+					} else {
+						persistenciaPublicaciones.update(alb);
+					}
+				}
+				prop.setValor(obtenerCodigosAlbums(usuario.getAlbumnes()));
+
 			} else if (prop.getNombre().equals(FOTOS)) {
 				for (Photo f : usuario.getFotos()) {
 					if (f.getId() == Photo.IDERROR) {
 						persistenciaPublicaciones.create(f);
-					}
-					else {
+					} else {
 						persistenciaPublicaciones.update(f);
 					}
-				} prop.setValor(obtenerCodigos(usuario.getFotos()));
+				}
+				prop.setValor(obtenerCodigos(usuario.getFotos()));
 			}
 			servPersistencia.modificarPropiedad(prop);
 		}
@@ -208,9 +247,9 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 
 	public List<Usuario> getAll() {
 		List<Entidad> entidades = servPersistencia.recuperarEntidades(USUARIO);
-		/*for(Entidad e: entidades) {
-			servPersistencia.borrarEntidad(e);
-		}*/
+		/*
+		 * for(Entidad e: entidades) { servPersistencia.borrarEntidad(e); }
+		 */
 		List<Usuario> usuarios = entidades.stream().map(e -> get(e.getId())).collect(Collectors.toList());
 		return usuarios;
 	}

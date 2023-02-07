@@ -39,6 +39,7 @@ public class RepoPublicaciones {
 	
 	public void cargarRepo() {
 		List<Publicacion> publicacionesBD = adaptadorPublicacion.getAll();
+		System.out.println(publicacionesBD.size());
 		 for(Publicacion pub : publicacionesBD) {
 			 //adaptadorPublicacion.delete(pub);
 			 publicacionesID.put(pub.getId(), pub);

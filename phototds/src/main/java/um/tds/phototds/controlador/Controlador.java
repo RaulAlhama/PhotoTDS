@@ -1,6 +1,5 @@
 package um.tds.phototds.controlador;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -9,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import um.tds.phototds.dominio.RepoPublicaciones;
 import um.tds.phototds.dominio.RepoUsuarios;
 import um.tds.phototds.dominio.Usuario;
 import um.tds.phototds.dominio.Album;
@@ -18,13 +16,12 @@ import um.tds.phototds.dominio.Descuento;
 import um.tds.phototds.dominio.DescuentoEdad;
 import um.tds.phototds.dominio.DescuentoPopularidad;
 import um.tds.phototds.dominio.Photo;
+import um.tds.phototds.dominio.Publicacion;
 import um.tds.phototds.persistencia.DAOException;
 import um.tds.phototds.persistencia.FactoriaDAO;
 import um.tds.phototds.persistencia.PublicacionDAO;
 import um.tds.phototds.persistencia.UsuarioDAO;
 import umu.tds.fotos.CargadorFotos;
-import umu.tds.fotos.Fotos;
-import umu.tds.fotos.FotosEvent;
 import umu.tds.fotos.FotosListener;
 
 public class Controlador implements FotosListener {
@@ -36,10 +33,10 @@ public class Controlador implements FotosListener {
 	private UsuarioDAO usuarioDAO;
 
 	private CargadorFotos cargadorFotos;
-	private Fotos nuevasFotos;
+	//private Fotos nuevasFotos;
 
 	private RepoUsuarios repoUsuario;
-	private RepoPublicaciones repoPublicaciones;
+	//private RepoPublicaciones repoPublicaciones;
 	private List<Descuento> descuentos;
 
 	// patron Sigleton
@@ -70,8 +67,9 @@ public class Controlador implements FotosListener {
 	}
 
 	public void inicializarRepositorios() {
+		//repoPublicaciones = RepoPublicaciones.getUnicaInstancia();
 		repoUsuario = RepoUsuarios.getUnicaInstancia();
-		repoPublicaciones = RepoPublicaciones.getUnicaInstancia();
+		
 	}
 
 	public Usuario getUsuarioActual() {
@@ -129,6 +127,12 @@ public class Controlador implements FotosListener {
 	
 	public void compartirAlbum(String titulo, String texto, String path, List<String> hashtags) {
 		usuarioActual.addAlbum(titulo,texto,path,hashtags);
+		actualizarUsuario(usuarioActual);
+	}
+	
+	public void addFotoToAlbum(Album album, String path) {
+		usuarioActual.addFotoToAlbum(album, path);
+		actualizarAlbum(album);
 	}
 	
 	public boolean comprobarTitulo(String titulo) {
@@ -137,6 +141,10 @@ public class Controlador implements FotosListener {
 
 	public void actualizarUsuario(Usuario usuario) {
 		usuarioDAO.update(usuario);
+	}
+	
+	public void actualizarAlbum(Album album) {
+		publicacionDAO.update(album);
 	}
 
 	public void hacerPremium() {
@@ -156,22 +164,20 @@ public class Controlador implements FotosListener {
 	@Override
 	public void nuevasFotos(EventObject arg0) {
 		if (arg0 instanceof FotosListener) {
-			nuevasFotos = ((FotosEvent) arg0).getNuevasFotos();
+			//nuevasFotos = ((FotosEvent) arg0).getNuevasFotos();
 		}
 
 	}
 
-	public int obtenerNumeroPubls() {
-		return usuarioActual.getFotos().size();
-	}
-
 	public int obtenerNumeroPubls(Usuario usu) {
-		return usu.getFotos().size();
+		return usu.getFotos().size() + usu.getAlbumnes().size();
 	}
 
 	public List<Photo> obtenerFotos() {
 		return usuarioActual.getFotos();
 	}
+	
+
 
 	private void inicializarDescuentos() {
 		descuentos = new ArrayList<Descuento>();
@@ -184,9 +190,14 @@ public class Controlador implements FotosListener {
 				.sorted(Comparator.comparing(Descuento::getDescuento).reversed()).findFirst();
 	}
 
-	public void addMeGusta(Photo f) {
-		f.setMeGustas(f.getMeGusta() + 1);
-		publicacionDAO.update(f);
+	public void addMeGusta(Publicacion pub) {
+		pub.setMeGustas(pub.getMeGusta() + 1);
+		if(pub instanceof Album) {
+			for (Photo photo : ((Album) pub).getFotos()) {
+				addMeGusta(photo);
+			}
+		}
+		//publicacionDAO.update(pub);
 	}
 
 	public void addComentario(Photo f, String comentario) {

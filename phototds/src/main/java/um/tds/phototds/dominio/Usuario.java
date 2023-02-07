@@ -151,11 +151,19 @@ public class Usuario {
 		this.fotos.add(foto);
 	}
 	
-	public void addAlbum(String titulo, String texto, String path,List<String> hashtags) {
+	public void addAlbum(String titulo, String texto, String path, List<String> hashtags) {
 		Photo foto = new Photo(LocalDate.now().toString(), texto, hashtags, path);
 		Album album = new Album(titulo,LocalDate.now().toString(), texto, hashtags);
 		album.setFoto(foto);
 		this.albumnes.add(album);
+	}
+	
+	public void addFotoToAlbum(Album album, String path) {
+		for (Album album2 : albumnes) {
+			if(album.getTitulo() == album2.getTitulo()) {
+				album.getFotos().add(new Photo(LocalDate.now().toString(), album.getTitulo(), new ArrayList<String>(), path));
+			}
+		}
 	}
 	
 	public void borrarFoto(Photo foto) {

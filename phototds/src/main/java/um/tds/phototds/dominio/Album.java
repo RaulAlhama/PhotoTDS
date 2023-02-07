@@ -1,6 +1,8 @@
 package um.tds.phototds.dominio;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Album extends Publicacion {
@@ -31,6 +33,10 @@ public class Album extends Publicacion {
 	
 	public void setFoto(Photo foto) {
 		this.fotos.add(foto);
+	}
+	
+	public void addFoto(String path) {
+		this.fotos.add(new Photo(LocalDate.now().toString(),this.titulo, new LinkedList<String>(), path));
 	}
 
 	
