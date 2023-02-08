@@ -197,7 +197,7 @@ public class Controlador implements FotosListener {
 				addMeGusta(photo);
 			}
 		}
-		//publicacionDAO.update(pub);
+		publicacionDAO.update(pub);
 	}
 
 	public void addComentario(Photo f, String comentario) {

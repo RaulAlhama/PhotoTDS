@@ -658,15 +658,16 @@ public class VentanaPrincipal {
 				i++;
 			}
 		}
-		JPanel PanelAlbumes = new JPanel();
-		tabbedPane.addTab("ÁLBUMES", null, PanelAlbumes, null);
+		JPanel panelAlbumes = new JPanel();
+		tabbedPane.addTab("ÁLBUMES", null, panelAlbumes, null);
+		panelAlbumes.setLayout(new BorderLayout(0, 0));
 
 		JPanel panelScrollAlbumes = new JPanel();
 		panelScrollAlbumes.setLayout(new BorderLayout());
-		PanelAlbumes.add(panelScrollAlbumes, BorderLayout.CENTER);
+		panelAlbumes.add(panelScrollAlbumes, BorderLayout.CENTER);
 
 		JScrollPane scrollPaneAlbumes = new JScrollPane(panelScrollAlbumes);
-		PanelAlbumes.add(scrollPaneAlbumes);
+		panelAlbumes.add(scrollPaneAlbumes);
 
 		JPanel panelCentroAlbumes = new JPanel();
 		panelCentroAlbumes.setBackground(Color.LIGHT_GRAY);
@@ -717,7 +718,7 @@ public class VentanaPrincipal {
 
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
-						new MostrarAlbum(album);
+						new MostrarAlbum(album,usu);
 					}
 				});
 
