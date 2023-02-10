@@ -8,7 +8,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 import java.awt.GridBagConstraints;
 import java.awt.Font;
@@ -544,23 +543,32 @@ public class VentanaPrincipal {
 		JButton btnSeguir = new JButton("SEGUIR");
 		if (usu.equals(controlador.getUsuarioActual()))
 			btnSeguir.setText("EDITAR PERFIL");
-
+		if(usu.getSeguidores().contains(controlador.getUsuarioActual()))
+			btnSeguir.setText("DEJAR DE SEGUIR");
+		
 		btnSeguir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (usu.equals(controlador.getUsuarioActual())) {
+				if (btnSeguir.getText().equals("EDITAR PERFIL")) {
 					VentanaRegistro ventanaRegistro = new VentanaRegistro(true);
 					ventanaRegistro.mostrarVentana();
 					framePrincipal.dispose();
-				} else
-					JOptionPane.showMessageDialog(framePrincipal, "FUNCION SIN IMPLEMENTAR", "¡AVISO!",
-							JOptionPane.INFORMATION_MESSAGE);
+				} else if (btnSeguir.getText().equals("SEGUIR")){
+					controlador.addSeguidor(usu);
+					btnSeguir.setText("DEJAR DE SEGUIR");
+					refrescarPanel(panelPerfilBuscado);
+				} else {
+					controlador.deleteSeguidor(usu);
+					btnSeguir.setText("SEGUIR");
+					refrescarPanel(panelPerfilBuscado);
+				}
+					
 			}
 		});
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton.gridx = 7;
-		gbc_btnNewButton.gridy = 1;
-		panelInfoPerfil.add(btnSeguir, gbc_btnNewButton);
+		GridBagConstraints gbc_btnSeguir = new GridBagConstraints();
+		gbc_btnSeguir.insets = new Insets(0, 0, 5, 5);
+		gbc_btnSeguir.gridx = 7;
+		gbc_btnSeguir.gridy = 1;
+		panelInfoPerfil.add(btnSeguir, gbc_btnSeguir);
 
 		JLabel lblPublicaciones = new JLabel(Integer.toString(controlador.obtenerNumeroPubls(usu)) + " publicaciones");
 		GridBagConstraints gbc_lblPublicaciones = new GridBagConstraints();
@@ -569,14 +577,14 @@ public class VentanaPrincipal {
 		gbc_lblPublicaciones.gridy = 3;
 		panelInfoPerfil.add(lblPublicaciones, gbc_lblPublicaciones);
 
-		JLabel lblSeguidores = new JLabel("0 seguidores ");
+		JLabel lblSeguidores = new JLabel(controlador.getSeguidores(usu) + " Seguidores");
 		GridBagConstraints gbc_lblSeguidores = new GridBagConstraints();
 		gbc_lblSeguidores.insets = new Insets(0, 0, 0, 5);
 		gbc_lblSeguidores.gridx = 7;
 		gbc_lblSeguidores.gridy = 3;
 		panelInfoPerfil.add(lblSeguidores, gbc_lblSeguidores);
 
-		JLabel lblSeguidos = new JLabel("0 seguidos ");
+		JLabel lblSeguidos = new JLabel(/*controlador.getSeguidos(usu) + */   " Seguidos");
 		GridBagConstraints gbc_lblSeguidos = new GridBagConstraints();
 		gbc_lblSeguidos.gridx = 9;
 		gbc_lblSeguidos.gridy = 3;
@@ -727,6 +735,12 @@ public class VentanaPrincipal {
 		}
 
 		return panelInfoSurPerfil;
+	}
+	
+	private void refrescarPanel(JPanel panel) {
+		panel.revalidate();
+		panel.repaint();
+		panel.validate();
 	}
 
 	private static void addPopup(Component component, final JPopupMenu popup) {

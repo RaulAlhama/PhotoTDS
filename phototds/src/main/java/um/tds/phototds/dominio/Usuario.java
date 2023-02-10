@@ -4,8 +4,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
 
 public class Usuario {
@@ -22,7 +24,7 @@ public class Usuario {
 	private String imagenPath;
 	private String presentacion;
 	private List<Notificacion> notificaciones;
-	private List<Usuario> seguidores;
+	private Set<Usuario> seguidores;
 
 	public Usuario(String nombre, String email, String login, String password, Date fechaNacimiento, String imagenPath,
 			String presentacion) {
@@ -38,7 +40,7 @@ public class Usuario {
 		this.imagenPath = imagenPath;
 		this.presentacion = presentacion;
 		this.notificaciones = new ArrayList<Notificacion>();
-		this.seguidores = new ArrayList<Usuario>();
+		this.seguidores = new HashSet<Usuario>();
 	}
 
 	public int getId() {
@@ -138,11 +140,12 @@ public class Usuario {
 	}
 	
 
-	public List<Usuario> getSeguidores() {
+
+	public Set<Usuario> getSeguidores() {
 		return seguidores;
 	}
 
-	public void setSeguidores(List<Usuario> seguidores) {
+	public void setSeguidores(Set<Usuario> seguidores) {
 		this.seguidores = seguidores;
 	}
 
@@ -172,6 +175,14 @@ public class Usuario {
 	
 	public void borrarAlbum(Album album) {
 		this.albumnes.remove(album);
+	}
+	
+	public void addSeguidor(Usuario usu) {
+		this.seguidores.add(usu);
+	}
+	
+	public void deleteSeguidor(Usuario usu) {
+		this.seguidores.remove(usu);
 	}
 	
 

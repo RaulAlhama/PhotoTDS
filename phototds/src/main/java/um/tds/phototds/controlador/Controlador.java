@@ -33,10 +33,10 @@ public class Controlador implements FotosListener {
 	private UsuarioDAO usuarioDAO;
 
 	private CargadorFotos cargadorFotos;
-	//private Fotos nuevasFotos;
+	// private Fotos nuevasFotos;
 
 	private RepoUsuarios repoUsuario;
-	//private RepoPublicaciones repoPublicaciones;
+	// private RepoPublicaciones repoPublicaciones;
 	private List<Descuento> descuentos;
 
 	// patron Sigleton
@@ -67,9 +67,9 @@ public class Controlador implements FotosListener {
 	}
 
 	public void inicializarRepositorios() {
-		//repoPublicaciones = RepoPublicaciones.getUnicaInstancia();
+		// repoPublicaciones = RepoPublicaciones.getUnicaInstancia();
 		repoUsuario = RepoUsuarios.getUnicaInstancia();
-		
+
 	}
 
 	public Usuario getUsuarioActual() {
@@ -108,33 +108,33 @@ public class Controlador implements FotosListener {
 		usuarioDAO.delete(usuario);
 		return true;
 	}
-	
+
 	public void borrarImagen(Photo foto) {
 		usuarioActual.borrarFoto(foto);
 		publicacionDAO.delete(foto);
 		actualizarUsuario(usuarioActual);
 	}
-	
+
 	public void borrarAlbum(Album album) {
 		usuarioActual.borrarAlbum(album);
-		
+
 	}
-	
+
 	public void compartirFoto(String texto, String path, List<String> hashtags) {
 		usuarioActual.addFoto(texto, path, hashtags);
 		actualizarUsuario(usuarioActual);
 	}
-	
+
 	public void compartirAlbum(String titulo, String texto, String path, List<String> hashtags) {
-		usuarioActual.addAlbum(titulo,texto,path,hashtags);
+		usuarioActual.addAlbum(titulo, texto, path, hashtags);
 		actualizarUsuario(usuarioActual);
 	}
-	
+
 	public void addFotoToAlbum(Album album, String path) {
 		usuarioActual.addFotoToAlbum(album, path);
 		actualizarAlbum(album);
 	}
-	
+
 	public boolean comprobarTitulo(String titulo) {
 		return !(usuarioActual.getAlbumnes().stream().anyMatch(a -> a.getTitulo().equals(titulo)));
 	}
@@ -142,7 +142,7 @@ public class Controlador implements FotosListener {
 	public void actualizarUsuario(Usuario usuario) {
 		usuarioDAO.update(usuario);
 	}
-	
+
 	public void actualizarAlbum(Album album) {
 		publicacionDAO.update(album);
 	}
@@ -152,10 +152,11 @@ public class Controlador implements FotosListener {
 		actualizarUsuario(usuarioActual);
 	}
 
-	/*public void compartirFoto(String texto, String path, List<String> hashtags) {
-		usuarioActual.addFoto(texto, path, hashtags);
-		actualizarUsuario(usuarioActual);
-	}*/
+	/*
+	 * public void compartirFoto(String texto, String path, List<String> hashtags) {
+	 * usuarioActual.addFoto(texto, path, hashtags);
+	 * actualizarUsuario(usuarioActual); }
+	 */
 
 	public void setFotosFile(String path) {
 		cargadorFotos.setArchivoFotos(path);
@@ -164,7 +165,7 @@ public class Controlador implements FotosListener {
 	@Override
 	public void nuevasFotos(EventObject arg0) {
 		if (arg0 instanceof FotosListener) {
-			//nuevasFotos = ((FotosEvent) arg0).getNuevasFotos();
+			// nuevasFotos = ((FotosEvent) arg0).getNuevasFotos();
 		}
 
 	}
@@ -176,8 +177,6 @@ public class Controlador implements FotosListener {
 	public List<Photo> obtenerFotos() {
 		return usuarioActual.getFotos();
 	}
-	
-
 
 	private void inicializarDescuentos() {
 		descuentos = new ArrayList<Descuento>();
@@ -192,7 +191,7 @@ public class Controlador implements FotosListener {
 
 	public void addMeGusta(Publicacion pub) {
 		pub.setMeGustas(pub.getMeGusta() + 1);
-		if(pub instanceof Album) {
+		if (pub instanceof Album) {
 			for (Photo photo : ((Album) pub).getFotos()) {
 				addMeGusta(photo);
 			}
@@ -220,17 +219,39 @@ public class Controlador implements FotosListener {
 	public List<Usuario> obtenerUsuariosFiltro(String filtro) {
 		List<Usuario> usuarios = obtenerUsuarios().stream().filter(u -> u.getId() != usuarioActual.getId())
 				.collect(Collectors.toList()); // Todos los usuarios menos el actual
-		
+
 		return usuarios.stream().filter(u -> u.getNombre().startsWith(filtro)).collect(Collectors.toList());
 	}
-	
+
 	public List<Photo> obtenerTodasLasFotos() {
 		List<Usuario> usuarios = obtenerUsuarios();
 		List<Photo> fotos = new ArrayList<Photo>();
 		usuarios.stream().forEach(u -> fotos.addAll(u.getFotos()));
 		return fotos;
 	}
-	
 
+	public void addSeguidor(Usuario usu) {
+		usu.addSeguidor(usuarioActual);
+		actualizarUsuario(usu);
+	}
+
+	public void deleteSeguidor(Usuario usu) {
+		usu.deleteSeguidor(usuarioActual);
+		actualizarUsuario(usu);
+	}
+
+	public String getSeguidores(Usuario usu) {
+		return Integer.toString(usu.getSeguidores().size());
+	}
+
+	/*public String getSeguidos(Usuario usu) {
+		int contador = 0;
+		List<Usuario> usuarios = obtenerUsuarios();
+		for (Usuario usuario : usuarios) {
+				if (usuario.getSeguidores().contains(usu))
+					contador++;
+			}
+		return Integer.toString(contador);
+	}*/
 
 }
