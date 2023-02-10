@@ -24,7 +24,7 @@ public class Usuario {
 	private String imagenPath;
 	private String presentacion;
 	private List<Notificacion> notificaciones;
-	private Set<Usuario> seguidores;
+	private Set<String> seguidores;
 
 	public Usuario(String nombre, String email, String login, String password, Date fechaNacimiento, String imagenPath,
 			String presentacion) {
@@ -40,7 +40,7 @@ public class Usuario {
 		this.imagenPath = imagenPath;
 		this.presentacion = presentacion;
 		this.notificaciones = new ArrayList<Notificacion>();
-		this.seguidores = new HashSet<Usuario>();
+		this.seguidores = new HashSet<String>();
 	}
 
 	public int getId() {
@@ -141,11 +141,11 @@ public class Usuario {
 	
 
 
-	public Set<Usuario> getSeguidores() {
+	public Set<String> getSeguidores() {
 		return seguidores;
 	}
 
-	public void setSeguidores(Set<Usuario> seguidores) {
+	public void setSeguidores(Set<String> seguidores) {
 		this.seguidores = seguidores;
 	}
 
@@ -177,12 +177,12 @@ public class Usuario {
 		this.albumnes.remove(album);
 	}
 	
-	public void addSeguidor(Usuario usu) {
-		this.seguidores.add(usu);
+	public void addSeguidor(String usuId) {
+		this.seguidores.add(usuId);
 	}
 	
-	public void deleteSeguidor(Usuario usu) {
-		this.seguidores.remove(usu);
+	public void deleteSeguidor(String usuId) {
+		this.seguidores.remove(usuId);
 	}
 	
 

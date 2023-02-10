@@ -45,7 +45,7 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 	private Usuario entidadToUsuario(Entidad eUsuario) throws ParseException {
 		List<Photo> fotos;
 		List<Album> albums;
-		Set<Usuario> seguidores;
+		Set<String> seguidores;
 		String idsFotos = "";
 		String idsAlbums = "";
 		String idsSeguidores = "";
@@ -70,7 +70,7 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		} else
 			albums = obtenerAlbumsDeCodigos(idsAlbums);
 		if (idsSeguidores == null) {
-			seguidores = new HashSet<Usuario>();
+			seguidores = new HashSet<String>();
 		} else
 			seguidores = obtenerSeguidoresDeCodigos(idsSeguidores);
 		Usuario usuario = new Usuario(nombre, email, login, password, obtenerFecha(fechaNacimiento), imagenPath,
@@ -84,11 +84,11 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		return usuario;
 	}
 
-	private Set<Usuario> obtenerSeguidoresDeCodigos(String ids) {
-		Set<Usuario> resultado = new HashSet<Usuario>();
+	private Set<String> obtenerSeguidoresDeCodigos(String ids) {
+		Set<String> resultado = new HashSet<String>();
 		StringTokenizer strTok = new StringTokenizer(ids, " ");
 		while (strTok.hasMoreTokens()) {
-			resultado.add(get(Integer.valueOf(strTok.nextToken())));
+			resultado.add(strTok.nextToken());
 		}
 		return resultado;
 	}
@@ -179,10 +179,10 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		return eUsuario;
 	}
 
-	public String obtenerCodigosSeguidores(Set<Usuario> seguidores) {
+	public String obtenerCodigosSeguidores(Set<String> seguidoresIds) {
 		String resultado = "";
-		for (Usuario u : seguidores)
-			resultado += u.getId() + " ";
+		for (String id : seguidoresIds)
+			resultado += id + " ";
 		return resultado;
 	}
 

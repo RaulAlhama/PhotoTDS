@@ -231,12 +231,12 @@ public class Controlador implements FotosListener {
 	}
 
 	public void addSeguidor(Usuario usu) {
-		usu.addSeguidor(usuarioActual);
+		usu.addSeguidor(Integer.toString(usuarioActual.getId()));
 		actualizarUsuario(usu);
 	}
 
 	public void deleteSeguidor(Usuario usu) {
-		usu.deleteSeguidor(usuarioActual);
+		usu.deleteSeguidor(Integer.toString(usuarioActual.getId()));
 		actualizarUsuario(usu);
 	}
 
