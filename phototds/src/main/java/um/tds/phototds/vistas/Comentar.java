@@ -16,7 +16,7 @@ import java.awt.Image;
 import javax.swing.border.BevelBorder;
 
 import um.tds.phototds.controlador.Controlador;
-import um.tds.phototds.dominio.Photo;
+import um.tds.phototds.dominio.Publicacion;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -34,9 +34,9 @@ public class Comentar {
 	 */
 	// Si true -> VentanaPrincipal
 	// Si false -> VentanaPerfil
-	public Comentar(Photo foto) {
+	public Comentar(Publicacion pub, String path) {
 		controlador = Controlador.getUnicaInstancia();
-		initialize(foto);
+		initialize(pub, path);
 	}
 	
 	public void mostrarVentana() {
@@ -46,7 +46,7 @@ public class Comentar {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(Photo foto) {
+	private void initialize(Publicacion foto, String path) {
 		frameComentario = new JFrame();
 		frameComentario.setBounds(100, 100, 746, 444);
 		frameComentario.setUndecorated(true);
@@ -99,7 +99,7 @@ public class Comentar {
 		JLabel label = new JLabel("");
 		panelImagen.add(label);
 		
-		Image img = new ImageIcon(foto.getPath()).getImage();
+		Image img = new ImageIcon(path).getImage();
 		// JLabel lblFoto = new JLabel("");
 		label.setIcon(new ImageIcon(img.getScaledInstance(450,338, Image.SCALE_SMOOTH)));
 		

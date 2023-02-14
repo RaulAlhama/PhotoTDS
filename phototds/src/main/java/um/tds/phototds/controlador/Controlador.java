@@ -1,11 +1,13 @@
 package um.tds.phototds.controlador;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.EventObject;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import um.tds.phototds.dominio.RepoUsuarios;
@@ -15,6 +17,7 @@ import um.tds.phototds.dominio.Comentario;
 import um.tds.phototds.dominio.Descuento;
 import um.tds.phototds.dominio.DescuentoEdad;
 import um.tds.phototds.dominio.DescuentoPopularidad;
+import um.tds.phototds.dominio.Notificacion;
 import um.tds.phototds.dominio.Photo;
 import um.tds.phototds.dominio.Publicacion;
 import um.tds.phototds.persistencia.DAOException;
@@ -121,8 +124,10 @@ public class Controlador implements FotosListener {
 	}
 
 	public void compartirFoto(String texto, String path, List<String> hashtags) {
-		usuarioActual.addFoto(texto, path, hashtags);
+		Photo foto = usuarioActual.addFoto(texto, path, hashtags);
 		actualizarUsuario(usuarioActual);
+		notificarSeguidores(foto);
+		
 	}
 
 	public void compartirAlbum(String titulo, String texto, String path, List<String> hashtags) {
@@ -199,7 +204,7 @@ public class Controlador implements FotosListener {
 		publicacionDAO.update(pub);
 	}
 
-	public void addComentario(Photo f, String comentario) {
+	public void addComentario(Publicacion f, String comentario) {
 		f.setComentario(new Comentario(comentario));
 		publicacionDAO.update(f);
 	}
@@ -240,18 +245,56 @@ public class Controlador implements FotosListener {
 		actualizarUsuario(usu);
 	}
 
-	public String getSeguidores(Usuario usu) {
+	public String getNumSeguidores(Usuario usu) {
 		return Integer.toString(usu.getSeguidores().size());
 	}
 
-	/*public String getSeguidos(Usuario usu) {
+	public String getSeguidos(Usuario usu) {
 		int contador = 0;
 		List<Usuario> usuarios = obtenerUsuarios();
 		for (Usuario usuario : usuarios) {
-				if (usuario.getSeguidores().contains(usu))
+				if (usuario.getSeguidores().contains(Integer.toString(usu.getId())))
 					contador++;
 			}
 		return Integer.toString(contador);
-	}*/
+	}
+	
+	
+	public void notificarSeguidores(Publicacion pub) {
+		Set<String> seguidoresIds = usuarioActual.getSeguidores();
+		List<Usuario> seguidores = new ArrayList<Usuario>();
+		Notificacion notificacion = crearNotificacion(pub);
+		for(String id : seguidoresIds) {
+			seguidores.add(usuarioDAO.get(Integer.parseInt(id)));
+		}
+		for (Usuario usuario : seguidores) {
+			usuario.addNotificacion(notificacion);
+			actualizarUsuario(usuario);
+		}
+		usuarioActual.addNotificacion(notificacion);
+		actualizarUsuario(usuarioActual);
+	}
+	
+	public Notificacion crearNotificacion(Publicacion pub) {
+		Notificacion notificacion = new Notificacion(Integer.toString(pub.getId()), Integer.toString(usuarioActual.getId()));
+		return notificacion;
+	}
+	
+	public List<Notificacion> getNotificaciones(){
+		List<Notificacion> notificaciones = usuarioActual.getNotificaciones();
+		Collections.reverse(notificaciones);
+		for (Notificacion notificacion : notificaciones) {
+			System.out.println(notificacion);
+		}
+		return notificaciones;
+	}
+	
+	public Publicacion getPubDeNotif(String id) {
+		return publicacionDAO.get(Integer.parseInt(id));
+	}
+	
+	public Usuario getUserDeNotif(String id) {
+		return usuarioDAO.get(Integer.parseInt(id));
+	}
 
 }

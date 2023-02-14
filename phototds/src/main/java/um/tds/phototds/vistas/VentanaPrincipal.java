@@ -21,7 +21,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import um.tds.phototds.controlador.Controlador;
 import um.tds.phototds.dominio.Album;
+import um.tds.phototds.dominio.Notificacion;
 import um.tds.phototds.dominio.Photo;
+import um.tds.phototds.dominio.Publicacion;
 import um.tds.phototds.dominio.Usuario;
 
 import javax.swing.ImageIcon;
@@ -39,8 +41,10 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import pulsador.Luz;
 import pulsador.IEncendidoListener;
+
 import java.util.EventObject;
 import java.util.List;
+
 import javax.swing.JPopupMenu;
 import java.awt.Component;
 
@@ -325,104 +329,110 @@ public class VentanaPrincipal {
 		panelCentro.setLayout(new GridLayout(0, 1, 0, 10));
 
 		// Mostrar las 20 publicaciones más recientes
-		for (Usuario usu : controlador.obtenerUsuarios()) {
-			for (Photo foto : usu.getFotos()) {
-				JPanel panelFoto = new JPanel();
-				// System.out.println(foto.getHashtags());
-				panelCentro.add(panelFoto);
-				GridBagLayout gbl_panelFoto1 = new GridBagLayout();
-				gbl_panelFoto1.columnWidths = new int[] { 192, 97, 97, 0, 0 };
-				gbl_panelFoto1.rowHeights = new int[] { 20, 40, 0, 0, 0 };
-				gbl_panelFoto1.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-				gbl_panelFoto1.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-				panelFoto.setLayout(gbl_panelFoto1);
-
-				Image imgPanel = new ImageIcon(foto.getPath()).getImage();
-				JLabel lblimagen = new JLabel("");
-				lblimagen.setIcon(new ImageIcon(imgPanel.getScaledInstance(240, 160, Image.SCALE_SMOOTH)));
-				GridBagConstraints gbc_foto = new GridBagConstraints();
-				gbc_foto.fill = GridBagConstraints.HORIZONTAL;
-				gbc_foto.gridheight = 2;
-				gbc_foto.anchor = GridBagConstraints.NORTH;
-				gbc_foto.insets = new Insets(0, 0, 5, 5);
-				gbc_foto.gridx = 0;
-				gbc_foto.gridy = 1;
-				panelFoto.add(lblimagen, gbc_foto);
-				lblimagen.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent arg0) {
-						new MostrarImagen(foto.getPath());
-					}
-				});
-
-				JButton buttonCorazon = new JButton("");
-				buttonCorazon.setIcon(
-						new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/Corazon.png")));
-				buttonCorazon.setBackground(Color.WHITE);
-				GridBagConstraints gbc_buttonCorazon = new GridBagConstraints();
-				gbc_buttonCorazon.insets = new Insets(0, 0, 5, 5);
-				gbc_buttonCorazon.gridx = 1;
-				gbc_buttonCorazon.gridy = 1;
-
-				panelFoto.add(buttonCorazon, gbc_buttonCorazon);
-
-				JButton buttonComentarios = new JButton("");
-				buttonComentarios.setBackground(Color.WHITE);
-				buttonComentarios.setIcon(
-						new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/Comentario.png")));
-				GridBagConstraints gbc_buttonComentarios = new GridBagConstraints();
-				gbc_buttonComentarios.insets = new Insets(0, 0, 5, 5);
-				gbc_buttonComentarios.anchor = GridBagConstraints.WEST;
-				gbc_buttonComentarios.gridx = 2;
-				gbc_buttonComentarios.gridy = 1;
-
-				buttonComentarios.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						Comentar frameComentar = new Comentar(foto);
-						framePrincipal.dispose();
-						frameComentar.mostrarVentana();
-					}
-				});
-
-				panelFoto.add(buttonComentarios, gbc_buttonComentarios);
-
-				JLabel lblMeGusta = new JLabel(Integer.toString(foto.getMeGusta()) + " Me Gustas");
-				GridBagConstraints gbc_lblMeGusta = new GridBagConstraints();
-				gbc_lblMeGusta.insets = new Insets(0, 0, 5, 0);
-				gbc_lblMeGusta.gridx = 3;
-				gbc_lblMeGusta.gridy = 1;
-				panelFoto.add(lblMeGusta, gbc_lblMeGusta);
-
-				buttonCorazon.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						controlador.addMeGusta(foto);
-						lblMeGusta.setText(foto.getMeGusta() + " Me Gustas");
-					}
-				});
-
-				JLabel lblComentarios = new JLabel(Integer.toString(foto.getComentarios().size()) + " Comentarios");
-				GridBagConstraints gbc_lblComentarios = new GridBagConstraints();
-				gbc_lblComentarios.insets = new Insets(0, 0, 5, 0);
-				gbc_lblComentarios.gridx = 4;
-				gbc_lblComentarios.gridy = 1;
-				panelFoto.add(lblComentarios, gbc_lblComentarios);
-
-				Image imgUsuario = new ImageIcon(usu.getImagenPath()).getImage();
-				JLabel labelFotoUsuario = new JLabel("");
-				labelFotoUsuario.setIcon(new ImageIcon(imgUsuario.getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
-				GridBagConstraints gbc_label = new GridBagConstraints();
-				gbc_label.insets = new Insets(0, 0, 5, 5);
-				gbc_label.gridx = 1;
-				gbc_label.gridy = 2;
-				panelFoto.add(labelFotoUsuario, gbc_label);
-
-				JLabel lblUsuario = new JLabel(usu.getUsername());
-				GridBagConstraints gbc_lblUsuario = new GridBagConstraints();
-				gbc_lblUsuario.insets = new Insets(0, 0, 5, 5);
-				gbc_lblUsuario.gridx = 2;
-				gbc_lblUsuario.gridy = 2;
-				panelFoto.add(lblUsuario, gbc_lblUsuario);
+		for (Notificacion notificacion : controlador.getNotificaciones()) {
+			JPanel panelFoto = new JPanel();
+			// System.out.println(foto.getHashtags());
+			panelCentro.add(panelFoto);
+			GridBagLayout gbl_panelFoto1 = new GridBagLayout();
+			gbl_panelFoto1.columnWidths = new int[] { 192, 97, 97, 0, 0 };
+			gbl_panelFoto1.rowHeights = new int[] { 20, 40, 0, 0, 0 };
+			gbl_panelFoto1.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+			gbl_panelFoto1.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+			panelFoto.setLayout(gbl_panelFoto1);
+			Publicacion pub = controlador.getPubDeNotif(notificacion.getIdPublicacion());
+			String path;			
+			if(pub instanceof Photo) {
+				path = ((Photo) pub).getPath();
 			}
+			else {
+				path = ((Album) pub).getFotos().get(0).getPath();
+			}
+
+			Image imgPanel = new ImageIcon(path).getImage();
+			JLabel lblimagen = new JLabel("");
+			lblimagen.setIcon(new ImageIcon(imgPanel.getScaledInstance(240, 160, Image.SCALE_SMOOTH)));
+			GridBagConstraints gbc_foto = new GridBagConstraints();
+			gbc_foto.fill = GridBagConstraints.HORIZONTAL;
+			gbc_foto.gridheight = 2;
+			gbc_foto.anchor = GridBagConstraints.NORTH;
+			gbc_foto.insets = new Insets(0, 0, 5, 5);
+			gbc_foto.gridx = 0;
+			gbc_foto.gridy = 1;
+			panelFoto.add(lblimagen, gbc_foto);
+			lblimagen.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					new MostrarImagen(path);
+				}
+			});
+
+			JButton buttonCorazon = new JButton("");
+			buttonCorazon.setIcon(
+					new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/Corazon.png")));
+			buttonCorazon.setBackground(Color.WHITE);
+			GridBagConstraints gbc_buttonCorazon = new GridBagConstraints();
+			gbc_buttonCorazon.insets = new Insets(0, 0, 5, 5);
+			gbc_buttonCorazon.gridx = 1;
+			gbc_buttonCorazon.gridy = 1;
+
+			panelFoto.add(buttonCorazon, gbc_buttonCorazon);
+
+			JButton buttonComentarios = new JButton("");
+			buttonComentarios.setBackground(Color.WHITE);
+			buttonComentarios.setIcon(
+					new ImageIcon(VentanaPrincipal.class.getResource("/um/tds/phototds/imagenes/Comentario.png")));
+			GridBagConstraints gbc_buttonComentarios = new GridBagConstraints();
+			gbc_buttonComentarios.insets = new Insets(0, 0, 5, 5);
+			gbc_buttonComentarios.anchor = GridBagConstraints.WEST;
+			gbc_buttonComentarios.gridx = 2;
+			gbc_buttonComentarios.gridy = 1;
+
+			buttonComentarios.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					Comentar frameComentar = new Comentar(pub,path);
+					framePrincipal.dispose();
+					frameComentar.mostrarVentana();
+				}
+			});
+
+			panelFoto.add(buttonComentarios, gbc_buttonComentarios);
+
+			JLabel lblMeGusta = new JLabel(Integer.toString(pub.getMeGusta()) + " Me Gustas");
+			GridBagConstraints gbc_lblMeGusta = new GridBagConstraints();
+			gbc_lblMeGusta.insets = new Insets(0, 0, 5, 0);
+			gbc_lblMeGusta.gridx = 3;
+			gbc_lblMeGusta.gridy = 1;
+			panelFoto.add(lblMeGusta, gbc_lblMeGusta);
+
+			buttonCorazon.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					controlador.addMeGusta(pub);
+					lblMeGusta.setText(pub.getMeGusta() + " Me Gustas");
+				}
+			});
+
+			JLabel lblComentarios = new JLabel(Integer.toString(pub.getComentarios().size()) + " Comentarios");
+			GridBagConstraints gbc_lblComentarios = new GridBagConstraints();
+			gbc_lblComentarios.insets = new Insets(0, 0, 5, 0);
+			gbc_lblComentarios.gridx = 4;
+			gbc_lblComentarios.gridy = 1;
+			panelFoto.add(lblComentarios, gbc_lblComentarios);
+
+			Image imgUsuario = new ImageIcon(controlador.getUserDeNotif(notificacion.getIdPublicador()).getImagenPath()).getImage();
+			JLabel labelFotoUsuario = new JLabel("");
+			labelFotoUsuario.setIcon(new ImageIcon(imgUsuario.getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+			GridBagConstraints gbc_label = new GridBagConstraints();
+			gbc_label.insets = new Insets(0, 0, 5, 5);
+			gbc_label.gridx = 1;
+			gbc_label.gridy = 2;
+			panelFoto.add(labelFotoUsuario, gbc_label);
+
+			JLabel lblUsuario = new JLabel(controlador.getUserDeNotif(notificacion.getIdPublicador()).getUsername());
+			GridBagConstraints gbc_lblUsuario = new GridBagConstraints();
+			gbc_lblUsuario.insets = new Insets(0, 0, 5, 5);
+			gbc_lblUsuario.gridx = 2;
+			gbc_lblUsuario.gridy = 2;
+			panelFoto.add(lblUsuario, gbc_lblUsuario);
 		}
 
 		framePrincipal.getContentPane().add(scrollFotos, BorderLayout.CENTER);
@@ -540,19 +550,21 @@ public class VentanaPrincipal {
 		gbc_lblUsuario.gridy = 1;
 		panelInfoPerfil.add(lblUsuario, gbc_lblUsuario);
 
-		JButton btnSeguir = new JButton("SEGUIR");
+		JButton btnSeguir = new JButton();
 		if (usu.equals(controlador.getUsuarioActual()))
 			btnSeguir.setText("EDITAR PERFIL");
-		if(usu.getSeguidores().contains(controlador.getUsuarioActual()))
+		else if (usu.getSeguidores().contains(Integer.toString(controlador.getUsuarioActual().getId())))
 			btnSeguir.setText("DEJAR DE SEGUIR");
-		
+		else
+			btnSeguir.setText("SEGUIR");
+
 		btnSeguir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (btnSeguir.getText().equals("EDITAR PERFIL")) {
 					VentanaRegistro ventanaRegistro = new VentanaRegistro(true);
 					ventanaRegistro.mostrarVentana();
 					framePrincipal.dispose();
-				} else if (btnSeguir.getText().equals("SEGUIR")){
+				} else if (btnSeguir.getText().equals("SEGUIR")) {
 					controlador.addSeguidor(usu);
 					btnSeguir.setText("DEJAR DE SEGUIR");
 					refrescarPanel(panelPerfilBuscado);
@@ -561,7 +573,7 @@ public class VentanaPrincipal {
 					btnSeguir.setText("SEGUIR");
 					refrescarPanel(panelPerfilBuscado);
 				}
-					
+
 			}
 		});
 		GridBagConstraints gbc_btnSeguir = new GridBagConstraints();
@@ -577,14 +589,14 @@ public class VentanaPrincipal {
 		gbc_lblPublicaciones.gridy = 3;
 		panelInfoPerfil.add(lblPublicaciones, gbc_lblPublicaciones);
 
-		JLabel lblSeguidores = new JLabel(controlador.getSeguidores(usu) + " Seguidores");
+		JLabel lblSeguidores = new JLabel(controlador.getNumSeguidores(usu) + " Seguidores");
 		GridBagConstraints gbc_lblSeguidores = new GridBagConstraints();
 		gbc_lblSeguidores.insets = new Insets(0, 0, 0, 5);
 		gbc_lblSeguidores.gridx = 7;
 		gbc_lblSeguidores.gridy = 3;
 		panelInfoPerfil.add(lblSeguidores, gbc_lblSeguidores);
 
-		JLabel lblSeguidos = new JLabel(/*controlador.getSeguidos(usu) + */   " Seguidos");
+		JLabel lblSeguidos = new JLabel(controlador.getSeguidos(usu) + " Seguidos");
 		GridBagConstraints gbc_lblSeguidos = new GridBagConstraints();
 		gbc_lblSeguidos.gridx = 9;
 		gbc_lblSeguidos.gridy = 3;
@@ -726,7 +738,7 @@ public class VentanaPrincipal {
 
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
-						new MostrarAlbum(album,usu);
+						new MostrarAlbum(album, usu);
 					}
 				});
 
@@ -736,7 +748,7 @@ public class VentanaPrincipal {
 
 		return panelInfoSurPerfil;
 	}
-	
+
 	private void refrescarPanel(JPanel panel) {
 		panel.revalidate();
 		panel.repaint();

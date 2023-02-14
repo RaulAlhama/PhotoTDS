@@ -132,11 +132,18 @@ public class Usuario {
 	}
 	
 	public List<Notificacion> getNotificaciones() {
-		return notificaciones;
+		return new ArrayList<Notificacion>(notificaciones);
 	}
 
 	public void setNotificaciones(List<Notificacion> notificaciones) {
 		this.notificaciones = notificaciones;
+	}
+	
+	public void addNotificacion(Notificacion notificacion) {
+		if(notificaciones.size() == 5) {
+			notificaciones.remove(0);
+		}
+		this.notificaciones.add(notificacion);
 	}
 	
 
@@ -149,9 +156,10 @@ public class Usuario {
 		this.seguidores = seguidores;
 	}
 
-	public void addFoto(String texto, String path,List<String> hashtags) {
+	public Photo addFoto(String texto, String path,List<String> hashtags) {
 		Photo foto = new Photo(LocalDate.now().toString(), texto, hashtags, path);
 		this.fotos.add(foto);
+		return foto;
 	}
 	
 	public void addAlbum(String titulo, String texto, String path, List<String> hashtags) {

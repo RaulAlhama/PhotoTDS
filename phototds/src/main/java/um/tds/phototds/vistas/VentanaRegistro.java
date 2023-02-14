@@ -260,7 +260,8 @@ public class VentanaRegistro {
 		panelFotoUsuario.add(btnFotoUsuario);
 
 		labelFotoPerfil = new JLabel("");
-		labelFotoPerfil.setIcon(new ImageIcon(imagenPath));
+		Image img = new ImageIcon(imagenPath).getImage();
+		labelFotoPerfil.setIcon(new ImageIcon(img.getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
 		panelFotoUsuario.add(labelFotoPerfil);
 
 		JPanel panelTitulo = new JPanel();

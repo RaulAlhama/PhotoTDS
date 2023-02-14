@@ -16,6 +16,7 @@ import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 import um.tds.phototds.dominio.Album;
+import um.tds.phototds.dominio.Notificacion;
 import um.tds.phototds.dominio.Photo;
 import um.tds.phototds.dominio.Usuario;
 
@@ -33,6 +34,7 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 	private static final String FOTOS = "fotos";
 	private static final String ALBUMS = "albums";
 	private static final String SEGUIDORES = "seguidores";
+	private static final String NOTIFICACIONES = "notificaciones";
 
 	private ServicioPersistencia servPersistencia;
 	private TDSPublicacionDAO persistenciaPublicaciones;
@@ -46,9 +48,11 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		List<Photo> fotos;
 		List<Album> albums;
 		Set<String> seguidores;
+		List<Notificacion> notificaciones;
 		String idsFotos = "";
 		String idsAlbums = "";
 		String idsSeguidores = "";
+		String idsNotificaciones = "";
 		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, NOMBRE);
 		String email = servPersistencia.recuperarPropiedadEntidad(eUsuario, EMAIL);
 		String login = servPersistencia.recuperarPropiedadEntidad(eUsuario, LOGIN);
@@ -60,6 +64,7 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		idsFotos = servPersistencia.recuperarPropiedadEntidad(eUsuario, FOTOS);
 		idsAlbums = servPersistencia.recuperarPropiedadEntidad(eUsuario, ALBUMS);
 		idsSeguidores = servPersistencia.recuperarPropiedadEntidad(eUsuario, SEGUIDORES);
+		idsNotificaciones = servPersistencia.recuperarPropiedadEntidad(eUsuario, NOTIFICACIONES);
 		// System.out.println(idsFotos);
 		if (idsFotos == null) {
 			fotos = new ArrayList<Photo>();
@@ -73,6 +78,10 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 			seguidores = new HashSet<String>();
 		} else
 			seguidores = obtenerSeguidoresDeCodigos(idsSeguidores);
+		if (idsNotificaciones == null) {
+			notificaciones = new ArrayList<Notificacion>();
+		} else
+			notificaciones = obtenerNotificacionesDeCodigos(idsNotificaciones);
 		Usuario usuario = new Usuario(nombre, email, login, password, obtenerFecha(fechaNacimiento), imagenPath,
 				presentacion);
 		usuario.setId(eUsuario.getId());
@@ -80,8 +89,21 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		usuario.setFotos(fotos);
 		usuario.setAlbumnes(albums);
 		usuario.setSeguidores(seguidores);
+		usuario.setNotificaciones(notificaciones);
 
 		return usuario;
+	}
+
+	private List<Notificacion> obtenerNotificacionesDeCodigos(String ids) {
+		List<Notificacion> resultado = new ArrayList<Notificacion>();
+		StringTokenizer strTok = new StringTokenizer(ids, " ");
+		while (strTok.hasMoreTokens()) {
+			String[] pubUsu = strTok.nextToken().split(";");
+			Notificacion notificacion = new Notificacion(pubUsu[0],pubUsu[1]);
+			resultado.add(notificacion);
+		}
+		return resultado;
+
 	}
 
 	private Set<String> obtenerSeguidoresDeCodigos(String ids) {
@@ -168,6 +190,7 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		String idsFotos = obtenerCodigos(usuario.getFotos());
 		String idsAlbums = obtenerCodigosAlbums(usuario.getAlbumnes());
 		String idsSeguidores = obtenerCodigosSeguidores(usuario.getSeguidores());
+		String idsNotificaciones = obtenerCodigosNotificaciones(usuario.getNotificaciones());
 		eUsuario.setPropiedades(new ArrayList<Propiedad>(
 				Arrays.asList(new Propiedad(NOMBRE, usuario.getNombre()), new Propiedad(EMAIL, usuario.getEmail()),
 						new Propiedad(LOGIN, usuario.getUsername()), new Propiedad(PASSWORD, usuario.getClave()),
@@ -175,8 +198,17 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 						new Propiedad(IMAGEN_PATH, usuario.getImagenPath()),
 						new Propiedad(PRESENTACION, usuario.getPresentacion()),
 						new Propiedad(PREMIUM, Boolean.toString(usuario.isPremium())), new Propiedad(FOTOS, idsFotos),
-						new Propiedad(ALBUMS, idsAlbums), new Propiedad(SEGUIDORES, idsSeguidores))));
+						new Propiedad(ALBUMS, idsAlbums), new Propiedad(SEGUIDORES, idsSeguidores),
+						new Propiedad(NOTIFICACIONES, idsNotificaciones))));
 		return eUsuario;
+	}
+
+	public String obtenerCodigosNotificaciones(List<Notificacion> notificaciones) {
+		String resultado = "";
+		for (Notificacion notif : notificaciones) {
+			resultado += notif.getIdPublicacion() + ";" + notif.getIdPublicador() + " ";
+		}
+		return resultado;
 	}
 
 	public String obtenerCodigosSeguidores(Set<String> seguidoresIds) {
@@ -224,18 +256,14 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		for (Propiedad prop : eUsuario.getPropiedades()) {
 			if (prop.getNombre().equals(PASSWORD)) {
 				prop.setValor(usuario.getClave());
-			} else if (prop.getNombre().equals(EMAIL)) {
-				prop.setValor(usuario.getEmail());
-			} else if (prop.getNombre().equals(NOMBRE)) {
-				prop.setValor(usuario.getNombre());
-			} else if (prop.getNombre().equals(LOGIN)) {
-				prop.setValor(usuario.getUsername());
 			} else if (prop.getNombre().equals(IMAGEN_PATH)) {
 				prop.setValor(usuario.getImagenPath());
 			} else if (prop.getNombre().equals(PRESENTACION)) {
 				prop.setValor(usuario.getPresentacion());
 			} else if (prop.getNombre().equals(PREMIUM)) {
 				prop.setValor(Boolean.toString(usuario.isPremium()));
+			} else if (prop.getNombre().equals(NOTIFICACIONES)) {
+				prop.setValor(obtenerCodigosNotificaciones(usuario.getNotificaciones()));
 			} else if (prop.getNombre().equals(SEGUIDORES)) {
 				prop.setValor(obtenerCodigosSeguidores(usuario.getSeguidores()));
 			} else if (prop.getNombre().equals(ALBUMS)) {
