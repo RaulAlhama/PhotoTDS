@@ -51,7 +51,7 @@ public class Controlador implements FotosListener {
 			// TODO: handle exception
 		}
 		cargadorFotos = new CargadorFotos();
-		cargadorFotos.addCancionesListener(this);
+		cargadorFotos.addFotosListener(this);
 		inicializarAdaptadores();
 		inicializarRepositorios();
 		inicializarDescuentos();

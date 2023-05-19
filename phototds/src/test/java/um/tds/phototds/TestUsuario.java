@@ -3,11 +3,14 @@ package um.tds.phototds;
 import static org.junit.Assert.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import um.tds.phototds.dominio.Photo;
 import um.tds.phototds.dominio.Usuario;
 import um.tds.phototds.persistencia.DAOException;
 import um.tds.phototds.persistencia.FactoriaDAO;
@@ -52,6 +55,28 @@ public class TestUsuario {
 		persistencia.update(usuario1);
 		Usuario modificado = persistencia.get(usuario1.getId());
 		assertEquals(modificado.getPresentacion(), "Buenas tardes");
+	}
+	
+	@Test
+	public void testUpdate2() {
+		persistencia.create(usuario1);
+		usuario1.setPremium(true);
+		persistencia.update(usuario1);
+		Usuario modificado = persistencia.get(usuario1.getId());
+		assertEquals(modificado.isPremium(), true);
+	}
+	
+	@Test
+	public void testIsJoven() {
+		assertEquals(usuario1.isJoven(), false);
+	}
+	
+	@Test
+	public void testIsPopular() {
+		usuario1.addFoto("Hola a todos", "TestPath", new ArrayList<String>());
+		List<Photo> fotos = usuario1.getFotos();
+		fotos.get(0).setMeGustas(150);
+		assertEquals(usuario1.esPopular(), true);
 	}
 	
 	

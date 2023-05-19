@@ -87,8 +87,10 @@ public class TestPublicacion {
 	
 	@Test
 	public void testGetMeGustas() {
-		assertEquals(album.getMeGusta(), 0);
+		album.setMeGustas(1);
+		assertEquals(album.getMeGusta(), 1);
 	}
+	
 	
 	@Test
 	public void testGetFecha() {
