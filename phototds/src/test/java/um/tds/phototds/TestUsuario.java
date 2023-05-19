@@ -26,7 +26,7 @@ public class TestUsuario {
 	public void setUp() {
 		try {
 			persistencia = FactoriaDAO.getInstancia().getUsuarioDAO();
-			usuario1 = new Usuario("Raul Garcia", "raul.garciaa@um.es","raul" , "1234", fecha, "TestPath", "TestPresentacion");
+			usuario1 = new Usuario("Raul Garcia", "raul.garciaa@um.es","raul" , "12", fecha, "TestPath", "TestPresentacion");
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

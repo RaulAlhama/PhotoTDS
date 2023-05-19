@@ -1,10 +1,11 @@
 package um.tds.phototds.controlador;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.EventObject;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -25,7 +26,11 @@ import um.tds.phototds.persistencia.FactoriaDAO;
 import um.tds.phototds.persistencia.PublicacionDAO;
 import um.tds.phototds.persistencia.UsuarioDAO;
 import umu.tds.fotos.CargadorFotos;
+import umu.tds.fotos.Foto;
+import umu.tds.fotos.Fotos;
+import umu.tds.fotos.FotosEvent;
 import umu.tds.fotos.FotosListener;
+import umu.tds.fotos.HashTag;
 
 public class Controlador implements FotosListener {
 	private Usuario usuarioActual;
@@ -36,7 +41,7 @@ public class Controlador implements FotosListener {
 	private UsuarioDAO usuarioDAO;
 
 	private CargadorFotos cargadorFotos;
-	// private Fotos nuevasFotos;
+	//private Fotos nuevasFotos;
 
 	private RepoUsuarios repoUsuario;
 	// private RepoPublicaciones repoPublicaciones;
@@ -127,7 +132,7 @@ public class Controlador implements FotosListener {
 		Photo foto = usuarioActual.addFoto(texto, path, hashtags);
 		actualizarUsuario(usuarioActual);
 		notificarSeguidores(foto);
-		
+
 	}
 
 	public void compartirAlbum(String titulo, String texto, String path, List<String> hashtags) {
@@ -166,13 +171,33 @@ public class Controlador implements FotosListener {
 	public void setFotosFile(String path) {
 		cargadorFotos.setArchivoFotos(path);
 	}
-
+	
 	@Override
-	public void nuevasFotos(EventObject arg0) {
-		if (arg0 instanceof FotosListener) {
-			// nuevasFotos = ((FotosEvent) arg0).getNuevasFotos();
+	public void nuevasFotos(FotosEvent arg0) {
+		LinkedList<Photo> fotos = convertirFotos(arg0.getNuevasFotos());
+		for(Photo foto : fotos) {
+			compartirFoto(foto.getDescripcion(), foto.getPath(), foto.getHashtags());
 		}
+	}
 
+	private LinkedList<Photo> convertirFotos(Fotos fotos) {
+		LinkedList<Photo> aux = new LinkedList<Photo>();
+
+		for (Foto foto : fotos.getFoto()) {
+			Photo photo = new Photo(LocalDate.now().toString(), foto.getDescripcion(),
+					HashtagsToStrings(foto.getHashTags()), foto.getPath());
+			aux.add(photo);
+		}
+		return aux;
+
+	}
+
+	private List<String> HashtagsToStrings(List<HashTag> hashtags) {
+		LinkedList<String> resultado = new LinkedList<String>();
+		for (HashTag h : hashtags) {
+			resultado.add(h.toString());
+		}
+		return resultado;
 	}
 
 	public int obtenerNumeroPubls(Usuario usu) {
@@ -253,18 +278,17 @@ public class Controlador implements FotosListener {
 		int contador = 0;
 		List<Usuario> usuarios = obtenerUsuarios();
 		for (Usuario usuario : usuarios) {
-				if (usuario.getSeguidores().contains(Integer.toString(usu.getId())))
-					contador++;
-			}
+			if (usuario.getSeguidores().contains(Integer.toString(usu.getId())))
+				contador++;
+		}
 		return Integer.toString(contador);
 	}
-	
-	
+
 	public void notificarSeguidores(Publicacion pub) {
 		Set<String> seguidoresIds = usuarioActual.getSeguidores();
 		List<Usuario> seguidores = new ArrayList<Usuario>();
 		Notificacion notificacion = crearNotificacion(pub);
-		for(String id : seguidoresIds) {
+		for (String id : seguidoresIds) {
 			seguidores.add(usuarioDAO.get(Integer.parseInt(id)));
 		}
 		for (Usuario usuario : seguidores) {
@@ -274,13 +298,14 @@ public class Controlador implements FotosListener {
 		usuarioActual.addNotificacion(notificacion);
 		actualizarUsuario(usuarioActual);
 	}
-	
+
 	public Notificacion crearNotificacion(Publicacion pub) {
-		Notificacion notificacion = new Notificacion(Integer.toString(pub.getId()), Integer.toString(usuarioActual.getId()));
+		Notificacion notificacion = new Notificacion(Integer.toString(pub.getId()),
+				Integer.toString(usuarioActual.getId()));
 		return notificacion;
 	}
-	
-	public List<Notificacion> getNotificaciones(){
+
+	public List<Notificacion> getNotificaciones() {
 		List<Notificacion> notificaciones = usuarioActual.getNotificaciones();
 		Collections.reverse(notificaciones);
 		for (Notificacion notificacion : notificaciones) {
@@ -288,13 +313,14 @@ public class Controlador implements FotosListener {
 		}
 		return notificaciones;
 	}
-	
+
 	public Publicacion getPubDeNotif(String id) {
 		return publicacionDAO.get(Integer.parseInt(id));
 	}
-	
+
 	public Usuario getUserDeNotif(String id) {
 		return usuarioDAO.get(Integer.parseInt(id));
 	}
+
 
 }
