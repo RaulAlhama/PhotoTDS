@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -273,6 +274,19 @@ public class Controlador implements FotosListener {
 
 	public String getNumSeguidores(Usuario usu) {
 		return Integer.toString(usu.getSeguidores().size());
+	}
+	
+	public Integer getNumSeguidores() {
+		return usuarioActual.getSeguidores().size();
+	}
+	
+	public Set<Usuario> getSeguidores(){
+		Set<Usuario> seguidores = new HashSet<Usuario>();
+		for (String id : usuarioActual.getSeguidores()) {
+			Usuario usu = usuarioDAO.get(Integer.parseInt(id));
+			seguidores.add(usu);
+		}	
+		return seguidores;
 	}
 
 	public String getSeguidos(Usuario usu) {
