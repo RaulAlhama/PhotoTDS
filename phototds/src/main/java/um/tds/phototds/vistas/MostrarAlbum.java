@@ -45,7 +45,7 @@ public class MostrarAlbum {
 	 */
 	public MostrarAlbum(Album album, Usuario usu) {
 		controlador = Controlador.getUnicaInstancia();
-		initialize(album,usu);
+		initialize(album, usu);
 	}
 
 	/**
@@ -59,11 +59,10 @@ public class MostrarAlbum {
 		frameMostrarAlbum.setUndecorated(true);
 		frameMostrarAlbum.setVisible(true);
 
-		/*frameMostrarAlbum.addWindowListener(new WindowAdapter() {
-			public void windowDeactivated(WindowEvent e) {
-					frameMostrarAlbum.dispose();
-			}
-		});*/
+		/*
+		 * frameMostrarAlbum.addWindowListener(new WindowAdapter() { public void
+		 * windowDeactivated(WindowEvent e) { frameMostrarAlbum.dispose(); } });
+		 */
 
 		JPanel panelNorte = new JPanel();
 		frameMostrarAlbum.getContentPane().add(panelNorte, BorderLayout.NORTH);
@@ -74,8 +73,8 @@ public class MostrarAlbum {
 				Double.MIN_VALUE };
 		gbl_panelNorte.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 		panelNorte.setLayout(gbl_panelNorte);
-		
-		if(usu.equals(Controlador.getUnicaInstancia().getUsuarioActual())) {
+
+		if (usu.equals(Controlador.getUnicaInstancia().getUsuarioActual())) {
 			JButton botonAddFoto = new JButton("+");
 			botonAddFoto.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -87,7 +86,7 @@ public class MostrarAlbum {
 					}
 				}
 			});
-			
+
 			botonAddFoto.setForeground(Color.WHITE);
 			botonAddFoto.setFont(new Font("Tahoma", Font.PLAIN, 16));
 			botonAddFoto.setBackground(new Color(102, 10, 45));
@@ -97,7 +96,6 @@ public class MostrarAlbum {
 			gbc_botonAddFoto.gridy = 0;
 			panelNorte.add(botonAddFoto, gbc_botonAddFoto);
 		}
-		
 
 		buttonVolver = new JButton("<-");
 		buttonVolver.addActionListener(new ActionListener() {
@@ -113,8 +111,6 @@ public class MostrarAlbum {
 		gbc_buttonVolver.gridx = 1;
 		gbc_buttonVolver.gridy = 0;
 		panelNorte.add(buttonVolver, gbc_buttonVolver);
-
-		
 
 		JLabel lblTituloAlbum = new JLabel(album.getTitulo());
 		lblTituloAlbum.setFont(new Font("Quicksand", Font.PLAIN, 20));
@@ -161,7 +157,6 @@ public class MostrarAlbum {
 		panelCentro.setBackground(Color.LIGHT_GRAY);
 		panelCentral.add(panelCentro, BorderLayout.CENTER);
 		panelCentro.setLayout(new GridLayout(0, 1, 0, 10));
-
 
 		for (Photo foto : album.getFotos()) {
 			JPanel panelFoto = new JPanel();

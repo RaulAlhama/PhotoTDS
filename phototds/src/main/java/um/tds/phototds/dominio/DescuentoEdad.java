@@ -8,11 +8,11 @@ public class DescuentoEdad implements Descuento {
 		this.descuento = 0.2;
 		this.message = "DESCUENTO JOVEN - 20%";
 	}
-	
+
 	@Override
 	public double aplicarDescuento(double precio) {
-		
-		return precio * (1- descuento);
+
+		return precio * (1 - descuento);
 	}
 
 	@Override

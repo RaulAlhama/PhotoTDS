@@ -55,7 +55,8 @@ public class VentanaRegistro {
 	 */
 	public VentanaRegistro(boolean registrado) {
 		this.registrado = registrado;
-		if(registrado == true) usuarioActual = Controlador.getUnicaInstancia().getUsuarioActual();
+		if (registrado == true)
+			usuarioActual = Controlador.getUnicaInstancia().getUsuarioActual();
 		initialize();
 		lblError.setVisible(false);
 		lblError.setForeground(Color.RED);
@@ -70,20 +71,20 @@ public class VentanaRegistro {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		if(registrado) {
+		if (registrado) {
 			imagenPath = usuarioActual.getImagenPath();
-			
+
 		} else {
 			imagenPath = "C:/Users/raulg/git/PhotoTDS/phototds/target/classes/um/tds/phototds/imagenes/usuarioDef.png";
 		}
-		
+
 		frameRegistro = new JFrame();
 		frameRegistro.setBounds(100, 100, 647, 472);
 		frameRegistro.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		areaPresentacion = new JTextArea();
 		areaPresentacion.setText("");
-		
+
 		JPanel panelDatos = new JPanel();
 		frameRegistro.getContentPane().add(panelDatos, BorderLayout.CENTER);
 		panelDatos.setLayout(new BoxLayout(panelDatos, BoxLayout.Y_AXIS));
@@ -193,20 +194,21 @@ public class VentanaRegistro {
 			public void actionPerformed(ActionEvent e) {
 				JFrame frame = new JFrame();
 				frame.setBounds(100, 100, 450, 300);
-				// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
-				if(registrado && !(usuarioActual.getPresentacion().isEmpty())) areaPresentacion.setText(usuarioActual.getPresentacion());
+				// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				if (registrado && !(usuarioActual.getPresentacion().isEmpty()))
+					areaPresentacion.setText(usuarioActual.getPresentacion());
 				frame.getContentPane().add(areaPresentacion, BorderLayout.CENTER);
 				JPanel panelBotones = new JPanel();
 				frame.getContentPane().add(panelBotones, BorderLayout.SOUTH);
 				JButton btnOk = new JButton("OK");
 				btnOk.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						if(areaPresentacion.getText().length() > 200) {
-							JOptionPane.showMessageDialog(frame, "La presentación debe contener como máximo 200 caracteres",
-									"Error en el registro", JOptionPane.WARNING_MESSAGE);
-						}
-						else {
-						frame.dispose();
+						if (areaPresentacion.getText().length() > 200) {
+							JOptionPane.showMessageDialog(frame,
+									"La presentación debe contener como máximo 200 caracteres", "Error en el registro",
+									JOptionPane.WARNING_MESSAGE);
+						} else {
+							frame.dispose();
 						}
 					}
 				});
@@ -300,33 +302,32 @@ public class VentanaRegistro {
 						JOptionPane.showMessageDialog(frameRegistro, "Algunos campos obligatorios están vacíos",
 								"Error en el registro", JOptionPane.WARNING_MESSAGE);
 					} else {
-						
-							Controlador.getUnicaInstancia().registrarUsuario(textNombre.getText(), textEmail.getText(),
-									textUsuario.getText(), String.valueOf(passwordClave.getPassword()),
-									textFecha.getDate(), imagenPath, areaPresentacion.getText());
-							JOptionPane.showMessageDialog(frameRegistro, "Se ha registrado correctamente",
-									"Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
-							VentanaLogin ventanaLogin = new VentanaLogin();
-							ventanaLogin.mostrarVentana();
-							frameRegistro.dispose();
-						
+
+						Controlador.getUnicaInstancia().registrarUsuario(textNombre.getText(), textEmail.getText(),
+								textUsuario.getText(), String.valueOf(passwordClave.getPassword()), textFecha.getDate(),
+								imagenPath, areaPresentacion.getText());
+						JOptionPane.showMessageDialog(frameRegistro, "Se ha registrado correctamente",
+								"Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
+						VentanaLogin ventanaLogin = new VentanaLogin();
+						ventanaLogin.mostrarVentana();
+						frameRegistro.dispose();
 
 					}
 
-				}
-				else { //EDITAR PERFIL
+				} else { // EDITAR PERFIL
 					usuarioActual.setImagenPath(imagenPath);
-					if(!areaPresentacion.getText().equals(usuarioActual.getPresentacion())) {
+					if (!areaPresentacion.getText().equals(usuarioActual.getPresentacion())) {
 						usuarioActual.setPresentacion(areaPresentacion.getText());
 					}
-					if (passwordClave.getPassword().length == 0) { //Comprobación contraseñas
+					if (passwordClave.getPassword().length == 0) { // Comprobación contraseñas
 						Controlador.getUnicaInstancia().actualizarUsuario(usuarioActual);
 						VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
 						ventanaPrincipal.mostrarVentana();
 						frameRegistro.dispose();
 					} else {
 						if (passwordClaveChk.getPassword().length != 0) {
-							if (!(String.valueOf(passwordClave.getPassword()).equals(String.valueOf(passwordClaveChk.getPassword())))) {
+							if (!(String.valueOf(passwordClave.getPassword())
+									.equals(String.valueOf(passwordClaveChk.getPassword())))) {
 								lblError.setText("Las Claves no coinciden");
 								passwordClave.setBorder(BorderFactory.createLineBorder(Color.RED));
 								lblError.setVisible(true);
@@ -344,7 +345,7 @@ public class VentanaRegistro {
 							passwordClaveChk.setBorder(BorderFactory.createLineBorder(Color.RED));
 						}
 					}
-					
+
 				}
 			}
 		});
@@ -353,10 +354,10 @@ public class VentanaRegistro {
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(!registrado) {
-				VentanaLogin ventanaLogin = new VentanaLogin();
-				ventanaLogin.mostrarVentana();
-				frameRegistro.dispose();
+				if (!registrado) {
+					VentanaLogin ventanaLogin = new VentanaLogin();
+					ventanaLogin.mostrarVentana();
+					frameRegistro.dispose();
 				} else {
 					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
 					ventanaPrincipal.mostrarVentana();
@@ -416,8 +417,5 @@ public class VentanaRegistro {
 		frameRegistro.revalidate();
 		return verificar;
 	}
-	
-	
-	
 
 }

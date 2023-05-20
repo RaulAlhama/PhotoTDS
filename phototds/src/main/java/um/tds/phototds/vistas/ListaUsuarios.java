@@ -73,15 +73,14 @@ public class ListaUsuarios {
 				panelCentral.add(panel);
 				panel.setLayout(new GridLayout(1, 0, 0, 0));
 
-
 				Image imgPanel = new ImageIcon(usu.getImagenPath()).getImage();
 				JLabel lblUsuario = new JLabel();
 				lblUsuario.setIcon(new ImageIcon(imgPanel.getScaledInstance(120, 80, Image.SCALE_SMOOTH)));
 				panel.add(lblUsuario);
-				
+
 				JLabel lblNombreusuario = new JLabel(usu.getUsername());
 				panel.add(lblNombreusuario);
-				
+
 				panel.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
@@ -91,16 +90,16 @@ public class ListaUsuarios {
 			}
 		}
 		frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-		
+
 		JPanel panel = new JPanel();
 		frame.getContentPane().add(panel, BorderLayout.NORTH);
-		
+
 		JLabel lblNewLabel = new JLabel("CLICK DERECHO AQUÍ");
 		panel.add(lblNewLabel);
-		
+
 		JPopupMenu popupMenu = new JPopupMenu();
 		addPopup(lblNewLabel, popupMenu);
-		
+
 		JButton btnHacerVisible = new JButton("Hacer Visible");
 		btnHacerVisible.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -119,11 +118,13 @@ public class ListaUsuarios {
 					showMenu(e);
 				}
 			}
+
 			public void mouseReleased(MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					showMenu(e);
 				}
 			}
+
 			private void showMenu(MouseEvent e) {
 				popup.show(e.getComponent(), e.getX(), e.getY());
 			}

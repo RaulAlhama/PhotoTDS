@@ -1,6 +1,5 @@
 package um.tds.phototds.persistencia;
 
-
 public abstract class FactoriaDAO {
 	public static final String DAO_TDS = "um.tds.phototds.persistencia.TDSFactoriaDAO";
 
@@ -32,5 +31,6 @@ public abstract class FactoriaDAO {
 	// Metodos factoria para obtener adaptadores
 
 	public abstract UsuarioDAO getUsuarioDAO();
+
 	public abstract PublicacionDAO getPublicacionDAO();
 }

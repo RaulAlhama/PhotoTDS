@@ -36,9 +36,9 @@ public class SubirPublicacion {
 	 */
 	// Si true -> VentanaPrincipal
 	// Si false -> VentanaPerfil
-	public SubirPublicacion(String path, boolean isAlbum,String titulo) {
+	public SubirPublicacion(String path, boolean isAlbum, String titulo) {
 		controlador = Controlador.getUnicaInstancia();
-		initialize(path, isAlbum,titulo);
+		initialize(path, isAlbum, titulo);
 	}
 
 	public void mostrarVentana() {
@@ -117,7 +117,7 @@ public class SubirPublicacion {
 					List<String> hashtags = obtenerHashtags(texto);
 					if (verificarHashtags(hashtags)) {
 						if (isAlbum)
-							controlador.compartirAlbum(titulo,texto,path,hashtags);
+							controlador.compartirAlbum(titulo, texto, path, hashtags);
 						else
 							controlador.compartirFoto(texto, path, hashtags);
 						VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
@@ -141,15 +141,15 @@ public class SubirPublicacion {
 			}
 		});
 		panelBotones.add(btnCancelar);
-		
-		if(isAlbum) {
+
+		if (isAlbum) {
 			JPanel panel = new JPanel();
 			frameAddFoto.getContentPane().add(panel, BorderLayout.NORTH);
-			
+
 			JLabel lblNewLabel = new JLabel("Titulo del album: " + titulo);
 			panel.add(lblNewLabel);
 		}
-	
+
 	}
 
 	public List<String> obtenerHashtags(String texto) {

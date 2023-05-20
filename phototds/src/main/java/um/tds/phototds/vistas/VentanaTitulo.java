@@ -31,14 +31,14 @@ public class VentanaTitulo extends JDialog {
 		controlador = Controlador.getUnicaInstancia();
 		setBounds(100, 100, 409, 160);
 		getContentPane().setLayout(new BorderLayout());
-		
+
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowDeactivated(WindowEvent e) {
 				dispose();
 			}
 		});
-		
+
 		contentPanel.setLayout(new FlowLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setTitle("Introduce un título");
@@ -62,13 +62,14 @@ public class VentanaTitulo extends JDialog {
 							int result = chooser.showSaveDialog(null);
 							if (result == JFileChooser.APPROVE_OPTION) {
 								File fichero = chooser.getSelectedFile();
-								SubirPublicacion frameSubir = new SubirPublicacion(fichero.getAbsolutePath(), true,textField.getText());
+								SubirPublicacion frameSubir = new SubirPublicacion(fichero.getAbsolutePath(), true,
+										textField.getText());
 								frameSubir.mostrarVentana();
 								framePrincipal.dispose();
 							}
 						} else {
-							JOptionPane.showMessageDialog(framePrincipal, "Ya existe un albúm con ese nombre",
-									"Error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(framePrincipal, "Ya existe un albúm con ese nombre", "Error",
+									JOptionPane.ERROR_MESSAGE);
 						}
 
 					}

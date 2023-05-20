@@ -130,7 +130,7 @@ public class Usuario {
 	public void setPresentacion(String presentacion) {
 		this.presentacion = presentacion;
 	}
-	
+
 	public List<Notificacion> getNotificaciones() {
 		return new ArrayList<Notificacion>(notificaciones);
 	}
@@ -138,15 +138,13 @@ public class Usuario {
 	public void setNotificaciones(List<Notificacion> notificaciones) {
 		this.notificaciones = notificaciones;
 	}
-	
+
 	public void addNotificacion(Notificacion notificacion) {
-		if(notificaciones.size() == 5) {
+		if (notificaciones.size() == 5) {
 			notificaciones.remove(0);
 		}
 		this.notificaciones.add(notificacion);
 	}
-	
-
 
 	public Set<String> getSeguidores() {
 		return seguidores;
@@ -156,43 +154,43 @@ public class Usuario {
 		this.seguidores = seguidores;
 	}
 
-	public Photo addFoto(String texto, String path,List<String> hashtags) {
+	public Photo addFoto(String texto, String path, List<String> hashtags) {
 		Photo foto = new Photo(LocalDate.now().toString(), texto, hashtags, path);
 		this.fotos.add(foto);
 		return foto;
 	}
-	
+
 	public void addAlbum(String titulo, String texto, String path, List<String> hashtags) {
 		Photo foto = new Photo(LocalDate.now().toString(), texto, hashtags, path);
-		Album album = new Album(titulo,LocalDate.now().toString(), texto, hashtags);
+		Album album = new Album(titulo, LocalDate.now().toString(), texto, hashtags);
 		album.setFoto(foto);
 		this.albumnes.add(album);
 	}
-	
+
 	public void addFotoToAlbum(Album album, String path) {
 		for (Album album2 : albumnes) {
-			if(album.getTitulo() == album2.getTitulo()) {
-				album.getFotos().add(new Photo(LocalDate.now().toString(), album.getTitulo(), new ArrayList<String>(), path));
+			if (album.getTitulo() == album2.getTitulo()) {
+				album.getFotos()
+						.add(new Photo(LocalDate.now().toString(), album.getTitulo(), new ArrayList<String>(), path));
 			}
 		}
 	}
-	
+
 	public void borrarFoto(Photo foto) {
 		this.fotos.remove(foto);
 	}
-	
+
 	public void borrarAlbum(Album album) {
 		this.albumnes.remove(album);
 	}
-	
+
 	public void addSeguidor(String usuId) {
 		this.seguidores.add(usuId);
 	}
-	
+
 	public void deleteSeguidor(String usuId) {
 		this.seguidores.remove(usuId);
 	}
-	
 
 	public boolean isJoven() {
 		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europa/Madrid"));

@@ -42,7 +42,7 @@ public class Controlador implements FotosListener {
 	private UsuarioDAO usuarioDAO;
 
 	private CargadorFotos cargadorFotos;
-	//private Fotos nuevasFotos;
+	// private Fotos nuevasFotos;
 
 	private RepoUsuarios repoUsuario;
 	// private RepoPublicaciones repoPublicaciones;
@@ -174,11 +174,11 @@ public class Controlador implements FotosListener {
 	public void setFotosFile(String path) {
 		cargadorFotos.setArchivoFotos(path);
 	}
-	
+
 	@Override
 	public void nuevasFotos(FotosEvent arg0) {
 		LinkedList<Photo> fotos = convertirFotos(arg0.getNuevasFotos());
-		for(Photo foto : fotos) {
+		for (Photo foto : fotos) {
 			compartirFoto(foto.getDescripcion(), foto.getPath(), foto.getHashtags());
 		}
 	}
@@ -275,17 +275,17 @@ public class Controlador implements FotosListener {
 	public String getNumSeguidores(Usuario usu) {
 		return Integer.toString(usu.getSeguidores().size());
 	}
-	
+
 	public Integer getNumSeguidores() {
 		return usuarioActual.getSeguidores().size();
 	}
-	
-	public Set<Usuario> getSeguidores(){
+
+	public Set<Usuario> getSeguidores() {
 		Set<Usuario> seguidores = new HashSet<Usuario>();
 		for (String id : usuarioActual.getSeguidores()) {
 			Usuario usu = usuarioDAO.get(Integer.parseInt(id));
 			seguidores.add(usu);
-		}	
+		}
 		return seguidores;
 	}
 
@@ -333,6 +333,5 @@ public class Controlador implements FotosListener {
 	public Usuario getUserDeNotif(String id) {
 		return usuarioDAO.get(Integer.parseInt(id));
 	}
-
 
 }

@@ -46,9 +46,8 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 			propiedades.add(new Propiedad(PATH, ((Photo) publicacion).getPath()));
 		} else {
 			propiedades.add(new Propiedad(TITULO, ((Album) publicacion).getTitulo()));
-			propiedades.add(new Propiedad(FOTOSALBUM,guardarFotosAlbum(((Album)publicacion).getFotos())));
+			propiedades.add(new Propiedad(FOTOSALBUM, guardarFotosAlbum(((Album) publicacion).getFotos())));
 		}
-			
 
 		ePubli.setPropiedades(propiedades);
 
@@ -66,7 +65,7 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 		}
 		return lineas.substring(0, lineas.length() - 1);
 	}
-	
+
 	private String guardarFotosAlbum(List<Photo> fotosAlbum) {
 		String lineas = "";
 		for (Photo f : fotosAlbum) {
@@ -100,8 +99,7 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 			String fotosAlbum = servPersistencia.recuperarPropiedadEntidad(ePubli, FOTOSALBUM);
 			publicacion = new Album(titulo, fecha, descripcion, recuperarHashtags(hashtags));
 			((Album) publicacion).setFotos(recuperarFotos(fotosAlbum));
-		}	
-		else
+		} else
 			publicacion = new Photo(fecha, descripcion, recuperarHashtags(hashtags), path);
 
 		if (comentarios.equals(""))
@@ -113,9 +111,11 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 		publicacion.setMeGustas(meGustas);
 		return publicacion;
 	}
-	private List<Photo> recuperarFotos(String codigosFotos){
+
+	private List<Photo> recuperarFotos(String codigosFotos) {
 		List<Photo> resultado = new LinkedList<Photo>();
-		if(codigosFotos == null) return resultado;
+		if (codigosFotos == null)
+			return resultado;
 		StringTokenizer strTok = new StringTokenizer(codigosFotos, " ");
 		while (strTok.hasMoreTokens()) {
 			resultado.add((Photo) get(Integer.parseInt(strTok.nextToken())));
@@ -150,8 +150,8 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 
 	@Override
 	public void create(Publicacion publicacion) {
-		if(publicacion instanceof Album) {
-			for(Photo f : ((Album) publicacion).getFotos()) {
+		if (publicacion instanceof Album) {
+			for (Photo f : ((Album) publicacion).getFotos()) {
 				create(f);
 			}
 		}
@@ -181,14 +181,14 @@ public class TDSPublicacionDAO implements PublicacionDAO {
 			} else if (prop.getNombre().equals(COMENTARIOS)) {
 				prop.setValor(guardarComentarios(publicacion.getComentarios()));
 			} else if (prop.getNombre().equals(FOTOSALBUM)) {
-				for(Photo foto : ((Album)publicacion).getFotos()){
-					if(foto.getId() == Photo.IDERROR) {
+				for (Photo foto : ((Album) publicacion).getFotos()) {
+					if (foto.getId() == Photo.IDERROR) {
 						create(foto);
 					} else {
 						update(foto);
 					}
 				}
-				prop.setValor(guardarFotosAlbum(((Album)publicacion).getFotos()));
+				prop.setValor(guardarFotosAlbum(((Album) publicacion).getFotos()));
 			}
 			servPersistencia.modificarPropiedad(prop);
 		}

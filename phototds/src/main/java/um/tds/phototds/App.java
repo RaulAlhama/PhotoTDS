@@ -7,7 +7,7 @@ import um.tds.phototds.vistas.VentanaLogin;
 public class App {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
-			
+
 			public void run() {
 				try {
 					VentanaLogin ventanaLogin = new VentanaLogin();
@@ -15,7 +15,7 @@ public class App {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
+
 			}
 		});
 	}

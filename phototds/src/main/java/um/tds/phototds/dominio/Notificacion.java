@@ -3,7 +3,7 @@ package um.tds.phototds.dominio;
 public class Notificacion {
 	private String idPublicacion;
 	private String idPublicador;
-	
+
 	public Notificacion(String idPublicacion, String idPublicador) {
 		this.idPublicacion = idPublicacion;
 		this.idPublicador = idPublicador;
@@ -24,5 +24,5 @@ public class Notificacion {
 	public void setIdPublicador(String idPublicador) {
 		this.idPublicador = idPublicador;
 	}
-	
+
 }

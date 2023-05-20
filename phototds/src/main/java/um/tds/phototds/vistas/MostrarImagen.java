@@ -30,21 +30,20 @@ public class MostrarImagen {
 		JPanel panel = new JPanel();
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		JLabel lblimagen = new JLabel("");
-		if(imgPanel.getWidth(null) > 1600 || imgPanel.getWidth(null) > 900) {
+		if (imgPanel.getWidth(null) > 1600 || imgPanel.getWidth(null) > 900) {
 			frame.setSize(1600, 900);
 			lblimagen.setIcon(new ImageIcon(imgPanel.getScaledInstance(1600, 900, Image.SCALE_SMOOTH)));
-		}
-		else {
+		} else {
 			frame.setSize(imgPanel.getWidth(null), imgPanel.getHeight(null));
 			lblimagen.setIcon(new ImageIcon(imgPanel));
 		}
-		
+
 		panel.add(lblimagen);
 
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-		
+
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowDeactivated(WindowEvent e) {
 				frame.dispose();

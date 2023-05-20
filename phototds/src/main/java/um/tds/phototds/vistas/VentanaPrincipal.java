@@ -337,11 +337,10 @@ public class VentanaPrincipal {
 			gbl_panelFoto1.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 			panelFoto.setLayout(gbl_panelFoto1);
 			Publicacion pub = controlador.getPubDeNotif(notificacion.getIdPublicacion());
-			String path;			
-			if(pub instanceof Photo) {
+			String path;
+			if (pub instanceof Photo) {
 				path = ((Photo) pub).getPath();
-			}
-			else {
+			} else {
 				path = ((Album) pub).getFotos().get(0).getPath();
 			}
 
@@ -386,7 +385,7 @@ public class VentanaPrincipal {
 
 			buttonComentarios.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					Comentar frameComentar = new Comentar(pub,path);
+					Comentar frameComentar = new Comentar(pub, path);
 					framePrincipal.dispose();
 					frameComentar.mostrarVentana();
 				}
@@ -415,7 +414,8 @@ public class VentanaPrincipal {
 			gbc_lblComentarios.gridy = 1;
 			panelFoto.add(lblComentarios, gbc_lblComentarios);
 
-			Image imgUsuario = new ImageIcon(controlador.getUserDeNotif(notificacion.getIdPublicador()).getImagenPath()).getImage();
+			Image imgUsuario = new ImageIcon(controlador.getUserDeNotif(notificacion.getIdPublicador()).getImagenPath())
+					.getImage();
 			JLabel labelFotoUsuario = new JLabel("");
 			labelFotoUsuario.setIcon(new ImageIcon(imgUsuario.getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
 			GridBagConstraints gbc_label = new GridBagConstraints();

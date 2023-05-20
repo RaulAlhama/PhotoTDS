@@ -1,10 +1,9 @@
 package um.tds.phototds.dominio;
 
-
 import java.util.List;
 
 public class Photo extends Publicacion {
-	 
+
 	private String path;
 
 	public Photo(String fecha, String descripcion, List<String> hashtags, String path) {
@@ -16,7 +15,5 @@ public class Photo extends Publicacion {
 	public String getPath() {
 		return path;
 	}
-	
-	
-	
+
 }

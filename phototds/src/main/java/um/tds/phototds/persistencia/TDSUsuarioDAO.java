@@ -99,7 +99,7 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		StringTokenizer strTok = new StringTokenizer(ids, " ");
 		while (strTok.hasMoreTokens()) {
 			String[] pubUsu = strTok.nextToken().split(";");
-			Notificacion notificacion = new Notificacion(pubUsu[0],pubUsu[1]);
+			Notificacion notificacion = new Notificacion(pubUsu[0], pubUsu[1]);
 			resultado.add(notificacion);
 		}
 		return resultado;
