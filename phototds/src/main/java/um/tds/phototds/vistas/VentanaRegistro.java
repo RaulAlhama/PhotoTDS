@@ -321,7 +321,6 @@ public class VentanaRegistro {
 					}
 					if (passwordClave.getPassword().length == 0) { //Comprobación contraseñas
 						Controlador.getUnicaInstancia().actualizarUsuario(usuarioActual);
-						System.out.println(usuarioActual.getPresentacion());
 						VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
 						ventanaPrincipal.mostrarVentana();
 						frameRegistro.dispose();

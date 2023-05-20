@@ -228,7 +228,6 @@ public class VentanaPrincipal {
 					framePrincipal.getContentPane().remove(panelSurPerfilBuscado);
 					framePrincipal.getContentPane().add(scrollFotos);
 				} else {
-					System.out.println("Eliminado perfil");
 					framePrincipal.getContentPane().remove(panelCentralPerfil);
 					framePrincipal.getContentPane().remove(panelSurPerfil);
 					framePrincipal.getContentPane().add(scrollFotos);
@@ -262,7 +261,6 @@ public class VentanaPrincipal {
 			public void actionPerformed(ActionEvent arg0) {
 				if (isPrincipal) {
 					isPrincipal = false;
-					System.out.println("ES PRINCPIPAL");
 					framePrincipal.getContentPane().remove(scrollFotos);
 					framePrincipal.getContentPane().add(panelCentralPerfil);
 					framePrincipal.getContentPane().add(panelSurPerfil, BorderLayout.SOUTH);
@@ -331,7 +329,6 @@ public class VentanaPrincipal {
 		// Mostrar las 20 publicaciones más recientes
 		for (Notificacion notificacion : controlador.getNotificaciones()) {
 			JPanel panelFoto = new JPanel();
-			// System.out.println(foto.getHashtags());
 			panelCentro.add(panelFoto);
 			GridBagLayout gbl_panelFoto1 = new GridBagLayout();
 			gbl_panelFoto1.columnWidths = new int[] { 192, 97, 97, 0, 0 };
@@ -473,7 +470,6 @@ public class VentanaPrincipal {
 					panel.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseClicked(MouseEvent arg0) {
-							System.out.println(usu.getUsername());
 							if (isBuscandoUsuario) { // Estamos ya en el panelPerfilBuscado
 								framePrincipal.getContentPane().remove(panelPerfilBuscado);
 								framePrincipal.getContentPane().remove(panelSurPerfilBuscado);
@@ -654,7 +650,6 @@ public class VentanaPrincipal {
 					btnBorrar.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
 							controlador.borrarImagen(foto);
-							System.out.println("Borrandoo");
 							popupMenu.setVisible(false);
 
 						}
@@ -701,7 +696,6 @@ public class VentanaPrincipal {
 		if (!usu.getAlbumnes().isEmpty()) {
 			int i = 0; // Columna
 			int j = 0; // fila
-			System.out.println("Hay Albums");
 			for (Album album : usu.getAlbumnes()) {
 				if (i != 0 && i % 3 == 0) {
 					i = 0;
@@ -719,7 +713,6 @@ public class VentanaPrincipal {
 					btnBorrar.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
 							controlador.borrarAlbum(album);
-							System.out.println("Borrandoo");
 							framePrincipal.revalidate();
 							framePrincipal.repaint();
 

@@ -125,6 +125,8 @@ public class Controlador implements FotosListener {
 
 	public void borrarAlbum(Album album) {
 		usuarioActual.borrarAlbum(album);
+		publicacionDAO.delete(album);
+		actualizarUsuario(usuarioActual);
 
 	}
 
@@ -242,7 +244,6 @@ public class Controlador implements FotosListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Entra");
 		return null;
 	}
 
@@ -308,9 +309,6 @@ public class Controlador implements FotosListener {
 	public List<Notificacion> getNotificaciones() {
 		List<Notificacion> notificaciones = usuarioActual.getNotificaciones();
 		Collections.reverse(notificaciones);
-		for (Notificacion notificacion : notificaciones) {
-			System.out.println(notificacion);
-		}
 		return notificaciones;
 	}
 
